@@ -36,9 +36,38 @@ public class UserDao {
 	private boolean verified;
 	private boolean active;
         private boolean flag;
+        private String walletId;
+    private String taguuid;
+    private String eventId;
         private TixxTag tixxtag;
         private List<Wallet> wallet;
         private List<Transaction> donetrans;
+
+    public String getWalletId() {
+        return walletId;
+    }
+
+    public void setWalletId(String walletId) {
+        this.walletId = walletId;
+    }
+
+    public String getTaguuid() {
+        return taguuid;
+    }
+
+    public void setTaguuid(String taguuid) {
+        this.taguuid = taguuid;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+        
+        
 
     public List<Transaction> getDonetrans() {
         return donetrans;
@@ -214,6 +243,7 @@ public class UserDao {
         
     
 }
+
 
 
 
