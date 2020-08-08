@@ -5,18 +5,20 @@
  */
 package com.steinacoz.tixx.tixxbayserver.repo;
 
+import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import java.util.List;
 
 /**
  *
  * @author nkenn
  */
-@RepositoryRestResource(collectionResourceRel = "event", path = "event")
-public interface EventRepo extends MongoRepository<Event, String>, EventRepoCustom{
-    
+public interface EventRepoCustom {
+    List<EventDao> aggregateAllEvents();
+    List<EventDao> aggregateAllEventsByCreator(String creatorId);
 }
+
+
 
 
 

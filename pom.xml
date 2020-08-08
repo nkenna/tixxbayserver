@@ -11,7 +11,7 @@
 	<groupId>com.steinacoz.tixx</groupId>
 	<artifactId>tixxbayserver</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>tixxbayserver</name>
 	<description>Demo project for Spring Boot</description>
 

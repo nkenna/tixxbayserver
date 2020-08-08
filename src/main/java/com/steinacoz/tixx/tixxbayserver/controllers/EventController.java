@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
+import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
@@ -13,6 +14,7 @@ import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
@@ -241,7 +243,31 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);
         }
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-events", method = RequestMethod.GET)
+    public ResponseEntity<EventResponse> allEvents(){
+        EventResponse er = new EventResponse();
+        List<EventDao> events = eventRepo.aggregateAllEvents();
+        er.setMessage("events found: " + String.valueOf(events.size()));
+        er.setStatus("success");
+        er.setEvents(events);
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-events-by-creator", method = RequestMethod.PUT)
+    public ResponseEntity<EventResponse> allEventsByCreator(@RequestBody Event event){
+        EventResponse er = new EventResponse();
+        List<EventDao> events = eventRepo.aggregateAllEventsByCreator(event.getCreatorId());
+        er.setMessage("events found: " + String.valueOf(events.size()));
+        er.setStatus("success");
+        er.setEvents(events);
+        return ResponseEntity.ok().body(er);
+    }
 }
+
+
 
 
 

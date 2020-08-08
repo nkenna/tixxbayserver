@@ -13,10 +13,10 @@ import java.util.List;
  * @author nkenn
  */
 public interface UserRepoCustom {
-    List<UserDao> aggregateAllUsers();
-    
+    List<UserDao> aggregateAllUsers();  
     
 }
+
 
 
 
