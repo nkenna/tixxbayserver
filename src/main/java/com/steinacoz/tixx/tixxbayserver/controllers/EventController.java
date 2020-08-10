@@ -12,6 +12,7 @@ import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -19,14 +20,19 @@ import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -102,7 +108,7 @@ public class EventController {
         try{
             event.setAdminStatus(true);
             event.setStatus(true);
-            event.setEventCode(Utils.randomNS(5));
+            event.setEventCode(Utils.randomNS(8));
             Event newEvent = eventRepo.save(event);
             
             User user = userRepo.findById(newEvent.getCreatorId()).orElseThrow(null);
@@ -110,8 +116,7 @@ public class EventController {
                 this.sendSimpleMessage(event, user, "info@tixxbay.com", "New Event created",
                     "Your new Event have been successfully created. The event details is available on your dashboard."
                 );
-            }
-            
+            }            
             er.setStatus("success");
             er.setMessage("event created successfully");
             return ResponseEntity.ok().body(er);
@@ -178,6 +183,47 @@ public class EventController {
            er.setMessage("error occurred updating event: " + e.getMessage());
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er); 
         }
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/add-event-photo", method = RequestMethod.POST)
+    public ResponseEntity<EventResponse> addPhoto(@RequestParam("image") MultipartFile image, @RequestParam("position") int position, @RequestParam("eventId") String eventId){
+        EventResponse er = new EventResponse();
+        Event foundEvent = eventRepo.findById(eventId).orElseThrow(null);
+        
+        if(foundEvent != null){
+            try{
+                switch (position) {
+                    case 1:
+                        foundEvent.setImage1(new Binary(BsonBinarySubType.BINARY, image.getBytes()));
+                        break;
+                    case 2:
+                        foundEvent.setImage2(new Binary(BsonBinarySubType.BINARY, image.getBytes()));
+                        break;
+                    case 3:
+                        foundEvent.setImage3(new Binary(BsonBinarySubType.BINARY, image.getBytes()));
+                        break;
+                    default:
+                        er.setStatus("failed");
+                        er.setMessage("Image position not specified.");
+                        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
+                }
+            }catch(IOException e){
+                er.setStatus("failed");
+                er.setMessage("Image position not specified.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er);
+            }
+        }else{
+            er.setStatus("failed");
+            er.setMessage("Event not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);
+        }
+        
+        Event event = eventRepo.save(foundEvent);
+        er.setStatus("success");
+        er.setEvent(event);
+        er.setMessage("Image uploaded successfully");
+        return ResponseEntity.ok().body(er);
     }
     
     @CrossOrigin
@@ -266,6 +312,9 @@ public class EventController {
         return ResponseEntity.ok().body(er);
     }
 }
+
+
+
 
 
 

@@ -8,6 +8,7 @@ package com.steinacoz.tixx.tixxbayserver.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -30,6 +31,35 @@ public class Event {
     private boolean status;
     private boolean adminStatus;
     private String eventCode;
+    private Binary image1;
+    private Binary image2;
+    private Binary image3;
+
+    public Binary getImage1() {
+        return image1;
+    }
+
+    public void setImage1(Binary image1) {
+        this.image1 = image1;
+    }
+
+    public Binary getImage2() {
+        return image2;
+    }
+
+    public void setImage2(Binary image2) {
+        this.image2 = image2;
+    }
+
+    public Binary getImage3() {
+        return image3;
+    }
+
+    public void setImage3(Binary image3) {
+        this.image3 = image3;
+    }
+    
+    
 
     public String getEventCode() {
         return eventCode;
@@ -156,6 +186,7 @@ public class Event {
     
     
 }
+
 
 
 

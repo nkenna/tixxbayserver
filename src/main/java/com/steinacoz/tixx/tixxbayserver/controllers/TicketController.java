@@ -58,7 +58,7 @@ public class TicketController {
         Event event = eventRepo.findById(ticket.getEventId()).orElseThrow(null);
         
         if(event != null){
-          ticket.setTicketCode(event.getEventCode() + "-" + Utils.randomNS(6));  
+          ticket.setTicketCode(event.getEventCode() + Utils.randomNS(8));  
         }else{
            tr.setStatus("failed");
             tr.setMessage("parent event not found");
@@ -82,8 +82,7 @@ public class TicketController {
     @RequestMapping(value = "/add-child-ticket", method = RequestMethod.POST)
     public ResponseEntity<TicketResponse> createChildTicket(@RequestBody CreateChildTicketRequest ccr){
         TicketResponse tr = new TicketResponse();
-        List<ChildTicket> cts = new ArrayList<>();
-        
+        List<ChildTicket> cts = new ArrayList<>();       
    
         
         for(int i = 0; i < ccr.getNumToCreate(); i++){
@@ -95,7 +94,7 @@ public class TicketController {
             ct.setTicketAmount(ccr.getTicket().getTicketAmount());
             ct.setEventId(ccr.getTicket().getEventId());
             ct.setTicketType(ccr.getTicket().getTicketType());
-            ct.setTicketCode(ccr.getTicket().getTicketCode() + "-" + Utils.randomNS(5));
+            ct.setTicketCode(ccr.getTicket().getTicketCode() + Utils.randomNS(8));
             ct.setCouponId(ccr.getTicket().getCouponId());
             ct.setIndividual(ccr.getTicket().isIndividual());
             ct.setSaleStartDay(ccr.getTicket().getSaleStartDay());
@@ -121,6 +120,8 @@ public class TicketController {
     }
     
 }
+
+
 
 
 
