@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.dao;
 
+import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.TixxTag;
 import com.steinacoz.tixx.tixxbayserver.model.Transaction;
@@ -42,6 +43,17 @@ public class UserDao {
         private TixxTag tixxtag;
         private List<Wallet> wallet;
         private List<Transaction> donetrans;
+        private List<Event> events;
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+        
+        
 
     public String getWalletId() {
         return walletId;
@@ -243,6 +255,7 @@ public class UserDao {
         
     
 }
+
 
 
 

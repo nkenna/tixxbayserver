@@ -339,6 +339,7 @@ public class UserController {
 					"Password reset request",
 					"https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/reset-password/" + enc_aid
 			); 
+            System.out.println(jn.isSuccess());
             ur.setStatus("success");
             ur.setMessage("check your email to continue password reset");
             return ResponseEntity.ok().body(ur);
@@ -402,6 +403,7 @@ public class UserController {
         
     
 }
+
 
 
 

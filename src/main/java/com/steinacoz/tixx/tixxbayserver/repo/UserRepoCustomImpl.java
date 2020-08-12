@@ -34,6 +34,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
 	            "taguuid",// Query table fields
 	            "taguuid",// Join fields in tables
 	            "tags");
+        
 		
 		LookupOperation lookup2 = Aggregation.lookup("wallet",// Join Table
 	            "_id",// Query table fields
@@ -49,6 +50,11 @@ public class UserRepoCustomImpl implements UserRepoCustom{
 	            "id",// Query table fields
 	            "toId",// Join fields in tables
 	            "recvtrans");
+                
+                LookupOperation lookup5 = Aggregation.lookup("event",// Join Table
+	            "_id",// Query table fields
+	            "creatorId",// Join fields in tables
+	            "events");
 		
 		TypedAggregation<User> noRepeatAggregation2 =
 	            Aggregation.newAggregation(User.class, lookup1,lookup2, lookup3, lookup4);
@@ -59,6 +65,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
 
 
 
