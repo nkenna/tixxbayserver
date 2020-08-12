@@ -390,7 +390,7 @@ public class UserController {
     public ResponseEntity<UserResponse> allUsers(){
             
 		UserResponse ar = new UserResponse();
-		List<User> users = userRepo.aggregateAllUsers();
+		List<UserDao> users = userRepo.aggregateAllUsers();
 		ar.setMessage("users found: " + String.valueOf(users.size()));
 		ar.setStatus("success");
 		ar.setUsers(users);
@@ -403,6 +403,7 @@ public class UserController {
         
     
 }
+
 
 
 

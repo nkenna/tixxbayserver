@@ -22,7 +22,7 @@ public class UserResponse {
     private String message;
     private UserDao user;
     private String token;
-    private List<User> users;
+    private List<UserDao> users;
     private List<UserDao> allUsers;
     private List<Wallet> wallet;
     private List<Transaction> donetrans;
@@ -80,13 +80,15 @@ public class UserResponse {
         this.user = user;
     }
 
-    public List<User> getUsers() {
+    public List<UserDao> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<UserDao> users) {
         this.users = users;
     }
+
+  
 
     
     
@@ -104,6 +106,8 @@ public class UserResponse {
     
     
 }
+
+
 
 
 
