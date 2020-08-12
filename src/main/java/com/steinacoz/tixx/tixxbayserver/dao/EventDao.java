@@ -10,6 +10,7 @@ import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.bson.types.Binary;
 
 /**
  *
@@ -33,6 +34,35 @@ public class EventDao {
     private String eventCode;
     private User createdBy;
     private List<Ticket> tickets;
+    private Binary image1;
+    private Binary image2;
+    private Binary image3;
+
+    public Binary getImage1() {
+        return image1;
+    }
+
+    public void setImage1(Binary image1) {
+        this.image1 = image1;
+    }
+
+    public Binary getImage2() {
+        return image2;
+    }
+
+    public void setImage2(Binary image2) {
+        this.image2 = image2;
+    }
+
+    public Binary getImage3() {
+        return image3;
+    }
+
+    public void setImage3(Binary image3) {
+        this.image3 = image3;
+    }
+    
+    
 
     public User getCreatedBy() {
         return createdBy;
@@ -171,6 +201,7 @@ public class EventDao {
     
     
 }
+
 
 
 
