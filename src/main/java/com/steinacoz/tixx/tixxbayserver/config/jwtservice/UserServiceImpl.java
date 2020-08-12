@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserDetailsService {
 	if(user == null){
             throw new UsernameNotFoundException("Invalid email was provided");
 	}
-        getAuthority().add(new SimpleGrantedAuthority("USER"));
+        //getAuthority().add(new SimpleGrantedAuthority("USER"));
 	return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthority());
 	}
 
@@ -44,6 +44,8 @@ public class UserServiceImpl implements UserDetailsService {
 
 
 }
+
+
 
 
 
