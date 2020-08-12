@@ -134,44 +134,6 @@ public class EventController {
     public ResponseEntity<EventResponse> editEvent(@RequestBody Event event){
         EventResponse er = new EventResponse();
         
-        if(event.getTitle() == null || event.getTitle().isEmpty()){
-            er.setStatus("failed");
-            er.setMessage("Event title is required");
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
-        }
-        
-        if(event.getVenue() == null || event.getVenue().isEmpty()){
-            er.setStatus("failed");
-            er.setMessage("Event venue is required");
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
-        }
-        
-        if(event.getEventType().equalsIgnoreCase("virtual") && event.getVirtualUrl().isEmpty()){
-            er.setStatus("failed");
-            er.setMessage("Event type is virtual. Virtual url is required");
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
-        }
-        
-        if(event.getStartDate() == null || event.getEndDate() == null){
-            er.setStatus("failed");
-            er.setMessage("Event start and end date is required");
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
-        }
-        
-        if(event.getCreatorId() == null || event.getCreatorId().isEmpty()){
-            er.setStatus("failed");
-            er.setMessage("Event creator ID is required");
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
-        }
-        
-        if(event.getEventCategory() == null || event.getEventCategory().isEmpty()){
-            event.setEventCategory("others");
-        }
-        
-        if(event.getEventType() == null || event.getEventType().isEmpty()){
-            event.setEventType("physical");
-        }
-        
         try{
             Event newEvent = eventRepo.save(event);
             er.setEvent(newEvent);
@@ -312,6 +274,7 @@ public class EventController {
         return ResponseEntity.ok().body(er);
     }
 }
+
 
 
 
