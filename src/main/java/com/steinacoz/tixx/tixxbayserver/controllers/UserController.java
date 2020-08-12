@@ -233,11 +233,11 @@ public class UserController {
     public ResponseEntity<UserResponse>  loginUser(@RequestBody UserLoginRequest alr){
     	UserResponse cur = new UserResponse();
         System.out.println(111);
-        System.out.println(alr.getUsername());
+        System.out.println(alr.getEmail());
         System.out.println(alr.getPassword());
         System.out.println(222);
 		
-    	User user = userRepo.findByUsername(alr.getUsername());
+    	User user = userRepo.findByEmail(alr.getEmail());
     	if(user == null) {
     		cur.setStatus("failed");
 		cur.setMessage("user not found");
@@ -257,12 +257,12 @@ public class UserController {
     	}
         
         try{
-            System.out.println(alr.getUsername());
+            System.out.println(alr.getEmail());
             System.out.println(alr.getPassword());
             
             final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        alr.getUsername(),
+                        alr.getEmail(),
                         alr.getPassword()
                 )
         );
@@ -271,7 +271,7 @@ public class UserController {
       
 
                 
-                User usernew = userRepo.findByUsername(alr.getUsername());
+                User usernew = userRepo.findByEmail(alr.getEmail());
                final String token = jwtTokenUtil.generateToken(user);
                 UserDao aDao = new UserDao();
     		BeanUtils.copyProperties(usernew, aDao);
@@ -402,6 +402,7 @@ public class UserController {
         
     
 }
+
 
 
 
