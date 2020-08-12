@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
+import com.steinacoz.tixx.tixxbayserver.model.User;
 import java.util.List;
 
 /**
@@ -13,9 +14,11 @@ import java.util.List;
  * @author nkenn
  */
 public interface UserRepoCustom {
-    List<UserDao> aggregateAllUsers();  
+    List<User> aggregateAllUsers();  
     
 }
+
+
 
 
 

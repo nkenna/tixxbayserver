@@ -29,7 +29,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
 
     @Override
-    public List<UserDao> aggregateAllUsers() {
+    public List<User> aggregateAllUsers() {
         LookupOperation lookup1 = Aggregation.lookup("tixxtag",// Join Table
 	            "taguuid",// Query table fields
 	            "taguuid",// Join fields in tables
@@ -59,12 +59,15 @@ public class UserRepoCustomImpl implements UserRepoCustom{
 		TypedAggregation<User> noRepeatAggregation2 =
 	            Aggregation.newAggregation(User.class, lookup1,lookup2, lookup3, lookup4);
 		
-		AggregationResults<UserDao> noRepeatDataInfoVos2 = mongoTemplate.aggregate(noRepeatAggregation2, UserDao.class);
-                List<UserDao> noRepeatDataList2 = noRepeatDataInfoVos2.getMappedResults();
+		AggregationResults<User> noRepeatDataInfoVos2 = mongoTemplate.aggregate(noRepeatAggregation2, User.class, User.class);
+                //List<UserDao> noRepeatDataList2 = noRepeatDataInfoVos2.getMappedResults();
+                List<User> noRepeatDataList2 = noRepeatDataInfoVos2.getMappedResults();
+               // return noRepeatDataList2;
                 return noRepeatDataList2;
     }
     
 }
+
 
 
 
