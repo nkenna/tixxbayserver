@@ -7,14 +7,17 @@ package com.steinacoz.tixx.tixxbayserver.controllers;
 
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
+import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
+import com.steinacoz.tixx.tixxbayserver.request.EventUpdateRequest;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
@@ -131,14 +134,30 @@ public class EventController {
     
     @CrossOrigin
     @RequestMapping(value = "/edit-event", method = RequestMethod.POST)
-    public ResponseEntity<EventResponse> editEvent(@RequestBody Event event){
+    public ResponseEntity<EventResponse> editEvent(@RequestBody EventUpdateRequest event){
         EventResponse er = new EventResponse();
         
         Event foundEvent = eventRepo.findById(event.getId()).orElseGet(null);
+    
         
         if(foundEvent != null){
            try{
-            Event newEvent = eventRepo.save(event);
+               foundEvent.setTitle(event.getTitle());
+            foundEvent.setDiscription(event.getDiscription());
+            foundEvent.setVenue(event.getVenue());
+            foundEvent.setEventCategory(event.getEventCategory());
+            foundEvent.setEventType(event.getEventType());
+            foundEvent.setLocation(event.getLocation());
+            foundEvent.setAvailableTicket(event.getAvailableTicket());
+            foundEvent.setStartDate(event.getStartDate());
+            foundEvent.setEndDate(event.getEndDate());
+            foundEvent.setCreatorId(event.getCreatorId());
+            foundEvent.setVirtualUrl(event.getVirtualUrl());
+            foundEvent.setStatus(event.isStatus());
+            foundEvent.setAdminStatus(event.isAdminStatus());
+            foundEvent.setEventCode(event.getEventCode());
+            
+            Event newEvent = eventRepo.save(foundEvent);
             er.setEvent(newEvent);
             er.setStatus("success");
             er.setMessage("Event updated succesfully");
@@ -282,6 +301,7 @@ public class EventController {
         return ResponseEntity.ok().body(er);
     }
 }
+
 
 
 
