@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -37,6 +38,17 @@ public class User {
     private String walletId;
     private String taguuid;
     private String eventId;
+    private List<Event> events;
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+    
+    
 
     public String getEventId() {
         return eventId;
@@ -233,6 +245,8 @@ public class User {
     
     
 }
+
+
 
 
 
