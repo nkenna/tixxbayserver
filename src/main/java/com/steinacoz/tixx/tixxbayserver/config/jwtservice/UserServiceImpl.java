@@ -29,12 +29,13 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-	User user = userDao.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+	User user = userDao.findByEmail(email);
 	if(user == null){
-            throw new UsernameNotFoundException("Invalid username or password.");
+            throw new UsernameNotFoundException("Invalid email was provided");
 	}
-	return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthority());
+        getAuthority().add(new SimpleGrantedAuthority("USER"));
+	return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthority());
 	}
 
 	private List<SimpleGrantedAuthority> getAuthority() {
@@ -43,6 +44,8 @@ public class UserServiceImpl implements UserDetailsService {
 
 
 }
+
+
 
 
 

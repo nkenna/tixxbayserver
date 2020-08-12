@@ -13,6 +13,8 @@ import com.steinacoz.tixx.tixxbayserver.model.Wallet;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.VerifyCodeRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
+import com.steinacoz.tixx.tixxbayserver.request.ChangeUserPasswordRequest;
+import com.steinacoz.tixx.tixxbayserver.request.RestUserPasswordRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UserLoginRequest;
 import com.steinacoz.tixx.tixxbayserver.response.UserResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
@@ -169,7 +171,7 @@ public class UserController {
 					newUser, 
 					"welcome@tixxbay.ng", 
 					"Welcome to Tixxbay. Activate your account.",
-					"http://127.0.0.1:8090/tixxbay/api/user/v1/verify-user/" + enc_aid
+					"https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/verify-user/" + enc_aid
 			);
                         
                 UserDao usdao = new UserDao();
@@ -182,9 +184,9 @@ public class UserController {
 		
 	}
         
-        @CrossOrigin
-        @RequestMapping(value = "/verify-user/{enc_aid}", method = RequestMethod.GET)
-	public ResponseEntity<UserResponse>  verifyUser(@PathVariable String enc_aid) {
+    @CrossOrigin
+    @RequestMapping(value = "/verify-user/{enc_aid}", method = RequestMethod.GET)
+    public ResponseEntity<UserResponse>  verifyUser(@PathVariable String enc_aid) {
 		UserResponse cur = new UserResponse();
 		System.out.println(enc_aid);
 		//find user code
@@ -226,7 +228,7 @@ public class UserController {
 	}
         
         
-        @CrossOrigin
+    @CrossOrigin
     @RequestMapping(value = "auth/login-user", method = RequestMethod.POST)
     public ResponseEntity<UserResponse>  loginUser(@RequestBody UserLoginRequest alr){
     	UserResponse cur = new UserResponse();
@@ -290,6 +292,99 @@ public class UserController {
     	
     }
     
+    
+    @CrossOrigin
+    @RequestMapping(value = "auth/change-user-password", method = RequestMethod.POST)
+    public ResponseEntity<UserResponse>  changeUserPassword(@RequestBody ChangeUserPasswordRequest cup){
+        UserResponse ur = new UserResponse();
+        
+        User user = userRepo.findById(cup.getUserId()).orElseGet(null);
+        
+        if(user != null){
+            if(bCryptPasswordEncoder.matches(user.getPassword(), cup.getOldPassword())){
+                String nPwd = bCryptPasswordEncoder.encode(cup.getNewPassword());
+                user.setPassword(nPwd);
+                userRepo.save(user);
+                ur.setStatus("success");
+                ur.setMessage("password changed successfully");
+                return ResponseEntity.ok().body(ur);
+            }else{
+               ur.setStatus("failed");
+                ur.setMessage("password cannot be matched");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(ur); 
+            }
+        }else{
+            ur.setStatus("failed");
+            ur.setMessage("user account not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ur);
+        }
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "auth/reset-user-password-1", method = RequestMethod.POST)
+    public ResponseEntity<UserResponse>  resetUserPassword(@RequestBody RestUserPasswordRequest rpr){
+        UserResponse ur = new UserResponse();
+        User user = userRepo.findByEmail(rpr.getEmail());
+        
+        if(user != null){
+            String enc_aid = Utils.randomNS(15);
+            VerifyCode vc = new VerifyCode();
+            vc.setCode(enc_aid);
+            vc.setUsed(false);
+            vc.setUser(user.getId());
+            vcRepo.save(vc);
+            HttpResponse<JsonNode> jn = sendSimpleMessage(
+					user, 
+					"welcome@tixxbay.ng", 
+					"Password reset request",
+					"https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/reset-password/" + enc_aid
+			); 
+            ur.setStatus("success");
+            ur.setMessage("check your email to continue password reset");
+            return ResponseEntity.ok().body(ur);
+        }else{
+            ur.setStatus("failed");
+            ur.setMessage("user account not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ur);
+        }
+    }
+    
+    
+    @CrossOrigin
+    @RequestMapping(value = "auth/reset-user-password-2", method = RequestMethod.GET)
+    public ResponseEntity<UserResponse>  resetUserPassword2(@PathVariable String enc_aid){
+        UserResponse ur = new UserResponse();
+        UserResponse cur = new UserResponse();
+		System.out.println(enc_aid);
+		//find user code
+                VerifyCode vc = vcRepo.findByCode(enc_aid);
+                
+                if(vc == null){
+                    cur.setStatus("failed");
+                    cur.setMessage("Verification code is invalid");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(cur);
+                }
+                else if(vc != null && vc.isUsed() == true){
+                    cur.setStatus("failed");
+                    cur.setMessage("Verification code have been used");
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(cur);
+                }
+        User user = userRepo.findById(vc.getUser()).orElseGet(null);
+        
+        if(user != null){
+            String newPwd = Utils.randomNS(15);
+            user.setPassword(bCryptPasswordEncoder.encode(newPwd));             
+            ur.setStatus("success");
+            ur.setMessage(newPwd);
+            return ResponseEntity.ok().body(ur);
+        }else{
+            ur.setStatus("failed");
+            ur.setMessage("user account not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ur);
+        }
+    }
+    
+    
     @RequestMapping(value = "/all-users", method = RequestMethod.GET)
     public ResponseEntity<UserResponse> allUsers(){
             
@@ -307,6 +402,7 @@ public class UserController {
         
     
 }
+
 
 
 

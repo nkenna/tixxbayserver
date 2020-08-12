@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class JwtTokenUtil implements Serializable{
-     public String getUsernameFromToken(String token) {
+     public String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
      
@@ -64,14 +64,15 @@ public class JwtTokenUtil implements Serializable{
     }
 
     public String generateToken(User user) {
-        return doGenerateToken(user.getUsername(), user.getUserType());
+        return doGenerateToken(user);
     }
 
-    private String doGenerateToken(String subject, String role) {
+    private String doGenerateToken(User user) {
 
-        Claims claims = Jwts.claims().setSubject(subject);
+        Claims claims = Jwts.claims().setSubject(user.getEmail());
         //claims.put("scopes", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-        claims.put("role", role);
+        claims.put("role", user.getUserType());
+        claims.put("email", user.getEmail());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -83,13 +84,14 @@ public class JwtTokenUtil implements Serializable{
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
+        final String username = getEmailFromToken(token);
         return (
               username.equals(userDetails.getUsername())
                     && !isTokenExpired(token));
     }
 
 }
+
 
 
 

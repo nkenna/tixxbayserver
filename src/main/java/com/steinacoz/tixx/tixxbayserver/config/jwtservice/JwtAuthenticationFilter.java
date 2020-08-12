@@ -49,34 +49,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         String header = req.getHeader(Utils.HEADER_STRING);
-        String username = null;
+        String email = null;
         String authToken = null;
         if (header != null && header.startsWith(Utils.TOKEN_PREFIX)) {
             authToken = header.replace(Utils.TOKEN_PREFIX,"");
             try {
-                username = jwtTokenUtil.getUsernameFromToken(authToken);
+                email = jwtTokenUtil.getEmailFromToken(authToken);
             } catch (IllegalArgumentException e) {
-                System.out.println("an error occured during getting username from token" + e.getMessage());
+                System.out.println("an error occured during getting email from token" + e.getMessage());
                 
             } catch (ExpiredJwtException e) {
                 System.out.println("the token is expired and not valid anymore" + e.getMessage());
                
             } catch(SignatureException e){
-                System.out.println("Authentication Failed. Username or Password not valid." + e.getMessage());
+                System.out.println("Authentication Failed. email or Password not valid." + e.getMessage());
                 
             }
         } else {
             System.out.println("couldn't find bearer string, will ignore the header");
            
         }
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             System.out.println(jwtTokenUtil.getRoleFromToken(authToken));
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
             if (jwtTokenUtil.validateToken(authToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, emptyList());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-                System.out.println("authenticated user " + username + ", setting security context");
+                System.out.println("authenticated user " + email + ", setting security context");
                 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
@@ -85,6 +85,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(req, res);
     }
 }
+
+
 
 
 
