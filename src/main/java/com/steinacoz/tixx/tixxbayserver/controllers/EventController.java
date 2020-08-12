@@ -134,7 +134,10 @@ public class EventController {
     public ResponseEntity<EventResponse> editEvent(@RequestBody Event event){
         EventResponse er = new EventResponse();
         
-        try{
+        Event foundEvent = eventRepo.findById(event.getId()).orElseGet(null);
+        
+        if(foundEvent != null){
+           try{
             Event newEvent = eventRepo.save(event);
             er.setEvent(newEvent);
             er.setStatus("success");
@@ -144,7 +147,12 @@ public class EventController {
            er.setStatus("failed");
            er.setMessage("error occurred updating event: " + e.getMessage());
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er); 
-        }
+        } 
+        }else{
+           er.setStatus("failed");
+            er.setMessage("Event not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er); 
+        } 
     }
     
     @CrossOrigin
