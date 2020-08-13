@@ -26,7 +26,7 @@ public class Event {
     private int availableTicket;
     private LocalDateTime startDate; //
     private LocalDateTime endDate; //
-    private String creatorId; //
+    private String creatorUsername; //
     private String virtualUrl;
     private boolean status;
     private boolean adminStatus;
@@ -176,16 +176,20 @@ public class Event {
         this.endDate = endDate;
     }
 
-    public String getCreatorId() {
-        return creatorId;
+    public String getCreatorUsername() {
+        return creatorUsername;
     }
 
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
+    public void setCreatorUsername(String creatorUsername) {
+        this.creatorUsername = creatorUsername;
     }
+
+    
     
     
 }
+
+
 
 
 

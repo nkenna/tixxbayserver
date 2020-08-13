@@ -94,9 +94,9 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
         }
         
-        if(event.getCreatorId() == null || event.getCreatorId().isEmpty()){
+        if(event.getCreatorUsername() == null || event.getCreatorUsername().isEmpty()){
             er.setStatus("failed");
-            er.setMessage("Event creator ID is required");
+            er.setMessage("Event creator username is required");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
         }
         
@@ -114,7 +114,7 @@ public class EventController {
             event.setEventCode(Utils.randomNS(8));
             Event newEvent = eventRepo.save(event);
             
-            User user = userRepo.findById(newEvent.getCreatorId()).orElseThrow(null);
+            User user = userRepo.findByUsername(event.getCreatorUsername());
             if(user != null){
                 this.sendSimpleMessage(event, user, "info@tixxbay.com", "New Event created",
                     "Your new Event have been successfully created. The event details is available on your dashboard."
@@ -151,7 +151,7 @@ public class EventController {
             foundEvent.setAvailableTicket(event.getAvailableTicket());
             foundEvent.setStartDate(event.getStartDate());
             foundEvent.setEndDate(event.getEndDate());
-            foundEvent.setCreatorId(event.getCreatorId());
+            foundEvent.setCreatorUsername(event.getCreatorUsername());
             foundEvent.setVirtualUrl(event.getVirtualUrl());
             foundEvent.setStatus(event.isStatus());
             foundEvent.setAdminStatus(event.isAdminStatus());
@@ -294,13 +294,15 @@ public class EventController {
     @RequestMapping(value = "/all-events-by-creator", method = RequestMethod.PUT)
     public ResponseEntity<EventResponse> allEventsByCreator(@RequestBody Event event){
         EventResponse er = new EventResponse();
-        List<EventDao> events = eventRepo.aggregateAllEventsByCreator(event.getCreatorId());
+        List<EventDao> events = eventRepo.aggregateAllEventsByCreator(event.getCreatorUsername());
         er.setMessage("events found: " + String.valueOf(events.size()));
         er.setStatus("success");
         er.setEvents(events);
         return ResponseEntity.ok().body(er);
     }
 }
+
+
 
 
 

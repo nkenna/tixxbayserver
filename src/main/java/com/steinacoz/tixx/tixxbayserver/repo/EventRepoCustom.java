@@ -14,9 +14,10 @@ import java.util.List;
  * @author nkenn
  */
 public interface EventRepoCustom {
-    List<EventDao> aggregateAllEvents();
+    List<Event> aggregateAllEvents();
     List<EventDao> aggregateAllEventsByCreator(String creatorId);
 }
+
 
 
 
