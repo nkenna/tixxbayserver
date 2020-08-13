@@ -40,15 +40,6 @@ public class User {
     private String eventId;
     
  
-    private List<Event> events;
-
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
     
     
 
@@ -247,6 +238,7 @@ public class User {
     
     
 }
+
 
 
 
