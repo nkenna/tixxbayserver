@@ -53,14 +53,14 @@ public class UserRepoCustomImpl implements UserRepoCustom{
 	            "recvtrans");
                 
                 LookupOperation lookup5 = Aggregation.lookup("event",// Join Table
-	            "_id",// Query table fields
+	            "id",// Query table fields
 	            "creatorId",// Join fields in tables
 	            "events");
                 
-                ProjectionOperation po = Aggregation.project("events", "wallet", "id");
+                //ProjectionOperation po = Aggregation.project("events", "wallet", "id");
 		
 		TypedAggregation<User> noRepeatAggregation2 =
-	            Aggregation.newAggregation(User.class, lookup1,lookup2, lookup3, lookup4, po);
+	            Aggregation.newAggregation(User.class, lookup1,lookup2, lookup3, lookup4,lookup5);
 		
 		//AggregationResults<UserDao> noRepeatDataInfoVos2 = 
                    return  mongoTemplate.aggregate(noRepeatAggregation2, User.class, UserDao.class).getMappedResults();
@@ -71,6 +71,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
 
 
 
