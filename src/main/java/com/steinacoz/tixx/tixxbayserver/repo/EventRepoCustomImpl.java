@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.repo;
 
+import com.mongodb.client.model.geojson.Point;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
@@ -51,6 +52,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         MatchOperation match = Aggregation.match(Criteria.where("creatorUsername").is(creatorId));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(match);
        
 	TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
 	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
@@ -58,22 +60,53 @@ public class EventRepoCustomImpl implements EventRepoCustom {
 
     @Override
     public List<EventDao> aggregateAllEventsByState(String state) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        MatchOperation match = Aggregation.match(Criteria.where("state").is(state));
+        list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(match);
+       
+	TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();  
     }
 
     @Override
     public List<EventDao> aggregateAllEventsByLga(String lga) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+       MatchOperation match = Aggregation.match(Criteria.where("lga").is(lga));
+        list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(match);
+       
+	TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults(); 
     }
 
     @Override
-    public List<EventDao> aggregateAllEventsByCountry(String Country) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<EventDao> aggregateAllEventsByCountry(String country) {
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+       MatchOperation match = Aggregation.match(Criteria.where("country").is(country));
+        list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(match);
+       
+	TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults(); 
     }
 
     @Override
     public List<EventDao> aggregateAllEventsByUserLocation(String country, String state, String lga) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+       List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+       MatchOperation match = Aggregation.match(Criteria.where("country").is(country)
+               .orOperator(Criteria.where("country").is(country))
+       .orOperator(Criteria.where("country").is(country)));
+        list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(match);
+       
+	TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
     }
 
     @Override
@@ -82,6 +115,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
     
 }
+
+
 
 
 

@@ -300,7 +300,53 @@ public class EventController {
         er.setEvents(events);
         return ResponseEntity.ok().body(er);
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-events-by-country", method = RequestMethod.PUT)
+    public ResponseEntity<EventResponse> allEventsByCountry(@RequestBody Event event){
+        EventResponse er = new EventResponse();
+        List<EventDao> events = eventRepo.aggregateAllEventsByCountry(event.getCountry());
+       er.setMessage("events found: " + String.valueOf(events.size()));
+        er.setStatus("success");
+        er.setEvents(events);
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-events-by-state", method = RequestMethod.PUT)
+    public ResponseEntity<EventResponse> allEventsByState(@RequestBody Event event){
+        EventResponse er = new EventResponse();
+        List<EventDao> events = eventRepo.aggregateAllEventsByState(event.getState());
+       er.setMessage("events found: " + String.valueOf(events.size()));
+        er.setStatus("success");
+        er.setEvents(events);
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-events-by-lga", method = RequestMethod.PUT)
+    public ResponseEntity<EventResponse> allEventsByLGA(@RequestBody Event event){
+        EventResponse er = new EventResponse();
+        List<EventDao> events = eventRepo.aggregateAllEventsByLga(event.getLga());
+       er.setMessage("events found: " + String.valueOf(events.size()));
+        er.setStatus("success");
+        er.setEvents(events);
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-events-by-all", method = RequestMethod.PUT)
+    public ResponseEntity<EventResponse> allEventsByAll(@RequestBody Event event){
+        EventResponse er = new EventResponse();
+        List<EventDao> events = eventRepo.aggregateAllEventsByUserLocation(event.getCountry(), event.getState(), event.getLga());
+       er.setMessage("events found: " + String.valueOf(events.size()));
+        er.setStatus("success");
+        er.setEvents(events);
+        return ResponseEntity.ok().body(er);
+    }
+    
 }
+
 
 
 
