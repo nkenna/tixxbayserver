@@ -33,7 +33,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
 
     @Override
-    public List<User> aggregateAllUsers() {
+    public List<UserDao> aggregateAllUsers() {
       /**  LookupOperation lookup1 = Aggregation.lookup("tixxtag",// Join Table
 	            "taguuid",// Query table fields
 	            "taguuid",// Join fields in tables
@@ -68,7 +68,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
 		
 		TypedAggregation<User> agg = Aggregation.newAggregation(User.class, list);
-		return mongoTemplate.aggregate(agg, User.class).getMappedResults();
+		return mongoTemplate.aggregate(agg, User.class, UserDao.class).getMappedResults();
                 
                // LookupOperation lookup = LookupOperation.newLookup().from("event").localField("id").foreignField("creatorId")
 		//		.as("events");
@@ -87,6 +87,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
 
 
 

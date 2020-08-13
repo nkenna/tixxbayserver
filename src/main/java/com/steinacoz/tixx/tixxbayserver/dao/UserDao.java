@@ -38,8 +38,8 @@ public class UserDao {
 	private boolean active;
         private boolean flag;
         private String walletId;
-    private String taguuid;
-    private String eventId;
+        private String taguuid;
+        private String eventId;
         private TixxTag tixxtag;
         private List<Wallet> wallet;
         private List<Transaction> donetrans;
@@ -255,6 +255,7 @@ public class UserDao {
         
     
 }
+
 
 
 
