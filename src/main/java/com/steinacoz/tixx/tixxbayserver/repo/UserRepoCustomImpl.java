@@ -62,7 +62,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
                 
                 List<AggregationOperation> list = new ArrayList<AggregationOperation>();
 		//list.add(Aggregation. .adlookup(from, localField, foreignField, as));
-		list.add(Aggregation.lookup("event", "_id", "creatorId", "events"));
+		list.add(Aggregation.lookup("event", "id", "creatorId", "events"));
 				
 		//list.add(Aggregation.match(Criteria.where("originid").is(originid)));
     	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
@@ -87,6 +87,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
 
 
 
