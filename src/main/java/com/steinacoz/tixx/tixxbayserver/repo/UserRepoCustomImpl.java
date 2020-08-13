@@ -57,7 +57,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
 	            "creatorId",// Join fields in tables
 	            "events");
                 
-                LookupOperation lookup = LookupOperation.newLookup().from("event").localField("_id").foreignField("creatorId")
+                LookupOperation lookup = LookupOperation.newLookup().from("event").localField("id").foreignField("creatorId")
 				.as("events");
                 
                 //ProjectionOperation po = Aggregation.project("events", "wallet", "id");
@@ -74,6 +74,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
 
 
 
