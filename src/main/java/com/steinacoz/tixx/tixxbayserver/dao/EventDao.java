@@ -35,19 +35,12 @@ public class EventDao {
     private String eventCode;
     private User createdBy;
     private List<Ticket> tickets;
-    private List<Event> events;
+    
     private Binary image1;
     private Binary image2;
     private Binary image3;
 
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
-    
+   
     
 
     public Binary getImage1() {
@@ -213,6 +206,7 @@ public class EventDao {
     
     
 }
+
 
 
 

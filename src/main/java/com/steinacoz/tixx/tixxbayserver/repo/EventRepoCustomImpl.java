@@ -34,7 +34,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     public List<EventDao> aggregateAllEvents() {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
 		//list.add(Aggregation. .adlookup(from, localField, foreignField, as));
-		list.add(Aggregation.lookup("user", "creatorUsername", "username", "events"));
+		list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
 		
 		//list.add(Aggregation.match(Criteria.where("customerid").is(customerid)));
     	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
@@ -65,6 +65,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
     
 }
+
+
 
 
 
