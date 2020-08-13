@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.dao;
 
+import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.model.User;
@@ -34,9 +35,20 @@ public class EventDao {
     private String eventCode;
     private User createdBy;
     private List<Ticket> tickets;
+    private List<Event> events;
     private Binary image1;
     private Binary image2;
     private Binary image3;
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+    
+    
 
     public Binary getImage1() {
         return image1;
@@ -201,6 +213,7 @@ public class EventDao {
     
     
 }
+
 
 
 

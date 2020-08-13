@@ -31,7 +31,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
 
     @Override
-    public List<Event> aggregateAllEvents() {
+    public List<EventDao> aggregateAllEvents() {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
 		//list.add(Aggregation. .adlookup(from, localField, foreignField, as));
 		list.add(Aggregation.lookup("user", "creatorUsername", "username", "events"));
@@ -40,7 +40,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
 		
 		TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
-		return mongoTemplate.aggregate(agg, Event.class).getMappedResults();
+		return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
     }    
 
     @Override
@@ -65,6 +65,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
     
 }
+
 
 
 

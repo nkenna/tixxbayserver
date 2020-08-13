@@ -17,7 +17,7 @@ public class EventResponse {
     private String status;
     private String message;
     private Event event;
-    private List<Event> events;
+    private List<EventDao> events;
 
     public String getStatus() {
         return status;
@@ -43,16 +43,17 @@ public class EventResponse {
         this.event = event;
     }
 
-    public List<Event> getEvents() {
+    public List<EventDao> getEvents() {
         return events;
     }
 
-    public void setEvents(List<Event> events) {
+    public void setEvents(List<EventDao> events) {
         this.events = events;
     }
     
     
 }
+
 
 
 

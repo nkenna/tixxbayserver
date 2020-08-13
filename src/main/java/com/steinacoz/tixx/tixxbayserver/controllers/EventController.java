@@ -283,7 +283,7 @@ public class EventController {
     @RequestMapping(value = "/all-events", method = RequestMethod.GET)
     public ResponseEntity<EventResponse> allEvents(){
         EventResponse er = new EventResponse();
-        List<Event> events = eventRepo.aggregateAllEvents();
+        List<EventDao> events = eventRepo.aggregateAllEvents();
         er.setMessage("events found: " + String.valueOf(events.size()));
         er.setStatus("success");
         er.setEvents(events);
@@ -301,6 +301,7 @@ public class EventController {
         return ResponseEntity.ok().body(er);
     }
 }
+
 
 
 
