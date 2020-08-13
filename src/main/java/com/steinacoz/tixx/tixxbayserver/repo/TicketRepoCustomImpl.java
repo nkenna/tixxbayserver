@@ -33,7 +33,7 @@ public class TicketRepoCustomImpl implements TicketRepoCustom{
     public List<TicketDao> aggregateAllTicketCategories() {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
-        list.add(Aggregation.lookup("childticket", "ticketCode", "parentTicketCode", "childTickets"));
+        list.add(Aggregation.lookup("childTicket", "ticketCode", "parentTicketCode", "childTickets"));
         //list.add(Aggregation.match(Criteria.where("customerid").is(customerid)));
     	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
 	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
@@ -44,7 +44,7 @@ public class TicketRepoCustomImpl implements TicketRepoCustom{
     public List<TicketDao> aggregateAllTicketCategoriesByEvent(String eventCode) {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
-        list.add(Aggregation.lookup("childticket", "ticketCode", "parentTicketCode", "childTickets"));
+        list.add(Aggregation.lookup("childTicket", "ticketCode", "parentTicketCode", "childTickets"));
         list.add(Aggregation.match(Criteria.where("eventCode").is(eventCode)));
     	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
 	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
@@ -55,7 +55,7 @@ public class TicketRepoCustomImpl implements TicketRepoCustom{
     public TicketDao getTicketCategory(String ticketCode) {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
-        list.add(Aggregation.lookup("childticket", "ticketCode", "parentTicketCode", "childTickets"));
+        list.add(Aggregation.lookup("childTicket", "ticketCode", "parentTicketCode", "childTickets"));
         list.add(Aggregation.match(Criteria.where("ticketCode").is(ticketCode)));
     	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
 	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
@@ -73,6 +73,7 @@ public class TicketRepoCustomImpl implements TicketRepoCustom{
 	return mongoTemplate.aggregate(agg, Ticket.class, TicketDao.class).getUniqueMappedResult();
     }
 }
+
 
 
 
