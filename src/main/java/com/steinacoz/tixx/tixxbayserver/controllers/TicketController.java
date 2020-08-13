@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
+import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.Ticket;
@@ -97,6 +98,8 @@ public class TicketController {
             ct.setEventId(ccr.getTicket().getEventId());
             ct.setTicketType(ccr.getTicket().getTicketType());
             ct.setTicketCode(ccr.getTicket().getTicketCode() + Utils.randomNS(8));
+            ct.setParentTicketCode(ccr.getTicket().getTicketCode());
+            ct.setEventCode(ccr.getTicket().getEventCode());
             ct.setCouponId(ccr.getTicket().getCouponId());
             ct.setIndividual(ccr.getTicket().isIndividual());
             ct.setSaleStartDay(ccr.getTicket().getSaleStartDay());
@@ -164,7 +167,23 @@ public class TicketController {
         }
         
     }
+
+    @CrossOrigin
+    @RequestMapping(value = "/all-ticket-categories", method = RequestMethod.GET)
+    public ResponseEntity<TicketResponse> allTickets(){
+        TicketResponse er = new TicketResponse();
+        List<TicketDao> tickets = ticketRepo.aggregateAllTicketCategories();
+        er.setMessage("tickets found: " + String.valueOf(tickets.size()));
+        er.setStatus("success");
+        er.setTickets(tickets);
+        return ResponseEntity.ok().body(er);
+    }
 }
+
+
+
+
+
 
 
 

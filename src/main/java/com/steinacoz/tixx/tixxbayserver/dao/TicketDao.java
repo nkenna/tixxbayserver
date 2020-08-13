@@ -3,69 +3,47 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.steinacoz.tixx.tixxbayserver.model;
+package com.steinacoz.tixx.tixxbayserver.dao;
 
+import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
+import com.steinacoz.tixx.tixxbayserver.model.Coupon;
+import com.steinacoz.tixx.tixxbayserver.model.Event;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.annotation.Id;
 
 /**
  *
  * @author nkenn
  */
-public class ChildTicket {
-    @Id private String id;
+public class TicketDao {
+    private String id;
     private String title;
     private String description;
     private String ticketCategory; //public or private
     private boolean paidTicket; //true = paid, false = free
     private BigDecimal ticketAmount;
     private String eventId;
+    private String eventCode;
     private String ticketType; //electronic, nfc tag or qr code
     private String ticketCode;
-    private String eventCode;
     private String couponId;
     private boolean individual;
     private LocalDateTime saleStartDay;
     private LocalDateTime saleEndDay;
     private LocalDateTime created;
     private LocalDateTime updated;
-    private String parentTicketId;
-    private String parentTicketCode;
-
-    public String getEventCode() {
-        return eventCode;
-    }
-
-    public void setEventCode(String eventCode) {
-        this.eventCode = eventCode;
-    }
-    
-    
-    
-
-    public String getParentTicketCode() {
-        return parentTicketCode;
-    }
-
-    public void setParentTicketCode(String parentTicketCode) {
-        this.parentTicketCode = parentTicketCode;
-    }
-    
-    
-
-    public String getParentTicketId() {
-        return parentTicketId;
-    }
-
-    public void setParentTicketId(String parentTicketId) {
-        this.parentTicketId = parentTicketId;
-    }
-    
-    
+    private Event event;
+    private List<ChildTicket> childTickets;
+    private List<Coupon> coupons;
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -114,6 +92,14 @@ public class ChildTicket {
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+
+    public String getEventCode() {
+        return eventCode;
+    }
+
+    public void setEventCode(String eventCode) {
+        this.eventCode = eventCode;
     }
 
     public String getTicketType() {
@@ -179,10 +165,33 @@ public class ChildTicket {
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
     }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public List<ChildTicket> getChildTickets() {
+        return childTickets;
+    }
+
+    public void setChildTickets(List<ChildTicket> childTickets) {
+        this.childTickets = childTickets;
+    }
+
+    public List<Coupon> getCoupons() {
+        return coupons;
+    }
+
+    public void setCoupons(List<Coupon> coupons) {
+        this.coupons = coupons;
+    }
     
     
 }
-
 
 
 

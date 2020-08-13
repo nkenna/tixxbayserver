@@ -14,36 +14,19 @@ import org.springframework.data.annotation.Id;
 public class Coupon {
     @Id private String id;
     private String code;
-    private String ticketId;
+    private String ticketCode;
+    private String eventCode;
     private boolean used;
     private double discount;
     private int expirationTime;
-
-    public int getExpirationTime() {
-        return expirationTime;
-    }
-
-    public void setExpirationTime(int expirationTime) {
-        this.expirationTime = expirationTime;
-    }
-    
-    
-
-    public double getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(double discount) {
-        this.discount = discount;
-    }
-    
-    
 
     public String getId() {
         return id;
     }
 
-    
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCode() {
         return code;
@@ -53,12 +36,20 @@ public class Coupon {
         this.code = code;
     }
 
-    public String getTicketId() {
-        return ticketId;
+    public String getTicketCode() {
+        return ticketCode;
     }
 
-    public void setTicketId(String ticketId) {
-        this.ticketId = ticketId;
+    public void setTicketCode(String ticketCode) {
+        this.ticketCode = ticketCode;
+    }
+
+    public String getEventCode() {
+        return eventCode;
+    }
+
+    public void setEventCode(String eventCode) {
+        this.eventCode = eventCode;
     }
 
     public boolean isUsed() {
@@ -68,9 +59,27 @@ public class Coupon {
     public void setUsed(boolean used) {
         this.used = used;
     }
-    
-    
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public int getExpirationTime() {
+        return expirationTime;
+    }
+
+    public void setExpirationTime(int expirationTime) {
+        this.expirationTime = expirationTime;
+    }
+
+   
 }
+
+
 
 
 

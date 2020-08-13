@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.response;
 
+import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import java.util.List;
@@ -16,8 +17,8 @@ import java.util.List;
 public class TicketResponse {
     private String status;
     private String message;
-    private List<Ticket> tickets;
-    private Ticket ticket;
+    private List<TicketDao> tickets;
+    private TicketDao ticket;
     private ChildTicket childTicket;
     private List<ChildTicket> childTickets;
 
@@ -55,24 +56,27 @@ public class TicketResponse {
         this.message = message;
     }
 
-    public List<Ticket> getTickets() {
+    public List<TicketDao> getTickets() {
         return tickets;
     }
 
-    public void setTickets(List<Ticket> tickets) {
+    public void setTickets(List<TicketDao> tickets) {
         this.tickets = tickets;
     }
 
-    public Ticket getTicket() {
+    public TicketDao getTicket() {
         return ticket;
     }
 
-    public void setTicket(Ticket ticket) {
+    public void setTicket(TicketDao ticket) {
         this.ticket = ticket;
     }
+
+    
     
     
 }
+
 
 
 
