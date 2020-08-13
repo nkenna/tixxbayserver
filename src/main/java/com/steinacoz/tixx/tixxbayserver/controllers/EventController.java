@@ -156,6 +156,9 @@ public class EventController {
             foundEvent.setStatus(event.isStatus());
             foundEvent.setAdminStatus(event.isAdminStatus());
             foundEvent.setEventCode(event.getEventCode());
+            foundEvent.setCountry(event.getCountry());
+            foundEvent.setState(event.getState());
+            foundEvent.setLga(event.getLga());
             
             Event newEvent = eventRepo.save(foundEvent);
             er.setEvent(newEvent);
@@ -346,6 +349,7 @@ public class EventController {
     }
     
 }
+
 
 
 

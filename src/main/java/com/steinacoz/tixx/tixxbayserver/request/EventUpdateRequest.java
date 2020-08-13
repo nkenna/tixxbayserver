@@ -17,6 +17,9 @@ public class EventUpdateRequest {
     private String title; //
     private String discription;
     private String venue; //
+    private String lga; //
+    private String state; //
+    private String country; //
     private String eventCategory; // birthday, wedding, conference, religious, workshop & training, others
     private String eventType; //virtual or physical
     private Location location;
@@ -33,10 +36,31 @@ public class EventUpdateRequest {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getLga() {
+        return lga;
     }
 
+    public void setLga(String lga) {
+        this.lga = lga;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    
     public String getTitle() {
         return title;
     }
@@ -152,6 +176,7 @@ public class EventUpdateRequest {
     
     
 }
+
 
 
 
