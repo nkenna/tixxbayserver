@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
 
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 	User user = userDao.findByEmail(email);
 	if(user == null){
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserDetailsService {
 
 
 }
+
 
 
 

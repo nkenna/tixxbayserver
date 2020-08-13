@@ -133,7 +133,7 @@ public class EventController {
     
     
     @CrossOrigin
-    @RequestMapping(value = "/edit-event", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit-event", method = RequestMethod.PUT)
     public ResponseEntity<EventResponse> editEvent(@RequestBody EventUpdateRequest event){
         EventResponse er = new EventResponse();
         
@@ -349,6 +349,7 @@ public class EventController {
     }
     
 }
+
 
 
 
