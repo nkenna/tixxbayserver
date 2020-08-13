@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,8 +71,10 @@ public class TicketController {
         try{
             
             Ticket newTicket = ticketRepo.save(ticket);
+            TicketDao td = new TicketDao();
+                BeanUtils.copyProperties(newTicket, td);
             tr.setStatus("success");
-            tr.setTicket(ticket);
+            tr.setTicket(td);
             tr.setMessage("Ticket created successful");
             return ResponseEntity.ok().body(tr);
         }catch(Exception e){
@@ -150,9 +153,11 @@ public class TicketController {
             
             try{
                 Ticket newTicket = ticketRepo.save(foundTicket);
+                TicketDao td = new TicketDao();
+                BeanUtils.copyProperties(newTicket, td);
                 tr.setStatus("success");
                 tr.setMessage("ticket category updated successfully");
-                tr.setTicket(ticket);
+                tr.setTicket(td);
                 return ResponseEntity.ok().body(tr);
             }catch(Exception e){
                 tr.setStatus("failed");
@@ -179,6 +184,7 @@ public class TicketController {
         return ResponseEntity.ok().body(er);
     }
 }
+
 
 
 
