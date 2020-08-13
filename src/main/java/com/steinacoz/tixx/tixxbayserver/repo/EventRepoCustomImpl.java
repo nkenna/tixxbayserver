@@ -47,9 +47,10 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }    
 
     @Override
-    public List<EventDao> aggregateAllEventsByCreator(String creatorId) {
+    public List<EventDao> aggregateAllEventsByCreator(String username) {
+        System.out.println(username);
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        MatchOperation match = Aggregation.match(Criteria.where("creatorUsername").is(creatorId));
+        MatchOperation match = Aggregation.match(Criteria.where("creatorUsername").is(username));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -115,6 +116,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
     
 }
+
 
 
 

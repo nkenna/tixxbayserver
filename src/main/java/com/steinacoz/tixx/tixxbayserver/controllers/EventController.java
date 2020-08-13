@@ -12,6 +12,7 @@ import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.request.EventUpdateRequest;
+import com.steinacoz.tixx.tixxbayserver.request.RemoveImageRequest;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.io.IOException;
@@ -175,6 +176,42 @@ public class EventController {
             er.setMessage("Event not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er); 
         } 
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/remove-event-image", method = RequestMethod.PUT)
+    public ResponseEntity<EventResponse> editEvent(@RequestBody RemoveImageRequest event){
+        EventResponse er = new EventResponse();
+        Event foundEvent = eventRepo.findById(event.getEventId()).orElseThrow(null);
+        if(foundEvent != null){
+          
+                switch (event.getPosition()) {
+                    case 1:
+                        foundEvent.setImage1(null);
+                        break;
+                    case 2:
+                        foundEvent.setImage2(null);
+                        break;
+                    case 3:
+                        foundEvent.setImage3(null);
+                        break;
+                    default:
+                        er.setStatus("failed");
+                        er.setMessage("Image position not specified.");
+                        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
+                }
+           
+        }else{
+            er.setStatus("failed");
+            er.setMessage("Event not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);
+        }
+        
+         Event newEvent = eventRepo.save(foundEvent);
+        er.setStatus("success");
+        er.setEvent(newEvent);
+        er.setMessage("Image removed successfully");
+        return ResponseEntity.ok().body(er);
     }
     
     @CrossOrigin
@@ -349,6 +386,8 @@ public class EventController {
     }
     
 }
+
+
 
 
 
