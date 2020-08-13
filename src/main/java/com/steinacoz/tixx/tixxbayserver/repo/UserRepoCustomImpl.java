@@ -57,13 +57,16 @@ public class UserRepoCustomImpl implements UserRepoCustom{
 	            "creatorId",// Join fields in tables
 	            "events");
                 
+                LookupOperation lookup = LookupOperation.newLookup().from("event").localField("_id").foreignField("creatorId")
+				.as("events");
+                
                 //ProjectionOperation po = Aggregation.project("events", "wallet", "id");
 		
-		TypedAggregation<User> noRepeatAggregation2 =
-	            Aggregation.newAggregation(User.class, lookup1,lookup2, lookup3, lookup4,lookup5);
+		Aggregation aggregation =
+	            Aggregation.newAggregation(User.class, lookup1,lookup2, lookup3, lookup4,lookup);
 		
 		//AggregationResults<UserDao> noRepeatDataInfoVos2 = 
-                   return  mongoTemplate.aggregate(noRepeatAggregation2, User.class, UserDao.class).getMappedResults();
+                   return  mongoTemplate.aggregate(aggregation, User.class, UserDao.class).getMappedResults();
                 //List<UserDao> noRepeatDataList2 = noRepeatDataInfoVos2.getMappedResults();
                 //List<User> noRepeatDataList2 = noRepeatDataInfoVos2.getMappedResults();
                // return noRepeatDataList2;
@@ -71,6 +74,9 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
+
+
 
 
 
