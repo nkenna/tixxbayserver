@@ -108,7 +108,8 @@ public class TicketController {
             ct.setSaleStartDay(ccr.getTicket().getSaleStartDay());
             ct.setSaleEndDay(ccr.getTicket().getSaleEndDay());
             ct.setCreated(LocalDateTime.now());
-            ct.setUpdated(LocalDateTime.now());            
+            ct.setUpdated(LocalDateTime.now()); 
+            ct.setParentTicketId(ccr.getTicket().getId());
             cts.add(ct);
         }          
         
@@ -231,6 +232,7 @@ public class TicketController {
         
     }
 }
+
 
 
 

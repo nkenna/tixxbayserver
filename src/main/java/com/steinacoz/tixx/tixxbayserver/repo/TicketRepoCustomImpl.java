@@ -66,13 +66,14 @@ public class TicketRepoCustomImpl implements TicketRepoCustom{
     public TicketDao getTicketCategoryByChildTicket(String ticketCode) {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
-        list.add(Aggregation.lookup("childticket", "ticketCode", "parentTicketCode", "childTickets"));
+        list.add(Aggregation.lookup("childTicket", "ticketCode", "parentTicketCode", "childTickets"));
         list.add(Aggregation.match(Criteria.where("ticketCode").is(ticketCode)));
     	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
 	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
 	return mongoTemplate.aggregate(agg, Ticket.class, TicketDao.class).getUniqueMappedResult();
     }
 }
+
 
 
 
