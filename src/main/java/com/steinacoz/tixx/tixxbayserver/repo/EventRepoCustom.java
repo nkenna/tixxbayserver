@@ -7,6 +7,7 @@ package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
+import com.steinacoz.tixx.tixxbayserver.model.Location;
 import java.util.List;
 
 /**
@@ -16,7 +17,16 @@ import java.util.List;
 public interface EventRepoCustom {
     List<EventDao> aggregateAllEvents();
     List<EventDao> aggregateAllEventsByCreator(String creatorId);
+    List<EventDao> aggregateAllEventsByState(String state);
+    List<EventDao> aggregateAllEventsByLga(String lga);
+    List<EventDao> aggregateAllEventsByCountry(String Country);
+    
+    List<EventDao> aggregateAllEventsByUserLocation(String country, String state, String lga);
+    List<EventDao> aggregateAllEventsByUserGPSLocation(Location location);
+    
 }
+
+
 
 
 

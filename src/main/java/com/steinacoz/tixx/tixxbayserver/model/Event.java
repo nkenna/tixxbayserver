@@ -20,6 +20,9 @@ public class Event {
     private String title; //
     private String discription;
     private String venue; //
+    private String lga; //
+    private String state; //
+    private String country; //
     private String eventCategory; // birthday, wedding, conference, religious, workshop & training, others
     private String eventType; //virtual or physical
     private Location location;
@@ -34,6 +37,32 @@ public class Event {
     private Binary image1;
     private Binary image2;
     private Binary image3;
+
+    public String getLga() {
+        return lga;
+    }
+
+    public void setLga(String lga) {
+        this.lga = lga;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+    
+    
 
     public Binary getImage1() {
         return image1;
@@ -188,6 +217,7 @@ public class Event {
     
     
 }
+
 
 
 

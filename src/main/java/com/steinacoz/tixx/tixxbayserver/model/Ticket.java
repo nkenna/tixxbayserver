@@ -21,6 +21,7 @@ public class Ticket {
     private boolean paidTicket; //true = paid, false = free
     private BigDecimal ticketAmount;
     private String eventId;
+    private String eventCode;
     private String ticketType; //electronic, nfc tag or qr code
     private String ticketCode;
     private String couponId;
@@ -29,6 +30,16 @@ public class Ticket {
     private LocalDateTime saleEndDay;
     private LocalDateTime created;
     private LocalDateTime updated;
+
+    public String getEventCode() {
+        return eventCode;
+    }
+
+    public void setEventCode(String eventCode) {
+        this.eventCode = eventCode;
+    }
+    
+    
 
     public LocalDateTime getCreated() {
         return created;
@@ -154,6 +165,7 @@ public class Ticket {
     
     
 }
+
 
 
 

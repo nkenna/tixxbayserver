@@ -294,13 +294,14 @@ public class EventController {
     @RequestMapping(value = "/all-events-by-creator", method = RequestMethod.PUT)
     public ResponseEntity<EventResponse> allEventsByCreator(@RequestBody Event event){
         EventResponse er = new EventResponse();
-        //List<Event> events = eventRepo.aggregateAllEventsByCreator(event.getCreatorUsername());
-       // er.setMessage("events found: " + String.valueOf(events.size()));
+        List<EventDao> events = eventRepo.aggregateAllEventsByCreator(event.getCreatorUsername());
+       er.setMessage("events found: " + String.valueOf(events.size()));
         er.setStatus("success");
-        //er.setEvents(events);
+        er.setEvents(events);
         return ResponseEntity.ok().body(er);
     }
 }
+
 
 
 
