@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 
 /**
  *
@@ -38,7 +39,44 @@ public class TicketRepoCustomImpl implements TicketRepoCustom{
 	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
 	return mongoTemplate.aggregate(agg, Ticket.class, TicketDao.class).getMappedResults();
     }
+
+    @Override
+    public List<TicketDao> aggregateAllTicketCategoriesByEvent(String eventCode) {
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(Aggregation.lookup("childticket", "ticketCode", "parentTicketCode", "childTickets"));
+        list.add(Aggregation.match(Criteria.where("eventCode").is(eventCode)));
+    	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
+	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
+	return mongoTemplate.aggregate(agg, Ticket.class, TicketDao.class).getMappedResults();
+    }
+
+    @Override
+    public TicketDao getTicketCategory(String ticketCode) {
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(Aggregation.lookup("childticket", "ticketCode", "parentTicketCode", "childTickets"));
+        list.add(Aggregation.match(Criteria.where("ticketCode").is(ticketCode)));
+    	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
+	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
+	return mongoTemplate.aggregate(agg, Ticket.class, TicketDao.class).getUniqueMappedResult();
+    }
+
+    @Override
+    public TicketDao getTicketCategoryByChildTicket(String ticketCode) {
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(Aggregation.lookup("childticket", "ticketCode", "parentTicketCode", "childTickets"));
+        list.add(Aggregation.match(Criteria.where("ticketCode").is(ticketCode)));
+    	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
+	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
+	return mongoTemplate.aggregate(agg, Ticket.class, TicketDao.class).getUniqueMappedResult();
+    }
 }
+
+
+
+
 
 
 

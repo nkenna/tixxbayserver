@@ -14,6 +14,14 @@ import java.util.List;
  */
 public interface TicketRepoCustom {
     List<TicketDao> aggregateAllTicketCategories();
+    List<TicketDao> aggregateAllTicketCategoriesByEvent(String ticketCode);
+    TicketDao getTicketCategory(String ticketCode);
+    TicketDao getTicketCategoryByChildTicket(String ticketCode);
 }
+
+
+
+
+
 
 

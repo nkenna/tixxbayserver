@@ -183,7 +183,57 @@ public class TicketController {
         er.setTickets(tickets);
         return ResponseEntity.ok().body(er);
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-ticket-categories-by-event", method = RequestMethod.PUT)
+    public ResponseEntity<TicketResponse> allTicketsCategoriesByEvent(@RequestBody Ticket ticket){
+        TicketResponse er = new TicketResponse();
+        List<TicketDao> tickets = ticketRepo.aggregateAllTicketCategoriesByEvent(ticket.getEventCode());
+        er.setMessage("tickets found: " + String.valueOf(tickets.size()));
+        er.setStatus("success");
+        er.setTickets(tickets);
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/ticket-category", method = RequestMethod.PUT)
+    public ResponseEntity<TicketResponse> getTicketCategory(@RequestBody Ticket ticket){
+        TicketResponse er = new TicketResponse();
+        TicketDao foundTicket = ticketRepo.getTicketCategory(ticket.getTicketCode());
+        if(foundTicket != null){
+          er.setMessage("ticket retrieved successfully found");
+            er.setStatus("success");
+            er.setTicket(foundTicket);
+            return ResponseEntity.ok().body(er);  
+        }else{
+           er.setMessage("ticket not found");
+            er.setStatus("failed");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);  
+        }
+        
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/ticket-category-by-child-ticket", method = RequestMethod.PUT)
+    public ResponseEntity<TicketResponse> getTicketCategoryByChildTicket(@RequestBody ChildTicket ticket){
+        TicketResponse er = new TicketResponse();
+        TicketDao foundTicket = ticketRepo.getTicketCategoryByChildTicket(ticket.getParentTicketCode());
+        if(foundTicket != null){
+          er.setMessage("ticket retrieved successfully found");
+            er.setStatus("success");
+            er.setTicket(foundTicket);
+            return ResponseEntity.ok().body(er);  
+        }else{
+           er.setMessage("ticket not found");
+            er.setStatus("failed");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);  
+        }
+        
+    }
 }
+
+
+
 
 
 
