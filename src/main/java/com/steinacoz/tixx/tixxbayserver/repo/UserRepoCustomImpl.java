@@ -7,13 +7,16 @@ package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
 import com.steinacoz.tixx.tixxbayserver.model.User;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 
 /**
  *
@@ -31,7 +34,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
 
     @Override
     public List<UserDao> aggregateAllUsers() {
-        LookupOperation lookup1 = Aggregation.lookup("tixxtag",// Join Table
+      /**  LookupOperation lookup1 = Aggregation.lookup("tixxtag",// Join Table
 	            "taguuid",// Query table fields
 	            "taguuid",// Join fields in tables
 	            "tags");
@@ -55,18 +58,28 @@ public class UserRepoCustomImpl implements UserRepoCustom{
                 LookupOperation lookup5 = Aggregation.lookup("event",// Join Table
 	            "id",// Query table fields
 	            "creatorId",// Join fields in tables
-	            "events");
+	            "events"); **/
                 
-                LookupOperation lookup = LookupOperation.newLookup().from("event").localField("id").foreignField("creatorId")
-				.as("events");
+                List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+		//list.add(Aggregation. .adlookup(from, localField, foreignField, as));
+		list.add(Aggregation.lookup("event", "id", "creatorId", "events"));
+				
+		//list.add(Aggregation.match(Criteria.where("originid").is(originid)));
+    	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
+		
+		TypedAggregation<User> agg = Aggregation.newAggregation(User.class, list);
+		return mongoTemplate.aggregate(agg, User.class, UserDao.class).getMappedResults();
+                
+               // LookupOperation lookup = LookupOperation.newLookup().from("event").localField("id").foreignField("creatorId")
+		//		.as("events");
                 
                 //ProjectionOperation po = Aggregation.project("events", "wallet", "id");
 		
-		Aggregation aggregation =
-	            Aggregation.newAggregation(User.class, lookup1,lookup2, lookup3, lookup4,lookup);
+		//Aggregation aggregation =
+	       //     Aggregation.newAggregation(User.class, lookup1,lookup2, lookup3, lookup4,lookup);
 		
 		//AggregationResults<UserDao> noRepeatDataInfoVos2 = 
-                   return  mongoTemplate.aggregate(aggregation, User.class, UserDao.class).getMappedResults();
+                //   return  mongoTemplate.aggregate(aggregation, User.class, UserDao.class).getMappedResults();
                 //List<UserDao> noRepeatDataList2 = noRepeatDataInfoVos2.getMappedResults();
                 //List<User> noRepeatDataList2 = noRepeatDataInfoVos2.getMappedResults();
                // return noRepeatDataList2;
@@ -74,6 +87,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
 
 
 

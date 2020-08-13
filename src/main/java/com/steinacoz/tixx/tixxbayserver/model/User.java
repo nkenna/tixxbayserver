@@ -38,6 +38,8 @@ public class User {
     private String walletId;
     private String taguuid;
     private String eventId;
+    
+ 
     private List<Event> events;
 
     public List<Event> getEvents() {
@@ -245,6 +247,7 @@ public class User {
     
     
 }
+
 
 
 
