@@ -69,6 +69,7 @@ public class TicketController {
             
             Ticket newTicket = ticketRepo.save(ticket);
             tr.setStatus("success");
+            tr.setTicket(ticket);
             tr.setMessage("Ticket created successful");
             return ResponseEntity.ok().body(tr);
         }catch(Exception e){
@@ -102,8 +103,7 @@ public class TicketController {
             ct.setCreated(LocalDateTime.now());
             ct.setUpdated(LocalDateTime.now());            
             cts.add(ct);
-        }   
-        
+        }          
         
         
         try{            
@@ -120,6 +120,8 @@ public class TicketController {
     }
     
 }
+
+
 
 
 
