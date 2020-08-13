@@ -15,6 +15,7 @@ import com.steinacoz.tixx.tixxbayserver.request.CreateChildTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.response.TicketResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -119,7 +120,52 @@ public class TicketController {
         }
     }
     
+    
+    @CrossOrigin
+    @RequestMapping(value = "/edit-ticket-category", method = RequestMethod.POST)
+    public ResponseEntity<TicketResponse> editEventCategoryTicket(@RequestBody Ticket ticket){
+        TicketResponse tr = new TicketResponse();
+        
+        
+        Ticket foundTicket =  ticketRepo.findById(ticket.getId()).orElseGet(null);
+           
+        if(foundTicket != null){
+            foundTicket.setTitle(ticket.getTitle());
+            foundTicket.setDescription(ticket.getDescription());
+            foundTicket.setTicketCategory(ticket.getTicketCategory());
+            foundTicket.setTicketAmount(ticket.getTicketAmount());
+            foundTicket.setPaidTicket(ticket.isPaidTicket());
+            foundTicket.setEventId(ticket.getEventId());
+            foundTicket.setEventCode(ticket.getEventCode());
+            foundTicket.setTicketType(ticket.getTicketType());
+            foundTicket.setTicketCode(ticket.getTicketCode());
+            foundTicket.setCouponId(ticket.getCouponId());
+            foundTicket.setIndividual(ticket.isIndividual());
+            foundTicket.setSaleStartDay(ticket.getSaleStartDay());
+            foundTicket.setSaleEndDay(ticket.getSaleEndDay());
+            foundTicket.setUpdated(LocalDateTime.now());
+            
+            try{
+                Ticket newTicket = ticketRepo.save(foundTicket);
+                tr.setStatus("success");
+                tr.setMessage("ticket category updated successfully");
+                tr.setTicket(ticket);
+                return ResponseEntity.ok().body(tr);
+            }catch(Exception e){
+                tr.setStatus("failed");
+                tr.setMessage("ticket category updated failed: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tr);
+            }
+            
+        }else{
+          tr.setStatus("failed");
+          tr.setMessage("ticket category not found");
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);  
+        }
+        
+    }
 }
+
 
 
 
