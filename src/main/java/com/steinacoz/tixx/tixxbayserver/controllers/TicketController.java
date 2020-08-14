@@ -231,7 +231,38 @@ public class TicketController {
         }
         
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/make-ticket-category-private-public", method = RequestMethod.PUT)
+    public ResponseEntity<TicketResponse> ticketCategoryPrivatePublic (@RequestBody Ticket ticket){
+        TicketResponse er = new TicketResponse();
+        Ticket foundTicket = ticketRepo.findById(ticket.getId()).orElseGet(null);
+        if(foundTicket != null){
+            if(ticket.getTicketCategory().toLowerCase().equalsIgnoreCase("public")){
+                foundTicket.setTicketCategory("public");
+            }else if(ticket.getTicketCategory().toLowerCase().equalsIgnoreCase("private")){
+               foundTicket.setTicketCategory("private"); 
+            }else{
+                er.setMessage("invalid parameter was provided");
+                er.setStatus("failed");
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);   
+            }
+            Ticket newTicket = ticketRepo.save(foundTicket);
+            TicketDao td = new TicketDao();
+            BeanUtils.copyProperties(newTicket, td);
+            er.setMessage("ticket category changed successfully: " + newTicket.getTicketCategory());
+            er.setStatus("success");
+            er.setTicket(td);
+            return ResponseEntity.ok().body(er);  
+        }else{
+           er.setMessage("ticket not found");
+            er.setStatus("failed");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);  
+        }
+        
+    }
 }
+
 
 
 

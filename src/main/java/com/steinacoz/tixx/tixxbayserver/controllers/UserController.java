@@ -6,16 +6,20 @@
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
 import com.steinacoz.tixx.tixxbayserver.config.jwtservice.JwtTokenUtil;
+import com.steinacoz.tixx.tixxbayserver.dao.BankDetailDao;
 import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
+import com.steinacoz.tixx.tixxbayserver.model.BankDetail;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.model.VerifyCode;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
+import com.steinacoz.tixx.tixxbayserver.repo.BankDetailRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.VerifyCodeRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
 import com.steinacoz.tixx.tixxbayserver.request.ChangeUserPasswordRequest;
 import com.steinacoz.tixx.tixxbayserver.request.RestUserPasswordRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UserLoginRequest;
+import com.steinacoz.tixx.tixxbayserver.response.BankDetailResponse;
 import com.steinacoz.tixx.tixxbayserver.response.UserResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.math.BigDecimal;
@@ -60,8 +64,6 @@ public class UserController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     
-
-    
     @Autowired
     WalletRepo walletRepo;
     
@@ -69,13 +71,14 @@ public class UserController {
     VerifyCodeRepo vcRepo;
     
     @Autowired
+    BankDetailRepo bankDetailsRepo;
+    
+    @Autowired
     AuthenticationManager authenticationManager;
     
  
     @Autowired
     private PasswordEncoder bCryptPasswordEncoder;
-	
-    
 	
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
 	
@@ -94,7 +97,7 @@ public class UserController {
     
     
     @RequestMapping(value = "/create-user", method = RequestMethod.POST)
-	public ResponseEntity<UserResponse> createAgent(@RequestBody User user) {
+    public ResponseEntity<UserResponse> createAgent(@RequestBody User user) {
 		
 		UserResponse ar = new UserResponse();
 		User foundUser;
@@ -398,11 +401,165 @@ public class UserController {
 		
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/add-bank-details", method = RequestMethod.POST)
+    public ResponseEntity<BankDetailResponse> addBankDetails(@RequestBody BankDetail bd){
+        BankDetailResponse bdr = new BankDetailResponse();
+        BankDetail foundBD =  bankDetailsRepo.findByAccountNumber(bd.getAccountNumber());
+        
+        if(foundBD == null){
+            try{
+         
+                BankDetail newBankDetail = new BankDetail();
+                newBankDetail.setAccountName(bd.getAccountName());
+                newBankDetail.setAccountNumber(bd.getAccountNumber());
+                newBankDetail.setBankCode(bd.getBankCode());
+                newBankDetail.setBankId(bd.getBankId());
+                newBankDetail.setOwnerId(bd.getOwnerId());
+                newBankDetail.setOwnerUsername(bd.getOwnerUsername());
+                newBankDetail.setFlagged(false);
+                newBankDetail.setCreated(LocalDateTime.now());
+                newBankDetail.setUpdated(LocalDateTime.now());
+                
+                BankDetail newBd = bankDetailsRepo.save(newBankDetail);
+                BankDetailDao bdao = new BankDetailDao();
+                BeanUtils.copyProperties(newBd, bdao);
+                bdr.setBankDetail(bdao);
+                bdr.setStatus("success");
+                bdr.setMessage("bank detail saved successfully");
+                return ResponseEntity.ok().body(bdr);
+            }catch(Exception e){
+                bdr.setStatus("failed");
+                bdr.setMessage("error occurred saving bank details: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(bdr);
+            }
+        }else{
+            bdr.setStatus("failed");
+            bdr.setMessage("This account details already exist");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(bdr); //ResponseEntity.status(HttpStatus.NOT_FOUND).body(ur)
+        }
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/edit-bank-details", method = RequestMethod.POST)
+    public ResponseEntity<BankDetailResponse> editBankDetails(@RequestBody BankDetail bd){
+        BankDetailResponse bdr = new BankDetailResponse();
+        BankDetail newBankDetail =  bankDetailsRepo.findByAccountNumber(bd.getId());
+        
+        
+        
+        if(newBankDetail != null){
+            try{
+                if(newBankDetail.isFlagged()){
+           bdr.setStatus("failed");
+                bdr.setMessage("you are not allowed to perform this operation");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(bdr); 
+        }
+         
+                newBankDetail.setAccountName(bd.getAccountName());
+                newBankDetail.setAccountNumber(bd.getAccountNumber());
+                newBankDetail.setBankCode(bd.getBankCode());
+                newBankDetail.setBankId(bd.getBankId());
+                newBankDetail.setUpdated(LocalDateTime.now());
+                
+                BankDetail newBd = bankDetailsRepo.save(newBankDetail);
+                
+                BankDetailDao bdao = new BankDetailDao();
+                BeanUtils.copyProperties(newBd, bdao);
+                bdr.setBankDetail(bdao);
+                
+                bdr.setStatus("success");
+                bdr.setMessage("bank detail updated successfully");
+                return ResponseEntity.ok().body(bdr);
+            }catch(Exception e){
+                bdr.setStatus("failed");
+                bdr.setMessage("error occurred saving bank details: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(bdr);
+            }
+        }else{
+            bdr.setStatus("failed");
+            bdr.setMessage("account details not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(bdr); //ResponseEntity.status(HttpStatus.NOT_FOUND).body(ur)
+        }
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/flag-unflag-bank-details", method = RequestMethod.POST)
+    public ResponseEntity<BankDetailResponse> flagBankDetails(@RequestBody BankDetail bd){
+        BankDetailResponse bdr = new BankDetailResponse();
+        BankDetail newBankDetail =  bankDetailsRepo.findByAccountNumber(bd.getId());
+        
+        
+        
+        if(newBankDetail != null){
+            if(bd.isFlagged()){
+                newBankDetail.setFlagged(true);
+                newBankDetail.setUpdated(LocalDateTime.now());
+                
+                BankDetail newBd = bankDetailsRepo.save(newBankDetail);
+                
+                BankDetailDao bdao = new BankDetailDao();
+                BeanUtils.copyProperties(newBd, bdao);
+                bdr.setBankDetail(bdao);
+            
+            
+                bdr.setStatus("success");
+                bdr.setMessage("bank detail flagged successfully");
+                return ResponseEntity.ok().body(bdr);
+            }else if(!bd.isFlagged()){
+               newBankDetail.setFlagged(false); 
+               newBankDetail.setUpdated(LocalDateTime.now());
+               
+               BankDetail newBd = bankDetailsRepo.save(newBankDetail);
+                
+                BankDetailDao bdao = new BankDetailDao();
+                BeanUtils.copyProperties(newBd, bdao);
+                bdr.setBankDetail(bdao);
+            
+                bdr.setStatus("success");
+                bdr.setMessage("bank detail unflasgged successfully");
+               return ResponseEntity.ok().body(bdr);
+            }else{
+                bdr.setStatus("failed");
+                bdr.setMessage("invalid parameter supplied");
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(bdr);
+            }
+            
+            
+            
+        }else{
+            bdr.setStatus("failed");
+            bdr.setMessage("account details not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(bdr); //ResponseEntity.status(HttpStatus.NOT_FOUND).body(ur)
+        }
+    }
+    
+    @RequestMapping(value = "/all-bank-details", method = RequestMethod.GET)
+    public ResponseEntity<BankDetailResponse> allBankDetails(){
+            
+		BankDetailResponse br = new BankDetailResponse();
+		List<BankDetailDao> bdaos = bankDetailsRepo.getAllBankDetails();
+		br.setMessage("bank details found: " + String.valueOf(bdaos.size()));
+		br.setStatus("success");
+		br.setBankDetails(bdaos);
+		return ResponseEntity.ok().body(br);
+		
+    }
+    
+    
 
          
         
     
 }
+
+
+
+
+
+
+
+
 
 
 
