@@ -414,6 +414,7 @@ public class UserController {
                 newBankDetail.setAccountName(bd.getAccountName());
                 newBankDetail.setAccountNumber(bd.getAccountNumber());
                 newBankDetail.setBankCode(bd.getBankCode());
+                newBankDetail.setBankName(bd.getBankName());
                 newBankDetail.setBankId(bd.getBankId());
                 newBankDetail.setOwnerId(bd.getOwnerId());
                 newBankDetail.setOwnerUsername(bd.getOwnerUsername());
@@ -459,6 +460,7 @@ public class UserController {
                 newBankDetail.setAccountName(bd.getAccountName());
                 newBankDetail.setAccountNumber(bd.getAccountNumber());
                 newBankDetail.setBankCode(bd.getBankCode());
+                newBankDetail.setBankName(bd.getBankName());
                 newBankDetail.setBankId(bd.getBankId());
                 newBankDetail.setUpdated(LocalDateTime.now());
                 
@@ -601,6 +603,7 @@ public class UserController {
         
     
 }
+
 
 
 

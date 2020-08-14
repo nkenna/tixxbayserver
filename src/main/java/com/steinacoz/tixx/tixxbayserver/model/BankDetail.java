@@ -17,6 +17,7 @@ public class BankDetail {
     private String accountNumber;
     private String bankCode;
     private int bankId;
+    private String bankName;
     private String ownerId;
     private String ownerUsername;
     private boolean flagged; //true or false
@@ -30,6 +31,16 @@ public class BankDetail {
     public String getBankCode() {
         return bankCode;
     }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+    
+    
 
     public void setBankCode(String bankCode) {
         this.bankCode = bankCode;
@@ -103,6 +114,8 @@ public class BankDetail {
     
     
 }
+
+
 
 
 

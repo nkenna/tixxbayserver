@@ -19,6 +19,7 @@ public class BankDetailDao {
     private String bankCode;
     private int bankId;
     private String ownerId;
+    private String bankName;
     private String ownerUsername;
     private boolean flagged; //true or false
     private LocalDateTime created;
@@ -29,9 +30,15 @@ public class BankDetailDao {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getBankName() {
+        return bankName;
     }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    
 
     public String getAccountName() {
         return accountName;
@@ -116,6 +123,7 @@ public class BankDetailDao {
     
     
 }
+
 
 
 
