@@ -431,7 +431,7 @@ public class UserController {
             }catch(Exception e){
                 bdr.setStatus("failed");
                 bdr.setMessage("error occurred saving bank details: " + e.getMessage());
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(bdr);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(bdr);
             }
         }else{
             bdr.setStatus("failed");
@@ -601,6 +601,7 @@ public class UserController {
         
     
 }
+
 
 
 
