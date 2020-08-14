@@ -11,6 +11,7 @@ import com.steinacoz.tixx.tixxbayserver.model.BankDetail;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
@@ -81,7 +82,8 @@ public class BankDetailRepoCustomImpl implements BankDetailRepoCustom{
     @Override
     public List<BankDetailDao> getAllBankDetailsByAccountName(String name) {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        MatchOperation match = Aggregation.match(Criteria.where("accountName").is(name));
+        MatchOperation match = Aggregation.match(Criteria.where("accountName").regex(name));
+      
         list.add(Aggregation.lookup("user", "ownerUsername", "username", "user"));
         //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -91,6 +93,7 @@ public class BankDetailRepoCustomImpl implements BankDetailRepoCustom{
     }
     
 }
+
 
 
 

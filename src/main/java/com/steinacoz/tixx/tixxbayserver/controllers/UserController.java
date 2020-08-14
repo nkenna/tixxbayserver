@@ -546,12 +546,62 @@ public class UserController {
 		
     }
     
+    @RequestMapping(value = "/all-bank-details-by-ownerid", method = RequestMethod.PUT)
+    public ResponseEntity<BankDetailResponse> allBankDetailsByOwnerId(@RequestBody BankDetail bd){
+            
+		BankDetailResponse br = new BankDetailResponse();
+		List<BankDetailDao> bdaos = bankDetailsRepo.getAllBankDetailsByOwnerId(bd.getOwnerId());
+		br.setMessage("bank details found: " + String.valueOf(bdaos.size()));
+		br.setStatus("success");
+		br.setBankDetails(bdaos);
+		return ResponseEntity.ok().body(br);
+		
+    }
+    
+    @RequestMapping(value = "/all-bank-details-by-username", method = RequestMethod.PUT)
+    public ResponseEntity<BankDetailResponse> allBankDetailsByOwnerUsername(@RequestBody BankDetail bd){
+            
+		BankDetailResponse br = new BankDetailResponse();
+		List<BankDetailDao> bdaos = bankDetailsRepo.getAllBankDetailsByOwnerUsername(bd.getOwnerUsername());
+		br.setMessage("bank details found: " + String.valueOf(bdaos.size()));
+		br.setStatus("success");
+		br.setBankDetails(bdaos);
+		return ResponseEntity.ok().body(br);
+		
+    }
+    
+    @RequestMapping(value = "/all-bank-details-by-number", method = RequestMethod.PUT)
+    public ResponseEntity<BankDetailResponse> allBankDetailsByAcctNumber(@RequestBody BankDetail bd){
+            
+		BankDetailResponse br = new BankDetailResponse();
+		List<BankDetailDao> bdaos = bankDetailsRepo.getAllBankDetailsByAccountNumber(bd.getAccountNumber());
+		br.setMessage("bank details found: " + String.valueOf(bdaos.size()));
+		br.setStatus("success");
+		br.setBankDetails(bdaos);
+		return ResponseEntity.ok().body(br);
+		
+    }
+    
+    
+    @RequestMapping(value = "/all-bank-details-by-name", method = RequestMethod.PUT)
+    public ResponseEntity<BankDetailResponse> allBankDetailsByAcctName(@RequestBody BankDetail bd){
+            
+		BankDetailResponse br = new BankDetailResponse();
+		List<BankDetailDao> bdaos = bankDetailsRepo.getAllBankDetailsByAccountName(bd.getAccountName());
+		br.setMessage("bank details found: " + String.valueOf(bdaos.size()));
+		br.setStatus("success");
+		br.setBankDetails(bdaos);
+		return ResponseEntity.ok().body(br);
+		
+    }
+    
     
 
          
         
     
 }
+
 
 
 
