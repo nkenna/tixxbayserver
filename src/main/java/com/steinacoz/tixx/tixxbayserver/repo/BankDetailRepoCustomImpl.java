@@ -82,7 +82,7 @@ public class BankDetailRepoCustomImpl implements BankDetailRepoCustom{
     @Override
     public List<BankDetailDao> getAllBankDetailsByAccountName(String name) {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        MatchOperation match = Aggregation.match(Criteria.where("accountName").regex(name));
+        MatchOperation match = Aggregation.match(Criteria.where("accountName").regex(name.toUpperCase()));
       
         list.add(Aggregation.lookup("user", "ownerUsername", "username", "user"));
         //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
@@ -93,6 +93,7 @@ public class BankDetailRepoCustomImpl implements BankDetailRepoCustom{
     }
     
 }
+
 
 
 
