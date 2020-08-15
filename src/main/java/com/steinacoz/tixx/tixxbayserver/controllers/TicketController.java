@@ -359,6 +359,7 @@ public class TicketController {
 	            .asEmpty();
 
         //request.getBody().;
+        System.out.println(request.getBody());
         if(request.getBody().getObject().getBoolean("status") && request.getStatus() == 200){
             if(request.getBody().getObject().getJSONObject("data").getString("status").toLowerCase().equalsIgnoreCase("success")){
                 Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
@@ -419,6 +420,7 @@ public class TicketController {
     }
     
 }
+
 
 
 
