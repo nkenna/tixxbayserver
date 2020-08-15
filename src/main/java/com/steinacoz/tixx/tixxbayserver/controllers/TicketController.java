@@ -356,7 +356,7 @@ public class TicketController {
         
         HttpResponse<JsonNode> request = Unirest.get("https://api.paystack.co/transaction/verify/" + str.getReference())
 	            .basicAuth("Authorization", "Bearer " + "sk_test_36c529556d2463dac5aa8258522be46456013ee2")
-	            .asEmpty();
+	            .asJson();
 
         //request.getBody().;
         System.out.println(request.getBody());
@@ -420,6 +420,7 @@ public class TicketController {
     }
     
 }
+
 
 
 
