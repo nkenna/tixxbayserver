@@ -15,8 +15,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  */
 @RepositoryRestResource(collectionResourceRel = "ticket", path = "ticket")
 public interface TicketRepo extends MongoRepository<Ticket, String>, TicketRepoCustom  {
-    
+    Ticket findByTicketCode(String ticketCode);
 }
+
 
 
 

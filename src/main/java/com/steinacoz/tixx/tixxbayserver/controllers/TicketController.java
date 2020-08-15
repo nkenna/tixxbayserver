@@ -13,6 +13,7 @@ import com.steinacoz.tixx.tixxbayserver.repo.ChildTicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketRepo;
 import com.steinacoz.tixx.tixxbayserver.request.CreateChildTicketRequest;
+import com.steinacoz.tixx.tixxbayserver.request.SellTicketReqest;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.response.TicketResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
@@ -22,6 +23,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import kong.unirest.HttpResponse;
+import kong.unirest.JsonNode;
+import kong.unirest.Unirest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -261,7 +265,168 @@ public class TicketController {
         }
         
     }
+    
+    
+   @CrossOrigin
+    @RequestMapping(value = "/sell-ticket", method = RequestMethod.POST)
+    public ResponseEntity<TicketResponse> sellTicket (@RequestBody SellTicketReqest str){
+        TicketResponse tr = new TicketResponse();
+        
+        if(str.getEventCode() == null || str.getEventCode().isEmpty()){
+            tr.setStatus("failed");
+            tr.setMessage("event code is required");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }else if(str.getParentTicketCode() == null || str.getParentTicketCode().isEmpty()){
+            tr.setStatus("failed");
+            tr.setMessage("parent ticket code is required");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }else if(str.getQuantity() == 0){
+            tr.setStatus("failed");
+            tr.setMessage("ticket quantity cannot be zero");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }
+        
+        Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
+        
+        List<ChildTicket> cts = new ArrayList<>();       
+   
+        
+        for(int i = 0; i < str.getQuantity(); i++){
+            ChildTicket ct = new ChildTicket();
+            ct.setTitle(parentTicket.getTitle());
+            ct.setDescription(parentTicket.getDescription());
+            ct.setTicketCategory(parentTicket.getTicketCategory());
+            ct.setPaidTicket(parentTicket.isPaidTicket());
+            ct.setTicketAmount(parentTicket.getTicketAmount());
+            ct.setEventId(parentTicket.getEventId());
+            ct.setTicketType(parentTicket.getTicketType());
+            ct.setTicketCode(parentTicket.getTicketCode() + Utils.randomNS(8));
+            ct.setParentTicketCode(parentTicket.getTicketCode());
+            ct.setEventCode(parentTicket.getEventCode());
+            ct.setCouponId(parentTicket.getCouponId());
+            ct.setIndividual(parentTicket.isIndividual());
+            ct.setSaleStartDay(parentTicket.getSaleStartDay());
+            ct.setSaleEndDay(parentTicket.getSaleEndDay());
+            ct.setCreated(LocalDateTime.now());
+            ct.setUpdated(LocalDateTime.now()); 
+            ct.setParentTicketId(parentTicket.getId());
+            cts.add(ct);
+        }
+        
+        
+        
+        try{            
+            List<ChildTicket> newCTs = ctRepo.insert(cts);
+            tr.setChildTickets(newCTs);
+            tr.setStatus("success");
+            tr.setMessage("Child Tickets created successful");
+            return ResponseEntity.ok().body(tr);
+        }catch(Exception e){
+            tr.setStatus("failed");
+            tr.setMessage("error occurred creating tickets: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tr);
+        }
+        
+        
+    }
+    
+    
+    @CrossOrigin
+    @RequestMapping(value = "/sell-ticket-by-verify", method = RequestMethod.POST)
+    public ResponseEntity<TicketResponse> sellTicketByRef (@RequestBody SellTicketReqest str){
+        TicketResponse tr = new TicketResponse();
+        
+        if(str.getEventCode() == null || str.getEventCode().isEmpty()){
+            tr.setStatus("failed");
+            tr.setMessage("event code is required");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }else if(str.getParentTicketCode() == null || str.getParentTicketCode().isEmpty()){
+            tr.setStatus("failed");
+            tr.setMessage("parent ticket code is required");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }else if(str.getQuantity() == 0){
+            tr.setStatus("failed");
+            tr.setMessage("ticket quantity cannot be zero");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }else if(str.getReference() == null || str.getReference().isEmpty()){
+            tr.setStatus("failed");
+            tr.setMessage("payment reference is needed");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }
+        
+        HttpResponse<JsonNode> request = Unirest.get("https://api.paystack.co/transaction/verify/" + str.getReference())
+	            .basicAuth("Authorization", "Bearer " + "sk_test_36c529556d2463dac5aa8258522be46456013ee2")
+	            .asEmpty();
+
+        //request.getBody().;
+        if(request.getBody().getObject().getBoolean("status") && request.getStatus() == 200){
+            if(request.getBody().getObject().getJSONObject("data").getString("status").toLowerCase().equalsIgnoreCase("success")){
+                Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
+        
+        List<ChildTicket> cts = new ArrayList<>();       
+   
+        
+        for(int i = 0; i < str.getQuantity(); i++){
+            ChildTicket ct = new ChildTicket();
+            ct.setTitle(parentTicket.getTitle());
+            ct.setDescription(parentTicket.getDescription());
+            ct.setTicketCategory(parentTicket.getTicketCategory());
+            ct.setPaidTicket(parentTicket.isPaidTicket());
+            ct.setTicketAmount(parentTicket.getTicketAmount());
+            ct.setEventId(parentTicket.getEventId());
+            ct.setTicketType(parentTicket.getTicketType());
+            ct.setTicketCode(parentTicket.getTicketCode() + Utils.randomNS(8));
+            ct.setParentTicketCode(parentTicket.getTicketCode());
+            ct.setEventCode(parentTicket.getEventCode());
+            ct.setCouponId(parentTicket.getCouponId());
+            ct.setIndividual(parentTicket.isIndividual());
+            ct.setSaleStartDay(parentTicket.getSaleStartDay());
+            ct.setSaleEndDay(parentTicket.getSaleEndDay());
+            ct.setCreated(LocalDateTime.now());
+            ct.setUpdated(LocalDateTime.now()); 
+            ct.setParentTicketId(parentTicket.getId());
+            cts.add(ct);
+        }
+        
+        
+        
+        try{            
+            List<ChildTicket> newCTs = ctRepo.insert(cts);
+            tr.setChildTickets(newCTs);
+            tr.setStatus("success");
+            tr.setMessage("Child Tickets created successful");
+            return ResponseEntity.ok().body(tr);
+        }catch(Exception e){
+            tr.setStatus("failed");
+            tr.setMessage("error occurred creating tickets: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tr);
+        }
+            }else{
+                // status is not success
+                tr.setStatus("failed");
+                tr.setMessage("payment seems not be successful");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tr);
+            }
+        }else{
+            //status not verify
+            tr.setStatus("failed");
+            tr.setMessage("payment not verified");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tr);
+        }     
+        
+        
+        
+    }
+    
 }
+
+
+
+
+
+
+
+
 
 
 

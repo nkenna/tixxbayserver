@@ -16,15 +16,21 @@ import org.springframework.data.annotation.Id;
 public class Transaction {
     @Id private String id;
     private String transRef;
+    private String payRef;
+    private String payId;
     private LocalDateTime transDate;
     private BigDecimal amount;
     private String transType;
     private String walletId;
     private String taguuid;
-    private String originId;
-    private String toId;
+    private String usernameTo;
+    private String userIdTo;
+    private String usernameFrom;
+    private String userIdFrom;
     private String narration;
     private Location location;
+    private String couponCode;
+    private String ticketCode;
 
     public String getId() {
         return id;
@@ -40,6 +46,22 @@ public class Transaction {
 
     public void setTransRef(String transRef) {
         this.transRef = transRef;
+    }
+
+    public String getPayRef() {
+        return payRef;
+    }
+
+    public void setPayRef(String payRef) {
+        this.payRef = payRef;
+    }
+
+    public String getPayId() {
+        return payId;
+    }
+
+    public void setPayId(String payId) {
+        this.payId = payId;
     }
 
     public LocalDateTime getTransDate() {
@@ -78,24 +100,40 @@ public class Transaction {
         return taguuid;
     }
 
-    public void setTagUuid(String tagUuid) {
-        this.taguuid = tagUuid;
+    public void setTaguuid(String taguuid) {
+        this.taguuid = taguuid;
     }
 
-    public String getOriginId() {
-        return originId;
+    public String getUsernameTo() {
+        return usernameTo;
     }
 
-    public void setOriginId(String originId) {
-        this.originId = originId;
+    public void setUsernameTo(String usernameTo) {
+        this.usernameTo = usernameTo;
     }
 
-    public String getToId() {
-        return toId;
+    public String getUserIdTo() {
+        return userIdTo;
     }
 
-    public void setToId(String toId) {
-        this.toId = toId;
+    public void setUserIdTo(String userIdTo) {
+        this.userIdTo = userIdTo;
+    }
+
+    public String getUsernameFrom() {
+        return usernameFrom;
+    }
+
+    public void setUsernameFrom(String usernameFrom) {
+        this.usernameFrom = usernameFrom;
+    }
+
+    public String getUserIdFrom() {
+        return userIdFrom;
+    }
+
+    public void setUserIdFrom(String userIdFrom) {
+        this.userIdFrom = userIdFrom;
     }
 
     public String getNarration() {
@@ -113,9 +151,29 @@ public class Transaction {
     public void setLocation(Location location) {
         this.location = location;
     }
-        
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
+
+    public String getTicketCode() {
+        return ticketCode;
+    }
+
+    public void setTicketCode(String ticketCode) {
+        this.ticketCode = ticketCode;
+    }
+    
+    
+
+   
         
 }
+
 
 
 

@@ -31,11 +31,13 @@ public class Utils {
 	final public static String creditAgent = "TRANS_CREDIT_AGENT";
 	final public static String creditVendor = "TRANS_CREDIT_Vendor";
 	final public static String creditEventManager = "TRANS_CREDIT_EVENT_MANAGER";
+        final public static String buyTicket = "TRANS_BUY_TICKET";
 	
 	final public static String typeAdmin = "ADMIN";
 	final public static String typeAgent = "AGENT";
 	final public static String typeVendor = "VENDOR";
 	final public static String typeEventManager = "EVENT_MANAGER";
+        final public static String typeUser = "USER";
         
     
     public static final long EXPIRATION_TIME = 864_000_000; // 10 days
@@ -108,6 +110,8 @@ public class Utils {
         return null;
     }
 }
+
+
 
 
 

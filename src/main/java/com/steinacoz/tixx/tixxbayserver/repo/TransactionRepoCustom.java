@@ -15,6 +15,8 @@ import java.util.List;
 public interface TransactionRepoCustom {
     List<TransactionDao> aggregateAll();
     List<TransactionDao> aggregateTransRef(String transRef);
+    List<TransactionDao> getTransByMonth(String transRef);
 }
+
 
 

@@ -201,8 +201,8 @@ public class TixxTagController {
 				trans.setTransDate(LocalDateTime.now());
 				trans.setTransType(Utils.newcreditTag);
 				trans.setWalletId(tbsr.getWalletId());
-				trans.setTagUuid(tbsr.getTaguuid());
-				trans.setOriginId(tbsr.getUpdatedById());
+				trans.setTaguuid(tbsr.getTaguuid());
+				trans.setUserIdFrom(tbsr.getUpdatedById());
 				if(tbsr.getNarration() == null || tbsr.getNarration().isEmpty()) {
 					trans.setNarration("new tixx band credited.");
 				}else {
@@ -318,8 +318,8 @@ public class TixxTagController {
 				trans.setTransDate(LocalDateTime.now());
 				trans.setTransType(Utils.creditTag);
 				trans.setWalletId(tbsr.getWalletId());
-				trans.setTagUuid(tbsr.getTaguuid());
-				trans.setOriginId(tbsr.getUpdatedById());
+				trans.setTaguuid(tbsr.getTaguuid());
+				trans.setUserIdFrom(tbsr.getUpdatedById());
 				if(tbsr.getNarration() == null || tbsr.getNarration().isEmpty()) {
 					trans.setNarration("tixx band credited.");
 				}else {
@@ -480,8 +480,8 @@ public class TixxTagController {
 				trans.setTransDate(LocalDateTime.now());
 				trans.setTransType(Utils.creditTag);
 				trans.setWalletId(tbsr.getWalletId());
-				trans.setTagUuid(tbsr.getTaguuid());
-				trans.setOriginId(tbsr.getUpdatedById());
+				trans.setTaguuid(tbsr.getTaguuid());
+				trans.setUserIdFrom(tbsr.getUpdatedById());
 				if(tbsr.getNarration() == null || tbsr.getNarration().isEmpty()) {
 					trans.setNarration("tixx band credited.");
 				}else {
@@ -515,6 +515,7 @@ public class TixxTagController {
 	
     
 }
+
 
 
 

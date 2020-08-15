@@ -5,14 +5,21 @@
  */
 package com.steinacoz.tixx.tixxbayserver.repo;
 
+import com.steinacoz.tixx.tixxbayserver.dao.BankDetailDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TransactionDao;
+import com.steinacoz.tixx.tixxbayserver.model.BankDetail;
 import com.steinacoz.tixx.tixxbayserver.model.Transaction;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.DateOperators;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 
 /**
  *
@@ -29,35 +36,60 @@ public class TransactionRepoCustomImpl implements TransactionRepoCustom  {
 
     @Override
     public List<TransactionDao> aggregateAll() {
-        LookupOperation lookup1 = Aggregation.lookup("tixxtag",// Join Table
-	            "taguuid",// Query table fields
-	            "taguuid",// Join fields in tables
-	            "bands");
-		
-		LookupOperation lookup2 = Aggregation.lookup("user",// Join Table
-	            "originId",// Query table fields
-	            "_id",// Join fields in tables
-	            "origin");
-		
-		LookupOperation lookup3 = Aggregation.lookup("user",// Join Table
-	            "toId",// Query table fields
-	            "_id",// Join fields in tables
-	            "to");
-		
-		TypedAggregation<Transaction> noRepeatAggregation2 =
-	            Aggregation.newAggregation(Transaction.class, lookup1,lookup2, lookup3);
-		
-		AggregationResults<TransactionDao> noRepeatDataInfoVos2 = mongoTemplate.aggregate(noRepeatAggregation2, TransactionDao.class);
-        List<TransactionDao> noRepeatDataList2 = noRepeatDataInfoVos2.getMappedResults();
-        return noRepeatDataList2;
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        //MatchOperation match = Aggregation.match(Criteria.where("creatorUsername").is(username));
+        list.add(Aggregation.lookup("user", "usernameFrom", "username", "user"));
+        list.add(Aggregation.lookup("user", "usernameTo", "username", "user"));
+        list.add(Aggregation.lookup("user", "usernameFrom", "username", "user"));
+        list.add(Aggregation.lookup("tixxtag", "taguuid", "taguuid", "tixxTags"));
+        list.add(Aggregation.lookup("wallet", "walletid", "walletId", "wallet"));
+        //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        //list.add(match);
+       
+	TypedAggregation<Transaction> agg = Aggregation.newAggregation(Transaction.class, list);
+	return mongoTemplate.aggregate(agg, Transaction.class, TransactionDao.class).getMappedResults();
+        
     }
 
     @Override
     public List<TransactionDao> aggregateTransRef(String transRef) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        MatchOperation match = Aggregation.match(Criteria.where("transRef").is(transRef));
+        list.add(Aggregation.lookup("user", "usernameFrom", "username", "user"));
+        list.add(Aggregation.lookup("user", "usernameTo", "username", "user"));
+        list.add(Aggregation.lookup("user", "usernameFrom", "username", "user"));
+        list.add(Aggregation.lookup("tixxtag", "taguuid", "taguuid", "tixxTags"));
+        list.add(Aggregation.lookup("wallet", "walletid", "walletId", "wallet"));
+        //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(match);
+       
+	TypedAggregation<Transaction> agg = Aggregation.newAggregation(Transaction.class, list);
+	return mongoTemplate.aggregate(agg, Transaction.class, TransactionDao.class).getMappedResults();
+    }
+
+    @Override
+    public List<TransactionDao> getTransByMonth(String transRef) {
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        MatchOperation match = Aggregation.match(Criteria.where("transRef").is(transRef));
+        list.add(Aggregation.lookup("user", "usernameFrom", "username", "user"));
+        list.add(Aggregation.lookup("user", "usernameTo", "username", "user"));
+        list.add(Aggregation.lookup("user", "usernameFrom", "username", "user"));
+        list.add(Aggregation.lookup("tixxtag", "taguuid", "taguuid", "tixxTags"));
+        list.add(Aggregation.lookup("wallet", "walletid", "walletId", "wallet"));
+        list.add(Aggregation.project("").and(DateOperators.Month.month("transDate")));
+        //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(match);
+       
+	TypedAggregation<Transaction> agg = Aggregation.newAggregation( Transaction.class, list);
+	return mongoTemplate.aggregate(agg, Transaction.class, TransactionDao.class).getMappedResults();
     }
     
 }
+
+
+
+
+
 
 
 
