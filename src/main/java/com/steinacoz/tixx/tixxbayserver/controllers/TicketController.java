@@ -5,6 +5,8 @@
  */
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
@@ -15,8 +17,11 @@ import com.steinacoz.tixx.tixxbayserver.repo.TicketRepo;
 import com.steinacoz.tixx.tixxbayserver.request.CreateChildTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.SellTicketReqest;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
+import com.steinacoz.tixx.tixxbayserver.response.InitializeVerifyResponse;
 import com.steinacoz.tixx.tixxbayserver.response.TicketResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,6 +31,9 @@ import java.util.List;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -335,6 +343,9 @@ public class TicketController {
     @RequestMapping(value = "/sell-ticket-by-verify", method = RequestMethod.POST)
     public ResponseEntity<TicketResponse> sellTicketByRef (@RequestBody SellTicketReqest str){
         TicketResponse tr = new TicketResponse();
+        InitializeVerifyResponse initializeVerifyResponse = new InitializeVerifyResponse();
+         StringBuilder result = new StringBuilder();
+         int statusCode = 0;
         
         if(str.getEventCode() == null || str.getEventCode().isEmpty()){
             tr.setStatus("failed");
@@ -354,14 +365,50 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
         }
         
-        HttpResponse<JsonNode> request = Unirest.get("https://api.paystack.co/transaction/verify/" + str.getReference())
-	            .basicAuth("Authorization", "Bearer" + " sk_test_36c529556d2463dac5aa8258522be46456013ee2")
-	            .asJson();
+        try {
+	            // convert transaction to json then use it as a body to post json
+	            Gson gson = new Gson();
+	            // add paystack chrges to the amount
+	            //StringEntity postingString = new StringEntity(gson.toJson(request));
+	            HttpClient client = HttpClientBuilder.create().build();
+	            HttpGet getReq = new HttpGet("https://api.paystack.co/transaction/verify/"+ str.getReference());
+	            //HttpPost post = new HttpPost("https://api.paystack.co/transaction/initialize");
+	            //post.setEntity(postingString);
+	            getReq.addHeader("Content-type", "text/plain");
+	            getReq.addHeader("Authorization", "Bearer sk_test_36c529556d2463dac5aa8258522be46456013ee2");
+	           
+	            org.apache.http.HttpResponse response = client.execute(getReq);
+                    statusCode = response.getStatusLine().getStatusCode();
+	            if (response.getStatusLine().getStatusCode() == 200) {
+	                BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
+	                String line;
+	                while ((line = rd.readLine()) != null) {
+	                    result.append(line);
+	                }
+
+	            } else if (response.getStatusLine().getStatusCode() == 500) {
+	            	initializeVerifyResponse.setMessage("error");
+	            }
+	            else {
+                        tr.setStatus("failed");
+                        tr.setMessage("error verifying transaction");
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tr);
+	                
+	            }
+	            ObjectMapper mapper = new ObjectMapper();
+
+	            initializeVerifyResponse = mapper.readValue(result.toString(), InitializeVerifyResponse.class);
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	            initializeVerifyResponse.setMessage("error: 500");
+	           // throw new Exception("Failure initializaing paystack transaction");
+	        }
+        
         //request.getBody().;
-        System.out.println(request.getBody());
-        if(request.getBody().getObject().getBoolean("status") && request.getStatus() == 200){
-            if(request.getBody().getObject().getJSONObject("data").getString("status").toLowerCase().equalsIgnoreCase("success")){
+        System.out.println(result);
+        if(initializeVerifyResponse.getStatus() && statusCode == 200){
+            if(initializeVerifyResponse.getData().getStatus().toLowerCase().equalsIgnoreCase("success")){
                 Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
         
         List<ChildTicket> cts = new ArrayList<>();       
@@ -420,6 +467,9 @@ public class TicketController {
     }
     
 }
+
+
+
 
 
 
