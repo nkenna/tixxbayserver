@@ -407,12 +407,16 @@ public class TicketController {
         
         //request.getBody().;
         System.out.println(result);
+        List<ChildTicket> cts = new ArrayList<>(); 
+         
         if(initializeVerifyResponse.getStatus() && statusCode == 200){
             if(initializeVerifyResponse.getData().getStatus().toLowerCase().equalsIgnoreCase("success")){
                 Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
-        
-        List<ChildTicket> cts = new ArrayList<>();       
-   
+                System.out.println(parentTicket.getTitle());
+               
+                if(parentTicket != null){
+                          
+                            
         
         for(int i = 0; i < str.getQuantity(); i++){
             ChildTicket ct = new ChildTicket();
@@ -435,6 +439,13 @@ public class TicketController {
             ct.setParentTicketId(parentTicket.getId());
             cts.add(ct);
         }
+        
+                }else{
+                    tr.setStatus("failed");
+                tr.setMessage("parent ticket not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
+                }
+        
         
         
         
@@ -467,6 +478,8 @@ public class TicketController {
     }
     
 }
+
+
 
 
 
