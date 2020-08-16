@@ -343,6 +343,7 @@ public class TicketController {
     @RequestMapping(value = "/sell-ticket-by-verify", method = RequestMethod.POST)
     public ResponseEntity<TicketResponse> sellTicketByRef (@RequestBody SellTicketReqest str){
         TicketResponse tr = new TicketResponse();
+        System.out.println(str.toString());
         InitializeVerifyResponse initializeVerifyResponse = new InitializeVerifyResponse();
          StringBuilder result = new StringBuilder();
          int statusCode = 0;
@@ -412,7 +413,7 @@ public class TicketController {
         if(initializeVerifyResponse.getStatus() && statusCode == 200){
             if(initializeVerifyResponse.getData().getStatus().toLowerCase().equalsIgnoreCase("success")){
                 Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
-                System.out.println(parentTicket.getTitle());
+               // System.out.println(parentTicket.getTitle());
                
                 if(parentTicket != null){
                           
@@ -478,6 +479,7 @@ public class TicketController {
     }
     
 }
+
 
 
 

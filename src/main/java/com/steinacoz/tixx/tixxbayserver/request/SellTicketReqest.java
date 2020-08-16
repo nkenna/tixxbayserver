@@ -89,9 +89,17 @@ public class SellTicketReqest {
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "SellTicketReqest{" + "totalAmount=" + totalAmount + ", unitAmount=" + unitAmount + ", ticketCode=" + ticketCode + ", eventCode=" + eventCode + ", parentTicketCode=" + parentTicketCode + ", location=" + location + ", quantity=" + quantity + ", reference=" + reference + '}';
+    }
+    
+    
     
     
 }
+
 
 
 
