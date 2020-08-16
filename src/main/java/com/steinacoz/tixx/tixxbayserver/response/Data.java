@@ -5,13 +5,14 @@
  */
 package com.steinacoz.tixx.tixxbayserver.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;
 
 /**
  *
  * @author nkenn
  */
-
+   @JsonIgnoreProperties(ignoreUnknown = true)
    public class Data {
     private long id;
     private String domain;
@@ -163,6 +164,7 @@ import java.time.LocalDateTime;
     
 }
  
+
 
 
 

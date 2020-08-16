@@ -5,10 +5,13 @@
  */
 package com.steinacoz.tixx.tixxbayserver.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  *
  * @author nkenn
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class InitializeVerifyResponse {
     private boolean status;
     private String message;
@@ -29,6 +32,7 @@ public class InitializeVerifyResponse {
     
     public void setData(Data value) { this.data = value; }
 }
+
 
 
 
