@@ -13,8 +13,10 @@ import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.EventKeyRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
+import com.steinacoz.tixx.tixxbayserver.request.EventKeyReq;
 import com.steinacoz.tixx.tixxbayserver.request.EventUpdateRequest;
 import com.steinacoz.tixx.tixxbayserver.request.RemoveImageRequest;
+import com.steinacoz.tixx.tixxbayserver.response.EventKeyResponse;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.io.IOException;
@@ -401,9 +403,29 @@ public class EventController {
         return ResponseEntity.ok().body(er);
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/get-key-data-by-event", method = RequestMethod.POST)
+    public ResponseEntity<EventKeyResponse> getEventKey(@RequestBody EventKeyReq key){
+        EventKeyResponse er = new EventKeyResponse();
+        EventKey event = eventkeyRepo.findByEventId(key.getEventId());
+        if(event != null){
+            er.setMessage("data found");
+            er.setStatus("success");
+        er.setData(event);
+        return ResponseEntity.ok().body(er);
+        }else{
+          er.setMessage("data not found");
+            er.setStatus("failed");
+        er.setData(event);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);  
+        }
+       
+    }
+    
     
     
 }
+
 
 
 
