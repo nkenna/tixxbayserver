@@ -7,8 +7,10 @@ package com.steinacoz.tixx.tixxbayserver.controllers;
 
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
+import com.steinacoz.tixx.tixxbayserver.model.EventKey;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.User;
+import com.steinacoz.tixx.tixxbayserver.repo.EventKeyRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.request.EventUpdateRequest;
@@ -50,6 +52,9 @@ public class EventController {
     
     @Autowired
     UserRepo userRepo;
+    
+    @Autowired
+    EventKeyRepo eventkeyRepo;
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
@@ -114,6 +119,13 @@ public class EventController {
             event.setStatus(true);
             event.setEventCode(Utils.randomNS(8));
             Event newEvent = eventRepo.save(event);
+            
+            EventKey key = new EventKey();
+            key.setEventId(newEvent.getId());
+            key.setArchive(false);
+            key.setKey(Utils.randomNS(32));
+            
+            eventkeyRepo.save(key);
             
             User user = userRepo.findByUsername(event.getCreatorUsername());
             if(user != null){
@@ -386,6 +398,7 @@ public class EventController {
     }
     
 }
+
 
 
 
