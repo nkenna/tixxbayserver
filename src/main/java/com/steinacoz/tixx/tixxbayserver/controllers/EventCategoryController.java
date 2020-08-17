@@ -6,12 +6,14 @@
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
 import com.steinacoz.tixx.tixxbayserver.dao.EventCategoryDao;
+import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventCategory;
 import com.steinacoz.tixx.tixxbayserver.repo.EventCategoryRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.response.EventCategoryResponse;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
+import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,7 +58,20 @@ public class EventCategoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ecr);
         }
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-events-category", method = RequestMethod.GET)
+    public ResponseEntity<EventCategoryResponse> allEventsCategory(){
+        EventCategoryResponse ecr = new EventCategoryResponse();
+        List<EventCategoryDao> ec = eventCategoryRepo.getAllCategories();
+        ecr.setMessage("event categories found: " + String.valueOf(ec.size()));
+        ecr.setStatus("success");
+        ecr.setEventCategories(ec);
+        return ResponseEntity.ok().body(ecr);
+    }
 }
+
+
 
 
 

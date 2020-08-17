@@ -15,9 +15,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * @author nkenn
  */
 @RepositoryRestResource(collectionResourceRel = "eventcategory", path = "eventcategory")
-public interface EventCategoryRepo extends MongoRepository<EventCategory, String> {
+public interface EventCategoryRepo extends MongoRepository<EventCategory, String>, EventCategoryRepoCustom {
     EventCategory findByCategory(String category);
 }
+
 
 
 
