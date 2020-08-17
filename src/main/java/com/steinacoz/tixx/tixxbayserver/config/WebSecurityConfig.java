@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers(HttpMethod.POST, "/tixxbay/api/user/v1/auth/login-user").permitAll()
                // .antMatchers(HttpMethod.GET, "/tixxbay/api/user/v1/all-users").permitAll()
                 .antMatchers(HttpMethod.POST, "/tixxbay/api/user/v1/create-user").permitAll()
-                .antMatchers(HttpMethod.POST, "/tixxbay/api/user/v1/verify-user/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/tixxbay/api/user/v1/verify-user/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
@@ -83,6 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     }
     
 }
+
 
 
 
