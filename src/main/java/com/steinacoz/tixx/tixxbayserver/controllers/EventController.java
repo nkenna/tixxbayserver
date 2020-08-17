@@ -106,6 +106,12 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
         }
         
+        if(event.getCategoryId().isEmpty() || event.getCategoryName().isEmpty()){
+            er.setStatus("failed");
+            er.setMessage("Event category is required");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
+        }
+        
         if(event.getEventCategory() == null || event.getEventCategory().isEmpty()){
             event.setEventCategory("others");
         }
@@ -158,7 +164,8 @@ public class EventController {
                foundEvent.setTitle(event.getTitle());
             foundEvent.setDiscription(event.getDiscription());
             foundEvent.setVenue(event.getVenue());
-            foundEvent.setEventCategory(event.getEventCategory());
+            foundEvent.setCategoryName(event.getCategoryName());
+            foundEvent.setCategoryId(event.getCategoryId);
             foundEvent.setEventType(event.getEventType());
             foundEvent.setLocation(event.getLocation());
             foundEvent.setAvailableTicket(event.getAvailableTicket());
@@ -398,6 +405,9 @@ public class EventController {
     }
     
 }
+
+
+
 
 
 

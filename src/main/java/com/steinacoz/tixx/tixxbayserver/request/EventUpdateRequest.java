@@ -20,7 +20,8 @@ public class EventUpdateRequest {
     private String lga; //
     private String state; //
     private String country; //
-    private String eventCategory; // birthday, wedding, conference, religious, workshop & training, others
+    private String categoryId; 
+    private String categoryName; // birthday, wedding, conference, religious, workshop & training, others
     private String eventType; //virtual or physical
     private Location location;
     private int availableTicket;
@@ -85,13 +86,7 @@ public class EventUpdateRequest {
         this.venue = venue;
     }
 
-    public String getEventCategory() {
-        return eventCategory;
-    }
-
-    public void setEventCategory(String eventCategory) {
-        this.eventCategory = eventCategory;
-    }
+    
 
     public String getEventType() {
         return eventType;
@@ -176,6 +171,8 @@ public class EventUpdateRequest {
     
     
 }
+
+
 
 
 

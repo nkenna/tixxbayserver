@@ -23,7 +23,7 @@ public class Event {
     private String lga; //
     private String state; //
     private String country; //
-    private String eventCategory; // birthday, wedding, conference, religious, workshop & training, others
+    //private String eventCategory; // birthday, wedding, conference, religious, workshop & training, others
     private String eventType; //virtual or physical
     private Location location;
     private int availableTicket;
@@ -34,9 +34,29 @@ public class Event {
     private boolean status;
     private boolean adminStatus;
     private String eventCode;
+    private String categoryId;
+    private String categoryName;
     private Binary image1;
     private Binary image2;
     private Binary image3;
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+    
+    
 
     public String getLga() {
         return lga;
@@ -157,13 +177,7 @@ public class Event {
         this.venue = venue;
     }
 
-    public String getEventCategory() {
-        return eventCategory;
-    }
-
-    public void setEventCategory(String eventCategory) {
-        this.eventCategory = eventCategory;
-    }
+   
 
     public String getEventType() {
         return eventType;
@@ -217,6 +231,8 @@ public class Event {
     
     
 }
+
+
 
 
 
