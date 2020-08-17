@@ -5,6 +5,9 @@
  */
 package com.steinacoz.tixx.tixxbayserver.dao;
 
+import com.steinacoz.tixx.tixxbayserver.model.Event;
+import java.util.List;
+
 /**
  *
  * @author nkenn
@@ -12,6 +15,18 @@ package com.steinacoz.tixx.tixxbayserver.dao;
 public class EventCategoryDao {
     private String id;
     private String category;
+    private List<Event> events;
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    
+    
 
     public String getId() {
         return id;
@@ -31,5 +46,8 @@ public class EventCategoryDao {
     
     
 }
+
+
+
 
 
