@@ -112,9 +112,6 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
         }
         
-        if(event.getEventCategory() == null || event.getEventCategory().isEmpty()){
-            event.setEventCategory("others");
-        }
         
         if(event.getEventType() == null || event.getEventType().isEmpty()){
             event.setEventType("physical");
@@ -165,7 +162,7 @@ public class EventController {
             foundEvent.setDiscription(event.getDiscription());
             foundEvent.setVenue(event.getVenue());
             foundEvent.setCategoryName(event.getCategoryName());
-            foundEvent.setCategoryId(event.getCategoryId);
+            foundEvent.setCategoryId(event.getCategoryId());
             foundEvent.setEventType(event.getEventType());
             foundEvent.setLocation(event.getLocation());
             foundEvent.setAvailableTicket(event.getAvailableTicket());
@@ -405,6 +402,7 @@ public class EventController {
     }
     
 }
+
 
 
 
