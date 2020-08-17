@@ -35,11 +35,12 @@ public class EventCategoryRepoCustomImpl implements EventCategoryRepoCustom {
     @Override
     public List<EventCategoryDao> getAllCategories() {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();        
-        list.add(Aggregation.lookup("event", "id", "categoryId", "events"));               
+        list.add(Aggregation.lookup("event", "category", "categoryName", "events"));               
 	TypedAggregation<EventCategory> agg = Aggregation.newAggregation(EventCategory.class, list);
 	return mongoTemplate.aggregate(agg, EventCategory.class, EventCategoryDao.class).getMappedResults();
     }
     
 }
+
 
 
