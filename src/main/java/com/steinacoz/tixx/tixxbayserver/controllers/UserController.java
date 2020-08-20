@@ -84,7 +84,7 @@ public class UserController {
 	
     public HttpResponse<JsonNode> sendSimpleMessage(User user, String fromEmail, String subject, String content) throws UnirestException {
 
-    	HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/mailgun.cstdspaceconference.com")
+    	HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/sandboxf0a305f9cb84423c85c4f4f5c03e176e.mailgun.org")
 	            .basicAuth("api", Utils.API_KEY)
 	            .field("from", fromEmail)
 	            .field("to", user.getEmail())
@@ -621,6 +621,7 @@ public class UserController {
         
     
 }
+
 
 
 
