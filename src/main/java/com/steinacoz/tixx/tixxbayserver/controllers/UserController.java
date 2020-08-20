@@ -84,7 +84,7 @@ public class UserController {
 	
     public HttpResponse<JsonNode> sendSimpleMessage(User user, String fromEmail, String subject, String content) throws UnirestException {
 
-    	HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/sandbox54745fe7bf41492087ca09fa024aae27.mailgun.org/messages")
+    	HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/mailgun.cstdspaceconference.com")
 	            .basicAuth("api", Utils.API_KEY)
 	            .field("from", fromEmail)
 	            .field("to", user.getEmail())
@@ -101,6 +101,24 @@ public class UserController {
 		
 		UserResponse ar = new UserResponse();
 		User foundUser;
+                
+                if(user.getEmail() == null || user.getEmail().isEmpty()){
+                    ar.setMessage("user email is required");
+			ar.setStatus("failed");
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ar);
+                }
+                
+                if(user.getPassword() == null || user.getPassword().isEmpty()){
+                    ar.setMessage("user password is required");
+                    ar.setStatus("failed");
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ar);
+                }
+                
+                if(user.getPassword().length() < 8){
+                    ar.setMessage("user password must be more than 8 characters");
+                    ar.setStatus("failed");
+                    return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ar);
+                }
 		
 		//search for duplicate email
 		foundUser = userRepo.findByEmail(user.getEmail());
@@ -603,6 +621,8 @@ public class UserController {
         
     
 }
+
+
 
 
 

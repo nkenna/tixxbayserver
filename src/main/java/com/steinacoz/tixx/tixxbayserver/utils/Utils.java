@@ -47,7 +47,7 @@ public class Utils {
 	
 	public static String secretKey = "steintixxbay0987654321";
     public static String salt = "steintixxbay0987654321";
-    public static String API_KEY = "e2f6d3e4012a9b58b036150f11498b7e-87c34c41-96079a43";
+    public static String API_KEY = "key-ac97aa5eaca9fd3c8b4c6fb4d26575b7";//"e2f6d3e4012a9b58b036150f11498b7e-87c34c41-96079a43";
     
     private final static String NUMERIC_STRING = "0123456789abcdefghijklmnoprstuvwxyz";
 	private final String NUMERIC = "0123456789";
@@ -110,6 +110,7 @@ public class Utils {
         return null;
     }
 }
+
 
 
 
