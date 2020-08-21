@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.steinacoz.tixx.tixxbayserver.model;
+package com.steinacoz.tixx.tixxbayserver.dao;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,8 +13,8 @@ import org.springframework.data.annotation.Id;
  *
  * @author nkenn
  */
-public class ChildTicket {
-    @Id private String id;
+public class ChildTicketDao {
+    private String id;
     private String title;
     private String description;
     private String ticketCategory; //public or private
@@ -35,58 +35,12 @@ public class ChildTicket {
     private boolean checkedIn;
     private LocalDateTime checkedinTime;
 
-    public boolean isCheckedIn() {
-        return checkedIn;
-    }
-
-    public void setCheckedIn(boolean checkedIn) {
-        this.checkedIn = checkedIn;
-    }
-
-    public LocalDateTime getCheckedinTime() {
-        return checkedinTime;
-    }
-
-    public void setCheckedinTime(LocalDateTime checkedinTime) {
-        this.checkedinTime = checkedinTime;
-    }
-    
-    
-    
-
-    public String getEventCode() {
-        return eventCode;
-    }
-
-    public void setEventCode(String eventCode) {
-        this.eventCode = eventCode;
-    }
-    
-    
-    
-
-    public String getParentTicketCode() {
-        return parentTicketCode;
-    }
-
-    public void setParentTicketCode(String parentTicketCode) {
-        this.parentTicketCode = parentTicketCode;
-    }
-    
-    
-
-    public String getParentTicketId() {
-        return parentTicketId;
-    }
-
-    public void setParentTicketId(String parentTicketId) {
-        this.parentTicketId = parentTicketId;
-    }
-    
-    
-
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -153,6 +107,14 @@ public class ChildTicket {
         this.ticketCode = ticketCode;
     }
 
+    public String getEventCode() {
+        return eventCode;
+    }
+
+    public void setEventCode(String eventCode) {
+        this.eventCode = eventCode;
+    }
+
     public String getCouponId() {
         return couponId;
     }
@@ -200,12 +162,40 @@ public class ChildTicket {
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
     }
+
+    public String getParentTicketId() {
+        return parentTicketId;
+    }
+
+    public void setParentTicketId(String parentTicketId) {
+        this.parentTicketId = parentTicketId;
+    }
+
+    public String getParentTicketCode() {
+        return parentTicketCode;
+    }
+
+    public void setParentTicketCode(String parentTicketCode) {
+        this.parentTicketCode = parentTicketCode;
+    }
+
+    public boolean isCheckedIn() {
+        return checkedIn;
+    }
+
+    public void setCheckedIn(boolean checkedIn) {
+        this.checkedIn = checkedIn;
+    }
+
+    public LocalDateTime getCheckedinTime() {
+        return checkedinTime;
+    }
+
+    public void setCheckedinTime(LocalDateTime checkedinTime) {
+        this.checkedinTime = checkedinTime;
+    }
     
     
 }
-
-
-
-
 
 

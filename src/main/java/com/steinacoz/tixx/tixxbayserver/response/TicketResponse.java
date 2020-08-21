@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.response;
 
+import com.steinacoz.tixx.tixxbayserver.dao.ChildTicketDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Ticket;
@@ -21,6 +22,27 @@ public class TicketResponse {
     private TicketDao ticket;
     private ChildTicket childTicket;
     private List<ChildTicket> childTickets;
+    private ChildTicketDao ticketCheckin;
+    private List<ChildTicketDao> ticketCheckins;
+
+    public ChildTicketDao getTicketCheckin() {
+        return ticketCheckin;
+    }
+
+    public void setTicketCheckin(ChildTicketDao ticketCheckin) {
+        this.ticketCheckin = ticketCheckin;
+    }
+
+    public List<ChildTicketDao> getTicketCheckins() {
+        return ticketCheckins;
+    }
+
+    public void setTicketCheckins(List<ChildTicketDao> ticketCheckins) {
+        this.ticketCheckins = ticketCheckins;
+    }
+    
+    
+    
 
     public ChildTicket getChildTicket() {
         return childTicket;
@@ -76,6 +98,7 @@ public class TicketResponse {
     
     
 }
+
 
 
 

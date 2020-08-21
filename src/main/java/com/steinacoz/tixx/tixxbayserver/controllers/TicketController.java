@@ -7,6 +7,7 @@ package com.steinacoz.tixx.tixxbayserver.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.steinacoz.tixx.tixxbayserver.dao.ChildTicketDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
@@ -14,6 +15,7 @@ import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.repo.ChildTicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketRepo;
+import com.steinacoz.tixx.tixxbayserver.request.CheckinTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.CreateChildTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.SellTicketReqest;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
@@ -478,7 +480,43 @@ public class TicketController {
         
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/checkin-ticket", method = RequestMethod.POST)
+    public ResponseEntity<TicketResponse> sellTicket (@RequestBody CheckinTicketRequest ctr){
+        TicketResponse tr = new TicketResponse();
+        ChildTicket ct = ctRepo.findByTicketCode(ctr.getTicketCode());
+        
+                
+        if(ct != null){
+            if(ct.isCheckedIn()){
+                tr.setStatus("failed");
+                tr.setMessage("ticket have been checked in before");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(tr);
+            }
+            
+            ct.setCheckedIn(true);
+            ct.setCheckedinTime(LocalDateTime.now());
+            ctRepo.save(ct);
+            
+            ChildTicketDao ctDao = ctRepo.getChildTicketByTicketCode(ct.getTicketCode());
+            tr.setTicketCheckin(ctDao);
+            tr.setStatus("success");
+            tr.setMessage("ticket checked in successfully");
+            return ResponseEntity.ok().body(tr);
+        }else{
+            tr.setStatus("failed");
+            tr.setMessage("ticket not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
+        }
+        
+        
+    }
+    
 }
+
+
+
+
 
 
 
