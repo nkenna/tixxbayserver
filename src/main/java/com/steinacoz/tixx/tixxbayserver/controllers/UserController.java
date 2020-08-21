@@ -9,6 +9,7 @@ import com.steinacoz.tixx.tixxbayserver.config.jwtservice.JwtTokenUtil;
 import com.steinacoz.tixx.tixxbayserver.dao.BankDetailDao;
 import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
 import com.steinacoz.tixx.tixxbayserver.model.BankDetail;
+import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.model.VerifyCode;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
@@ -18,6 +19,8 @@ import com.steinacoz.tixx.tixxbayserver.repo.VerifyCodeRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
 import com.steinacoz.tixx.tixxbayserver.request.ChangeUserPasswordRequest;
 import com.steinacoz.tixx.tixxbayserver.request.RestUserPasswordRequest;
+import com.steinacoz.tixx.tixxbayserver.request.UpdateUserRequest;
+import com.steinacoz.tixx.tixxbayserver.request.UserFlagRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UserLoginRequest;
 import com.steinacoz.tixx.tixxbayserver.response.BankDetailResponse;
 import com.steinacoz.tixx.tixxbayserver.response.UserResponse;
@@ -247,6 +250,87 @@ public class UserController {
                 }
            	
 	}
+    
+    @RequestMapping(value = "/update-user", method = RequestMethod.PUT)
+    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest uur){
+		UserResponse ar = new UserResponse();
+		UserDao adao = new UserDao();
+                /**
+               
+                private String address;
+                private String country;
+                private Location location;
+                private String userType;**/
+		
+		User user = userRepo.findById(uur.getId()).orElseGet(null);
+		if(user != null) {
+                    user.setUpdated(LocalDateTime.now());
+                    user.setFirstName(uur.getFirstName());
+                    user.setLastName(uur.getLastName());
+                    user.setMiddleName(uur.getMiddleName());
+                    user.setMobileNumber(uur.getMobileNumber());
+                    user.setDob(uur.getDob());
+                    user.setState(uur.getState());
+                    user.setLga(uur.getLga());
+                    user.setAddress(uur.getAddress());
+                    user.setCountry(uur.getCountry());
+                    user.setLocation(uur.getLocation());
+                    user.setUserType(uur.getUserType());
+                    
+                    userRepo.save(user);
+                    ar.setMessage("user updated successfully");
+                    ar.setStatus("success");
+                    BeanUtils.copyProperties(user, adao);
+                    ar.setUser(adao);
+                    return ResponseEntity.ok().body(ar);
+			
+		}else {
+			ar.setMessage("user updated failed. agent not found");
+			ar.setStatus("failed");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ar);
+		}
+		
+	}
+    
+    @RequestMapping(value = "/flag-user", method = RequestMethod.PUT)
+    public ResponseEntity<UserResponse> flagUser(@RequestBody UserFlagRequest  ufr){
+		UserResponse ar = new UserResponse();
+		UserDao adao = new UserDao();
+		System.out.println(ufr.getId());
+		
+		if(ufr.getId() == null || ufr.getId().isEmpty()) {
+			ar.setStatus("failed");
+			ar.setMessage("user ID is required");
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ar);
+		}
+		
+		
+		User user = userRepo.findById(ufr.getId()).orElseGet(null);
+		
+		if(user != null) {
+			if(ufr.isActive()) {
+				user.setActive(true);
+				BeanUtils.copyProperties(user, adao);
+				ar.setUser(adao);
+				ar.setStatus("success");
+				ar.setMessage("user activated successfully");
+				return ResponseEntity.ok().body(ar);
+			}else {
+				user.setActive(false);
+				BeanUtils.copyProperties(user, adao);
+				ar.setUser(adao);
+				ar.setStatus("success");
+				ar.setMessage("user deactivated successfully");
+				return ResponseEntity.ok().body(ar);
+			}
+		}else {
+			ar.setStatus("failed");
+			ar.setMessage("user not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ar);
+		}
+		
+	}
+	
         
         
     @CrossOrigin
@@ -311,6 +395,42 @@ public class UserController {
         }
     	
     	
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/user-by-email", method = RequestMethod.PUT)
+    public ResponseEntity<UserResponse> getUserByEmail(@RequestBody User user){
+        UserResponse er = new UserResponse();
+        UserDao udao= userRepo.getUserByEmail(user.getEmail());
+        if(udao != null){
+           er.setMessage("user found");
+        er.setStatus("success");
+        er.setUser(udao);
+        return ResponseEntity.ok().body(er); 
+        }else{
+           er.setMessage("user not found");
+        er.setStatus("failed");        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);
+        }
+        
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/user-by-number", method = RequestMethod.PUT)
+    public ResponseEntity<UserResponse> getUserByPhoneNumber(@RequestBody User user){
+        UserResponse er = new UserResponse();
+        UserDao udao= userRepo.getUserByPhoneNumber(user.getMobileNumber());
+        if(udao != null){
+           er.setMessage("user found");
+        er.setStatus("success");
+        er.setUser(udao);
+        return ResponseEntity.ok().body(er); 
+        }else{
+           er.setMessage("user not found");
+        er.setStatus("failed");        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);
+        }
+        
     }
     
     
@@ -615,12 +735,19 @@ public class UserController {
 		
     }
     
-    
-
-         
-        
-    
+   
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
