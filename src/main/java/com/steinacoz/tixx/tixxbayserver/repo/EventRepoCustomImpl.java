@@ -114,12 +114,13 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     public List<EventDao> aggregateAllEventsByUserGPSLocation(Point point) {
       List<AggregationOperation> list = new ArrayList<AggregationOperation>();
       NearQuery query = NearQuery.near(point).maxDistance(new Distance(10, Metrics.MILES));
+      list.add(Aggregation.geoNear(query, "distance"));
        MatchOperation match = Aggregation.match((Criteria.where("status").is(true)));
        
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
-        list.add(Aggregation.geoNear(query, "distance"));
+        
        
 	TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
 	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults(); 
@@ -137,6 +138,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
     
 }
+
 
 
 
