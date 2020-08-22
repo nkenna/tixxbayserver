@@ -15,9 +15,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * @author nkenn
  */
 @RepositoryRestResource(collectionResourceRel = "ticketsaletrans", path = "ticketsaletrans")
-public interface TicketSaleTransactionRepo extends MongoRepository<TicketSaleTransaction, String>{
+public interface TicketSaleTransactionRepo extends MongoRepository<TicketSaleTransaction, String>, TicketSaleTransactionRepoCustom{
     
 }
+
 
 
 
