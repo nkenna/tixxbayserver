@@ -74,7 +74,19 @@ public class TransactionController {
         return ResponseEntity.ok().body(er);
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/all-ticket-sales", method = RequestMethod.GET)
+    public ResponseEntity<TicketSalesByMonthResponse> allTicketsSalesByMonth(){
+        TicketSalesByMonthResponse er = new TicketSalesByMonthResponse();
+        List<TicketSaleTransactionDao> sales = ttRepo.getAllTicketSaleTrans();
+        er.setTicketSales(sales);
+        er.setMessage("sales found: " + String.valueOf(sales.size()));
+        er.setStatus("success");
+        return ResponseEntity.ok().body(er);
+    }
+    
 }
+
 
 
 
