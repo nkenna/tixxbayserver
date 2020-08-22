@@ -415,6 +415,7 @@ public class EventController {
     @RequestMapping(value = "/all-events-by-gps", method = RequestMethod.PUT)
     public ResponseEntity<EventResponse> allEventsByGPS(@RequestBody Event event){
         EventResponse er = new EventResponse();
+        
         Point point = new Point(event.getLocation().getLat(), event.getLocation().getLon());
         List<EventDao> events = eventRepo.aggregateAllEventsByUserGPSLocation(point);
        er.setMessage("events found: " + String.valueOf(events.size()));
@@ -470,6 +471,7 @@ public class EventController {
     
     
 }
+
 
 
 
