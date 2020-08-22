@@ -533,7 +533,7 @@ public class TicketController {
         
         if(event != null){
           
-                Email from = new Email("test@example.com");
+                Email from = new Email("nkennannadi@gmail.com");
     String subject = "QR ticket image for " + event.getTitle();
     Email to = new Email("test@example.com");
     Content content = new Content("text/plain", "You recently purchased a ticket for " + event.getTitle());
@@ -585,6 +585,7 @@ public class TicketController {
     
     
 }
+
 
 
 
