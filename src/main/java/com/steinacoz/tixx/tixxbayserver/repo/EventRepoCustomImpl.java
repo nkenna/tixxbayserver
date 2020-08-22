@@ -37,12 +37,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
 	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
-           
-		//list.add(Aggregation.match(Criteria.where("customerid").is(customerid)));
-    	//list.add(Aggregation.sort(Sort.Direction.ASC, "created"));
-		
-		TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
-		return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
+        TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
     }    
 
     @Override
@@ -99,8 +95,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         
        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
        MatchOperation match = Aggregation.match(Criteria.where("country").is(country)
-               .orOperator(Criteria.where("country").is(country))
-       .orOperator(Criteria.where("country").is(country)));
+               .orOperator(Criteria.where("state").is(state))
+       .orOperator(Criteria.where("lga").is(lga)));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -113,8 +109,22 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     public List<EventDao> aggregateAllEventsByUserGPSLocation(Location location) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<EventDao> aggregateAllEventsByStatus() {
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        MatchOperation match = Aggregation.match(Criteria.where("status").is(true));
+	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(match);
+        TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
+    }
     
 }
+
+
+
 
 
 

@@ -24,6 +24,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import kong.unirest.ContentType;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
@@ -198,7 +201,7 @@ public class EventController {
     
     @CrossOrigin
     @RequestMapping(value = "/remove-event-image", method = RequestMethod.PUT)
-    public ResponseEntity<EventResponse> editEvent(@RequestBody RemoveImageRequest event){
+    public ResponseEntity<EventResponse> removeEventImage(@RequestBody RemoveImageRequest event){
         EventResponse er = new EventResponse();
         Event foundEvent = eventRepo.findById(event.getEventId()).orElseThrow(null);
         if(foundEvent != null){
@@ -272,6 +275,48 @@ public class EventController {
         er.setMessage("Image uploaded successfully");
         return ResponseEntity.ok().body(er);
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/add-event-photo", method = RequestMethod.POST)
+    public ResponseEntity<EventResponse> sendQRImageToEmail(@RequestParam("image") MultipartFile image, @RequestParam("email") String email, @RequestParam("eventId") String eventId){
+        EventResponse er = new EventResponse();
+        Event event = eventRepo.findById(eventId).orElseThrow(null);
+        
+        if(event != null){
+            try {
+                HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/sandboxf0a305f9cb84423c85c4f4f5c03e176e.mailgun.org") //Unirest.post("https://api.mailgun.net/v3/sandbox54745fe7bf41492087ca09fa024aae27.mailgun.org/messages")
+                        .basicAuth("api", Utils.API_KEY)
+                        .field("from", "info@tixxbay.com")
+                        .field("to", email)
+                        .field("subject", "QR ticket image for " + event.getTitle())
+                        .field("text", "You recently purchased a ticket for " + event.getTitle())
+                        .field("image", image.getBytes(), ContentType.IMAGE_PNG , "tixxbay-access-" + Utils.randomNS(6) + ".png")
+                        .asJson();
+                
+                System.out.println(request.getBody());
+                if(request.isSuccess()){
+                    er.setStatus("success");
+                    er.setMessage("image successfully sent to email");
+                    return ResponseEntity.ok().body(er);
+                }else{
+                    er.setStatus("fail");
+                    er.setMessage("email sending failed");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er);
+                }
+            } catch (IOException ex) {
+                er.setStatus("fail");
+                er.setMessage("error reading email");
+                Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er);
+            }        
+        }else{
+            er.setStatus("fail");
+            er.setMessage("event not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);
+        }
+    }
+    
+    
     
     @CrossOrigin
     @RequestMapping(value = "/remove-event-user", method = RequestMethod.POST)
@@ -422,9 +467,38 @@ public class EventController {
        
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/change-event-mode", method = RequestMethod.POST)
+    public ResponseEntity<EventResponse> changeEventMode(@RequestBody Event ev){
+        EventResponse er = new EventResponse();
+        Event event = eventRepo.findById(ev.getId()).orElseGet(null);
+        
+        if(event != null){
+            if(ev.isStatus()){
+                event.setStatus(true);
+                er.setStatus("success");
+                er.setMessage("event status is public");
+                return ResponseEntity.ok().body(er);
+            }else{
+                event.setStatus(false);
+                er.setStatus("success");
+                er.setMessage("event status is private");
+                return ResponseEntity.ok().body(er);
+            }
+        }else{
+          er.setMessage("event not found");
+            er.setStatus("failed");
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);  
+        }
+    }
+    
     
     
 }
+
+
+
+
 
 
 

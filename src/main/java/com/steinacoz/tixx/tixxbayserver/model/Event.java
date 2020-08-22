@@ -31,7 +31,7 @@ public class Event {
     private LocalDateTime endDate; //
     private String creatorUsername; //
     private String virtualUrl;
-    private boolean status;
+    private boolean status; //true = public and false = private
     private boolean adminStatus;
     private String eventCode;
     private String categoryId;
@@ -231,6 +231,8 @@ public class Event {
     
     
 }
+
+
 
 
 

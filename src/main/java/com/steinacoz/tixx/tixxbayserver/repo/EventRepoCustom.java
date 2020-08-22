@@ -16,6 +16,7 @@ import java.util.List;
  */
 public interface EventRepoCustom {
     List<EventDao> aggregateAllEvents();
+    List<EventDao> aggregateAllEventsByStatus();
     List<EventDao> aggregateAllEventsByCreator(String creatorId);
     List<EventDao> aggregateAllEventsByState(String state);
     List<EventDao> aggregateAllEventsByLga(String lga);
@@ -25,6 +26,7 @@ public interface EventRepoCustom {
     List<EventDao> aggregateAllEventsByUserGPSLocation(Location location);
     
 }
+
 
 
 
