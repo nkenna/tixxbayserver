@@ -7,6 +7,13 @@ package com.steinacoz.tixx.tixxbayserver.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import com.steinacoz.tixx.tixxbayserver.dao.ChildTicketDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
@@ -525,19 +532,36 @@ public class TicketController {
         Event event = eventRepo.findById(eventId).orElseThrow(null);
         
         if(event != null){
-            try {
-                HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/sandboxf0a305f9cb84423c85c4f4f5c03e176e.mailgun.org") //Unirest.post("https://api.mailgun.net/v3/sandbox54745fe7bf41492087ca09fa024aae27.mailgun.org/messages")
-                        .basicAuth("api", Utils.API_KEY)
-                        .field("from", "info@tixxbay.com")
-                        .field("to", email)
-                        .field("subject", "QR ticket image for " + event.getTitle())
-                        .field("text", "You recently purchased a ticket for " + event.getTitle())
-                        .field("image", image.getBytes(), ContentType.IMAGE_PNG , "tixxbay-access-" + Utils.randomNS(6) + ".png")
-                        .asJson();
-                System.out.println(request.getStatus());
-                System.out.println(request.getHeaders());
-                System.out.println(request.getBody());
-                if(request.isSuccess()){
+          
+                Email from = new Email("test@example.com");
+    String subject = "QR ticket image for " + event.getTitle();
+    Email to = new Email("test@example.com");
+    Content content = new Content("text/plain", "You recently purchased a ticket for " + event.getTitle());
+    Mail mail = new Mail(from, subject, to, content);
+
+    SendGrid sg = new SendGrid(Utils.SENDGRID_API);
+    Request request = new Request();
+    try {
+      request.setMethod(Method.POST);
+      request.setEndpoint("mail/send");
+      request.setBody(mail.build());
+      Response response = sg.api(request);
+      System.out.println(response.getStatusCode());
+      System.out.println(response.getBody());
+      System.out.println(response.getHeaders());
+      er.setStatus("success");
+                    er.setMessage("image successfully sent to email");
+                    return ResponseEntity.ok().body(er);
+    } catch (IOException ex) {
+      er.setStatus("fail");
+                    er.setMessage("email sending failed");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er);
+    }
+              
+                        //.field("image", image.getBytes(), ContentType.IMAGE_PNG , "tixxbay-access-" + Utils.randomNS(6) + ".png")
+                   
+            
+                /**if(request.isSuccess()){
                     er.setStatus("success");
                     er.setMessage("image successfully sent to email");
                     return ResponseEntity.ok().body(er);
@@ -545,13 +569,13 @@ public class TicketController {
                     er.setStatus("fail");
                     er.setMessage("email sending failed");
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er);
-                }
-            } catch (IOException ex) {
+                }**/
+           /** } catch (IOException ex) {
                 er.setStatus("fail");
                 er.setMessage("error reading email");
                 Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er);
-            }        
+            }        **/
         }else{
             er.setStatus("fail");
             er.setMessage("event not found");
@@ -561,6 +585,8 @@ public class TicketController {
     
     
 }
+
+
 
 
 
