@@ -534,7 +534,8 @@ public class TicketController {
                         .field("text", "You recently purchased a ticket for " + event.getTitle())
                         .field("image", image.getBytes(), ContentType.IMAGE_PNG , "tixxbay-access-" + Utils.randomNS(6) + ".png")
                         .asJson();
-                
+                System.out.println(request.getStatus());
+                System.out.println(request.getHeaders());
                 System.out.println(request.getBody());
                 if(request.isSuccess()){
                     er.setStatus("success");
@@ -560,6 +561,9 @@ public class TicketController {
     
     
 }
+
+
+
 
 
 
