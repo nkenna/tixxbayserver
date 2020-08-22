@@ -12,6 +12,7 @@ import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Attachments;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.steinacoz.tixx.tixxbayserver.dao.ChildTicketDao;
@@ -37,6 +38,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -527,7 +529,7 @@ public class TicketController {
     
     @CrossOrigin
     @RequestMapping(value = "/send-qr-email", method = RequestMethod.POST)
-    public ResponseEntity<EventResponse> sendQRImageToEmail(@RequestParam("image") MultipartFile image, @RequestParam("email") String email, @RequestParam("eventId") String eventId){
+    public ResponseEntity<EventResponse> sendQRImageToEmail(@RequestParam("image") MultipartFile image, @RequestParam("email") String email, @RequestParam("eventId") String eventId) throws IOException{
         EventResponse er = new EventResponse();
         Event event = eventRepo.findById(eventId).orElseThrow(null);
         
@@ -538,7 +540,19 @@ public class TicketController {
     Email to = new Email("test@example.com");
     Content content = new Content("text/plain", "You recently purchased a ticket for " + event.getTitle());
     Mail mail = new Mail(from, subject, to, content);
-
+    
+    byte[] filedata= image.getBytes();
+    
+    
+    String imageDataString = Base64.getEncoder().encodeToString(filedata);
+    Attachments attachments3 = new Attachments();
+       attachments3.setContent(imageDataString);
+       attachments3.setType("image/png");//"application/pdf"
+       attachments3.setFilename("tixxbay-access-" + Utils.randomNS(6) + ".png");
+       attachments3.setDisposition("attachment");
+       attachments3.setContentId("Banner");
+       mail.addAttachments(attachments3);
+    
     SendGrid sg = new SendGrid(Utils.SENDGRID_API);
     Request request = new Request();
     try {
@@ -585,6 +599,7 @@ public class TicketController {
     
     
 }
+
 
 
 
