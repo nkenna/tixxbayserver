@@ -23,6 +23,7 @@ import com.steinacoz.tixx.tixxbayserver.response.InitializeVerifyResponse;
 import com.steinacoz.tixx.tixxbayserver.response.TicketResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -30,6 +31,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import kong.unirest.ContentType;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
@@ -44,7 +48,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -512,7 +518,49 @@ public class TicketController {
         
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/send-qr-email", method = RequestMethod.POST)
+    public ResponseEntity<EventResponse> sendQRImageToEmail(@RequestParam("image") MultipartFile image, @RequestParam("email") String email, @RequestParam("eventId") String eventId){
+        EventResponse er = new EventResponse();
+        Event event = eventRepo.findById(eventId).orElseThrow(null);
+        
+        if(event != null){
+            try {
+                HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/sandboxf0a305f9cb84423c85c4f4f5c03e176e.mailgun.org") //Unirest.post("https://api.mailgun.net/v3/sandbox54745fe7bf41492087ca09fa024aae27.mailgun.org/messages")
+                        .basicAuth("api", Utils.API_KEY)
+                        .field("from", "info@tixxbay.com")
+                        .field("to", email)
+                        .field("subject", "QR ticket image for " + event.getTitle())
+                        .field("text", "You recently purchased a ticket for " + event.getTitle())
+                        .field("image", image.getBytes(), ContentType.IMAGE_PNG , "tixxbay-access-" + Utils.randomNS(6) + ".png")
+                        .asJson();
+                
+                System.out.println(request.getBody());
+                if(request.isSuccess()){
+                    er.setStatus("success");
+                    er.setMessage("image successfully sent to email");
+                    return ResponseEntity.ok().body(er);
+                }else{
+                    er.setStatus("fail");
+                    er.setMessage("email sending failed");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er);
+                }
+            } catch (IOException ex) {
+                er.setStatus("fail");
+                er.setMessage("error reading email");
+                Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er);
+            }        
+        }else{
+            er.setStatus("fail");
+            er.setMessage("event not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er);
+        }
+    }
+    
+    
 }
+
 
 
 
