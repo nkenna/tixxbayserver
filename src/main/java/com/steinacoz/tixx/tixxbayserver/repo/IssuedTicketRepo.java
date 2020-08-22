@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.model.Event;
+import com.steinacoz.tixx.tixxbayserver.model.IssuedTicket;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -13,11 +14,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  *
  * @author nkenn
  */
-@RepositoryRestResource(collectionResourceRel = "event", path = "event")
-public interface EventRepo extends MongoRepository<Event, String>, EventRepoCustom{
-    Event findByEventCode(String eventCode);
+@RepositoryRestResource(collectionResourceRel = "issuedticket", path = "issuedticket")
+public interface IssuedTicketRepo extends MongoRepository<IssuedTicket, String> {
+    IssuedTicket findByTicketCode(String ticketCode);
 }
-
-
 
 

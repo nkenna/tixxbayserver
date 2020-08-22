@@ -19,6 +19,7 @@ import com.steinacoz.tixx.tixxbayserver.dao.ChildTicketDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
+import com.steinacoz.tixx.tixxbayserver.model.IssuedTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.model.TicketSaleTransaction;
@@ -26,11 +27,13 @@ import com.steinacoz.tixx.tixxbayserver.model.Transaction;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.ChildTicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.IssuedTicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketSaleTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.request.CheckinTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.CreateChildTicketRequest;
+import com.steinacoz.tixx.tixxbayserver.request.IssueTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.SellTicketReqest;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.response.InitializeVerifyResponse;
@@ -88,6 +91,9 @@ public class TicketController {
     
     @Autowired
     TicketSaleTransactionRepo ttRepo;
+    
+    @Autowired
+    IssuedTicketRepo istRepo;
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
@@ -160,6 +166,81 @@ public class TicketController {
             tr.setChildTickets(newCTs);
             tr.setStatus("success");
             tr.setMessage("Child Tickets created successful");
+            return ResponseEntity.ok().body(tr);
+        }catch(Exception e){
+            tr.setStatus("failed");
+            tr.setMessage("error occurred creating tickets: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tr);
+        }
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/issue-ticket", method = RequestMethod.POST)
+    public ResponseEntity<TicketResponse> issueChildTicket(@RequestBody IssueTicketRequest itr){
+        TicketResponse tr = new TicketResponse();
+        List<ChildTicket> cts = new ArrayList<>();
+        IssuedTicket it = new IssuedTicket();
+      
+        List<String> codes = new ArrayList<>();
+        
+              
+       Ticket parentTicket = ticketRepo.findByTicketCode(itr.getTicketCode());
+       Event event = eventRepo.findById(itr.getEventId()).orElseThrow(null);
+       
+              
+       if(parentTicket != null && event != null){
+          for(int i = 0; i < itr.getQuantity(); i++){
+            ChildTicket ct = new ChildTicket();
+            ct.setTitle(parentTicket.getTitle());
+            ct.setDescription(parentTicket.getDescription());
+            ct.setTicketCategory(parentTicket.getTicketCategory());
+            ct.setPaidTicket(parentTicket.isPaidTicket());
+            ct.setTicketAmount(parentTicket.getTicketAmount());
+            ct.setEventId(parentTicket.getEventId());
+            ct.setTicketType(parentTicket.getTicketType());
+            ct.setTicketCode(parentTicket.getTicketCode() + Utils.randomNS(8));
+            ct.setParentTicketCode(parentTicket.getTicketCode());
+            ct.setEventCode(parentTicket.getEventCode());
+            ct.setCouponId(parentTicket.getCouponId());
+            ct.setIndividual(parentTicket.isIndividual());
+            ct.setSaleStartDay(parentTicket.getSaleStartDay());
+            ct.setSaleEndDay(parentTicket.getSaleEndDay());
+            ct.setCreated(LocalDateTime.now());
+            ct.setUpdated(LocalDateTime.now()); 
+            ct.setParentTicketId(parentTicket.getId());
+            cts.add(ct);
+            
+            codes.add(ct.getTicketCode());
+        } 
+          
+          User issuer = userRepo.findByUsername(itr.getIssuerUsername());
+          User issuedTo = userRepo.findByUsername(itr.getIssuedToUsername());
+      
+          
+          
+          
+          it.setTicketTitle(parentTicket.getTitle());
+          it.setTicketCode(codes);
+          it.setEventCode(itr.getEventCode());
+          it.setIssuedDate(LocalDateTime.now());
+          it.setQuantity(itr.getQuantity());
+          it.setTotalAmount(new BigDecimal(itr.getQuantity() * parentTicket.getTicketAmount().doubleValue()));
+          it.setUnitAmunt(new BigDecimal(it.getTotalAmount().doubleValue() / itr.getQuantity()));
+          it.setIssuer(issuer);
+          it.setIssuedTo(issuedTo);
+          
+       }else{
+           tr.setStatus("failed");
+            tr.setMessage("parent ticket or event not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
+       }
+        
+        try{            
+            istRepo.save(it);
+            List<ChildTicket> newCTs = ctRepo.insert(cts);
+            tr.setChildTickets(newCTs);
+            tr.setStatus("success");
+            tr.setMessage("Child Tickets issued successful");
             return ResponseEntity.ok().body(tr);
         }catch(Exception e){
             tr.setStatus("failed");
@@ -644,6 +725,16 @@ public class TicketController {
     
     
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
