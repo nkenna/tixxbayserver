@@ -64,25 +64,25 @@ public class TransactionController {
         
         //double sum = items.stream().mapToDouble(Item::getPrice).sum();
         
-         BigDecimal week1Total = new BigDecimal(0);
-        BigDecimal week2Total = new BigDecimal(0);
-        BigDecimal week3Total = new BigDecimal(0);
-        BigDecimal week4Total = new BigDecimal(0);
+         double week1Total = 0.0;
+        double week2Total = 0.0;
+        double week3Total = 0.0;
+        double week4Total = 0.0;
         
         for(TicketSaleTransactionDao td: week1){
-            week1Total = week1Total.add(td.getTotalAmount());
+            week1Total =+ td.getTotalAmount().doubleValue(); 
         }
         
         for(TicketSaleTransactionDao td: week2){
-            week2Total = week2Total.add(td.getTotalAmount());
+            week2Total =+ td.getTotalAmount().doubleValue();
         }
         
         for(TicketSaleTransactionDao td: week3){
-            week2Total = week3Total.add(td.getTotalAmount());
+            week2Total =+ td.getTotalAmount().doubleValue();
         }
         
         for(TicketSaleTransactionDao td: week4){
-            week4Total = week4Total.add(td.getTotalAmount());
+            week4Total =+ td.getTotalAmount().doubleValue();
         }
         
         System.out.println(week1Total);
@@ -94,10 +94,10 @@ public class TransactionController {
         
         er.setMessage("data found: " + String.valueOf(data.size()));
         er.setStatus("success");
-        er.setWeek1(week1Total);
-        er.setWeek2(week2Total);
-        er.setWeek3(week3Total);
-        er.setWeek4(week4Total);
+        er.setWeek1(new BigDecimal(week1Total));
+        er.setWeek2(new BigDecimal(week2Total));
+        er.setWeek3(new BigDecimal(week3Total));
+        er.setWeek4(new BigDecimal(week4Total));
         
         er.setWeek1data(week1);
         er.setWeek2data(week2);
@@ -120,6 +120,7 @@ public class TransactionController {
     }
     
 }
+
 
 
 
