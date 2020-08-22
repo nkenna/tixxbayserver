@@ -277,7 +277,7 @@ public class EventController {
     }
     
     @CrossOrigin
-    @RequestMapping(value = "/add-event-photo", method = RequestMethod.POST)
+    @RequestMapping(value = "/send-qr-email", method = RequestMethod.POST)
     public ResponseEntity<EventResponse> sendQRImageToEmail(@RequestParam("image") MultipartFile image, @RequestParam("email") String email, @RequestParam("eventId") String eventId){
         EventResponse er = new EventResponse();
         Event event = eventRepo.findById(eventId).orElseThrow(null);
@@ -495,6 +495,7 @@ public class EventController {
     
     
 }
+
 
 
 
