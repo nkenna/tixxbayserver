@@ -70,20 +70,25 @@ public class TransactionController {
         BigDecimal week4Total = new BigDecimal(0);
         
         for(TicketSaleTransactionDao td: week1){
-            week1Total.add(td.getTotalAmount());
+            week1Total = week1Total.add(td.getTotalAmount());
         }
         
         for(TicketSaleTransactionDao td: week2){
-            week2Total.add(td.getTotalAmount());
+            week2Total = week2Total.add(td.getTotalAmount());
         }
         
         for(TicketSaleTransactionDao td: week3){
-            week3Total.add(td.getTotalAmount());
+            week2Total = week3Total.add(td.getTotalAmount());
         }
         
         for(TicketSaleTransactionDao td: week4){
-            week4Total.add(td.getTotalAmount());
+            week4Total = week4Total.add(td.getTotalAmount());
         }
+        
+        System.out.println(week1Total);
+        System.out.println(week2Total);
+        System.out.println(week3Total);
+        System.out.println(week4Total);
         
        
         
@@ -115,6 +120,7 @@ public class TransactionController {
     }
     
 }
+
 
 
 
