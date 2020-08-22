@@ -10,8 +10,10 @@ package com.steinacoz.tixx.tixxbayserver.model;
  * @author nkenn
  */
 public class Location {
+    
     private double lat;
     private double lon;
+   // { "type": "Point", "coordinates": [100.0, 0.0] }
 
     public double getLat() {
         return lat;
@@ -31,5 +33,7 @@ public class Location {
     
     
 }
+
+
 
 

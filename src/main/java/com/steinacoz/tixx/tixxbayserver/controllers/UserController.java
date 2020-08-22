@@ -255,12 +255,7 @@ public class UserController {
     public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest uur){
 		UserResponse ar = new UserResponse();
 		UserDao adao = new UserDao();
-                /**
-               
-                private String address;
-                private String country;
-                private Location location;
-                private String userType;**/
+                
 		
 		User user = userRepo.findById(uur.getId()).orElseGet(null);
 		if(user != null) {
@@ -737,6 +732,7 @@ public class UserController {
     
    
 }
+
 
 
 

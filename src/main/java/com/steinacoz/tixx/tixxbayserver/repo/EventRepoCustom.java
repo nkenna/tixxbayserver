@@ -5,10 +5,12 @@
  */
 package com.steinacoz.tixx.tixxbayserver.repo;
 
+
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import java.util.List;
+import org.springframework.data.geo.Point;
 
 /**
  *
@@ -23,9 +25,11 @@ public interface EventRepoCustom {
     List<EventDao> aggregateAllEventsByCountry(String Country);
     
     List<EventDao> aggregateAllEventsByUserLocation(String country, String state, String lga);
-    List<EventDao> aggregateAllEventsByUserGPSLocation(Location location);
+    List<EventDao> aggregateAllEventsByUserGPSLocation(Point point);
     
 }
+
+
 
 
 

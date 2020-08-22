@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
+//import com.mongodb.client.model.geojson.Point;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventKey;
@@ -34,6 +35,7 @@ import kong.unirest.UnirestException;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -410,6 +412,18 @@ public class EventController {
     }
     
     @CrossOrigin
+    @RequestMapping(value = "/all-events-by-gps", method = RequestMethod.PUT)
+    public ResponseEntity<EventResponse> allEventsByGPS(@RequestBody Event event){
+        EventResponse er = new EventResponse();
+        Point point = new Point(event.getLocation().getLat(), event.getLocation().getLon());
+        List<EventDao> events = eventRepo.aggregateAllEventsByUserGPSLocation(point);
+       er.setMessage("events found: " + String.valueOf(events.size()));
+        er.setStatus("success");
+        er.setEvents(events);
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
     @RequestMapping(value = "/get-key-data-by-event", method = RequestMethod.POST)
     public ResponseEntity<EventKeyResponse> getEventKey(@RequestBody EventKeyReq key){
         EventKeyResponse er = new EventKeyResponse();
@@ -456,6 +470,7 @@ public class EventController {
     
     
 }
+
 
 
 
