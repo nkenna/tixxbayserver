@@ -81,7 +81,7 @@ public class TransactionController {
         
         for(TicketSaleTransactionDao td: week3){
             System.out.println(td.getTotalAmount().doubleValue());
-            week2Total =+ td.getTotalAmount().doubleValue();
+            week3Total =+ td.getTotalAmount().doubleValue();
         }
         
         for(TicketSaleTransactionDao td: week4){
@@ -124,6 +124,7 @@ public class TransactionController {
     }
     
 }
+
 
 
 
