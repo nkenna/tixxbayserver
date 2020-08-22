@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.response;
 
 import com.steinacoz.tixx.tixxbayserver.dao.TicketSaleTransactionDao;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -16,10 +17,10 @@ public class TicketSalesByMonthResponse {
     private String status;
     private String message;
     
-    private int week1;
-    private int week2;
-    private int week3;
-    private int week4;
+    private BigDecimal week1;
+    private BigDecimal week2;
+    private BigDecimal week3;
+    private BigDecimal week4;
     
     private List<TicketSaleTransactionDao> week1data;
     private List<TicketSaleTransactionDao> week2data;
@@ -43,41 +44,40 @@ public class TicketSalesByMonthResponse {
     public void setMessage(String message) {
         this.message = message;
     }
-    
-    
-    
 
-    public int getWeek1() {
+    public BigDecimal getWeek1() {
         return week1;
     }
 
-    public void setWeek1(int week1) {
+    public void setWeek1(BigDecimal week1) {
         this.week1 = week1;
     }
 
-    public int getWeek2() {
+    public BigDecimal getWeek2() {
         return week2;
     }
 
-    public void setWeek2(int week2) {
+    public void setWeek2(BigDecimal week2) {
         this.week2 = week2;
     }
 
-    public int getWeek3() {
+    public BigDecimal getWeek3() {
         return week3;
     }
 
-    public void setWeek3(int week3) {
+    public void setWeek3(BigDecimal week3) {
         this.week3 = week3;
     }
 
-    public int getWeek4() {
+    public BigDecimal getWeek4() {
         return week4;
     }
 
-    public void setWeek4(int week4) {
+    public void setWeek4(BigDecimal week4) {
         this.week4 = week4;
     }
+    
+    
 
     public List<TicketSaleTransactionDao> getWeek1data() {
         return week1data;
@@ -121,6 +121,9 @@ public class TicketSalesByMonthResponse {
     
     
 }
+
+
+
 
 
 

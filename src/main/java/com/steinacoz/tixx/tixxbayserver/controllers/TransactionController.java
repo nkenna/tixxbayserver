@@ -12,6 +12,7 @@ import com.steinacoz.tixx.tixxbayserver.repo.TransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.request.TicketSaleByMonthRequest;
 import com.steinacoz.tixx.tixxbayserver.response.TicketResponse;
 import com.steinacoz.tixx.tixxbayserver.response.TicketSalesByMonthResponse;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class TransactionController {
    @Autowired
    TicketSaleTransactionRepo ttRepo;
    
+   
    @CrossOrigin
     @RequestMapping(value = "/all-ticket-sales-month", method = RequestMethod.POST)
     public ResponseEntity<TicketSalesByMonthResponse> allTicketsSalesByMonth(@RequestBody TicketSaleByMonthRequest tsbm){
@@ -44,6 +46,8 @@ public class TransactionController {
         List<TicketSaleTransactionDao> week2 = new ArrayList<>();
         List<TicketSaleTransactionDao> week3 = new ArrayList<>();
         List<TicketSaleTransactionDao> week4 = new ArrayList<>();
+        
+              
         List<TicketSaleTransactionDao> data = ttRepo.getAllTicketSaleTransByMonth(tsbm.getYearMonth(), tsbm.getEventCode());
         
         for(TicketSaleTransactionDao tstd : data){
@@ -58,14 +62,21 @@ public class TransactionController {
             }
         }
         
+        //double sum = items.stream().mapToDouble(Item::getPrice).sum();
+        
+        BigDecimal week1Total = new BigDecimal(week1.stream().mapToDouble(TicketSaleTransactionDao::getTotalAmount).sum());
+        BigDecimal week2Total = new BigDecimal(week2.stream().mapToDouble(TicketSaleTransactionDao::getTotalAmount).sum());
+        BigDecimal week3Total = new BigDecimal(week3.stream().mapToDouble(TicketSaleTransactionDao::getTotalAmount).sum());
+        BigDecimal week4Total = new BigDecimal(week4.stream().mapToDouble(TicketSaleTransactionDao::getTotalAmount).sum());
+        
         
         
         er.setMessage("data found: " + String.valueOf(data.size()));
         er.setStatus("success");
-        er.setWeek1(week1.size());
-        er.setWeek2(week2.size());
-        er.setWeek3(week3.size());
-        er.setWeek4(week4.size());
+        er.setWeek1(week1Total);
+        er.setWeek2(week2Total);
+        er.setWeek3(week3Total);
+        er.setWeek4(week4Total);
         
         er.setWeek1data(week1);
         er.setWeek2data(week2);
@@ -88,6 +99,12 @@ public class TransactionController {
     }
     
 }
+
+
+
+
+
+
 
 
 
