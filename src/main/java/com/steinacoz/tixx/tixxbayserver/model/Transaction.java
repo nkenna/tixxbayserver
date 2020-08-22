@@ -7,6 +7,7 @@ package com.steinacoz.tixx.tixxbayserver.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -19,6 +20,8 @@ public class Transaction {
     private String payRef;
     private String payId;
     private LocalDateTime transDate;
+    private boolean transStatus;
+    private String payStatus;
     private BigDecimal amount;
     private String transType;
     private String walletId;
@@ -30,7 +33,17 @@ public class Transaction {
     private String narration;
     private Location location;
     private String couponCode;
-    private String ticketCode;
+    private List<String> ticketCode;
+
+    public String getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(String payStatus) {
+        this.payStatus = payStatus;
+    }
+    
+    
 
     public String getId() {
         return id;
@@ -160,19 +173,35 @@ public class Transaction {
         this.couponCode = couponCode;
     }
 
-    public String getTicketCode() {
+    public boolean isTransStatus() {
+        return transStatus;
+    }
+
+    public void setTransStatus(boolean transStatus) {
+        this.transStatus = transStatus;
+    }
+
+    public List<String> getTicketCode() {
         return ticketCode;
     }
 
-    public void setTicketCode(String ticketCode) {
+    public void setTicketCode(List<String> ticketCode) {
         this.ticketCode = ticketCode;
     }
     
     
 
    
+    
+    
+
+   
         
 }
+
+
+
+
 
 
 

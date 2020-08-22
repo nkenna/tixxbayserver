@@ -19,10 +19,16 @@ import com.steinacoz.tixx.tixxbayserver.dao.ChildTicketDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
+import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.Ticket;
+import com.steinacoz.tixx.tixxbayserver.model.TicketSaleTransaction;
+import com.steinacoz.tixx.tixxbayserver.model.Transaction;
+import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.ChildTicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.TicketSaleTransactionRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.request.CheckinTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.CreateChildTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.SellTicketReqest;
@@ -69,6 +75,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/tixxbay/api/ticket/v1")
 public class TicketController {
     @Autowired
+    UserRepo userRepo;
+    
+    @Autowired
     TicketRepo ticketRepo;
     
     @Autowired
@@ -76,6 +85,9 @@ public class TicketController {
     
     @Autowired
     ChildTicketRepo ctRepo;
+    
+    @Autowired
+    TicketSaleTransactionRepo ttRepo;
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
@@ -426,9 +438,37 @@ public class TicketController {
         //request.getBody().;
         System.out.println(result);
         List<ChildTicket> cts = new ArrayList<>(); 
+        List<String> tCodes = new ArrayList<>(); 
+       
+        /**
+         
+    
+    private User boughtBy;
+    
+    private Location location;
+    private List<String> ticketCodes;
+         **/
          
         if(initializeVerifyResponse.getStatus() && statusCode == 200){
             if(initializeVerifyResponse.getData().getStatus().toLowerCase().equalsIgnoreCase("success")){
+                // create transcation data
+                TicketSaleTransaction trans = new TicketSaleTransaction();
+                trans.setTransRef("TIXX" + Utils.randomNS(10));
+                trans.setPayRef(str.getReference());
+                trans.setPayId(String.valueOf(initializeVerifyResponse.getData().getId()));
+                trans.setTransDate(LocalDateTime.now());
+                trans.setTransStatus(true);
+                trans.setPayStatus(initializeVerifyResponse.getData().getStatus());
+                trans.setTotalAmount(new BigDecimal(initializeVerifyResponse.getData().getAmount()));
+                trans.setUnitAmount(new BigDecimal(initializeVerifyResponse.getData().getAmount() / str.getQuantity()));
+                trans.setTransType(Utils.buyTicket);
+                trans.setQuantity(str.getQuantity());
+                
+                User user = userRepo.findByEmail(str.getBoughtByEmail());
+                trans.setBoughtBy(user);
+                trans.setEventCode(str.getEventCode());
+                trans.setNarration("user bought ticket");
+                trans.setLocation(str.getLocation());
                 Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
                // System.out.println(parentTicket.getTitle());
                
@@ -455,8 +495,12 @@ public class TicketController {
             ct.setCreated(LocalDateTime.now());
             ct.setUpdated(LocalDateTime.now()); 
             ct.setParentTicketId(parentTicket.getId());
+            tCodes.add(ct.getTicketCode());
             cts.add(ct);
         }
+        
+        trans.setTicketCodes(tCodes);
+        
         
                 }else{
                     tr.setStatus("failed");
@@ -469,6 +513,7 @@ public class TicketController {
         
         try{            
             List<ChildTicket> newCTs = ctRepo.insert(cts);
+            ttRepo.save(trans); 
             tr.setChildTickets(newCTs);
             tr.setStatus("success");
             tr.setMessage("Child Tickets created successful");
@@ -599,6 +644,12 @@ public class TicketController {
     
     
 }
+
+
+
+
+
+
 
 
 

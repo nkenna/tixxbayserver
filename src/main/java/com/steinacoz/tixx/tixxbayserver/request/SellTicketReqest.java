@@ -21,6 +21,17 @@ public class SellTicketReqest {
     private Location location;
     private int quantity;
     private String reference;
+    private String boughtByEmail;
+
+    public String getBoughtByEmail() {
+        return boughtByEmail;
+    }
+
+    public void setBoughtByEmail(String boughtByEmail) {
+        this.boughtByEmail = boughtByEmail;
+    }
+    
+    
 
     public String getReference() {
         return reference;
@@ -99,6 +110,7 @@ public class SellTicketReqest {
     
     
 }
+
 
 
 
