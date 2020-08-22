@@ -17,10 +17,10 @@ public class TicketSalesByMonthResponse {
     private String status;
     private String message;
     
-    private double week1;
-    private double week2;
-    private double week3;
-    private double week4;
+    private BigDecimal week1;
+    private BigDecimal week2;
+    private BigDecimal week3;
+    private BigDecimal week4;
     
     private List<TicketSaleTransactionDao> week1data;
     private List<TicketSaleTransactionDao> week2data;
@@ -29,35 +29,35 @@ public class TicketSalesByMonthResponse {
     
     private List<TicketSaleTransactionDao> ticketSales;
 
-    public double getWeek1() {
+    public BigDecimal getWeek1() {
         return week1;
     }
 
-    public void setWeek1(double week1) {
+    public void setWeek1(BigDecimal week1) {
         this.week1 = week1;
     }
 
-    public double getWeek2() {
+    public BigDecimal getWeek2() {
         return week2;
     }
 
-    public void setWeek2(double week2) {
+    public void setWeek2(BigDecimal week2) {
         this.week2 = week2;
     }
 
-    public double getWeek3() {
+    public BigDecimal getWeek3() {
         return week3;
     }
 
-    public void setWeek3(double week3) {
+    public void setWeek3(BigDecimal week3) {
         this.week3 = week3;
     }
 
-    public double getWeek4() {
+    public BigDecimal getWeek4() {
         return week4;
     }
 
-    public void setWeek4(double week4) {
+    public void setWeek4(BigDecimal week4) {
         this.week4 = week4;
     }
     

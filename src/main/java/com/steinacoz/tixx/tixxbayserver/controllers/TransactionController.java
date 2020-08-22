@@ -64,12 +64,29 @@ public class TransactionController {
         
         //double sum = items.stream().mapToDouble(Item::getPrice).sum();
         
-        double week1Total = week1.stream().mapToDouble(TicketSaleTransactionDao::getTotalAmount).sum();
-        double week2Total = week2.stream().mapToDouble(TicketSaleTransactionDao::getTotalAmount).sum();
-        double week3Total = week3.stream().mapToDouble(TicketSaleTransactionDao::getTotalAmount).sum();
-        double week4Total = week4.stream().mapToDouble(TicketSaleTransactionDao::getTotalAmount).sum();
+         BigDecimal week1Total = new BigDecimal(0);
+        BigDecimal week2Total = new BigDecimal(0);
+        BigDecimal week3Total = new BigDecimal(0);
+        BigDecimal week4Total = new BigDecimal(0);
         
-                
+        for(TicketSaleTransactionDao td: week1){
+            week1Total.add(td.getTotalAmount());
+        }
+        
+        for(TicketSaleTransactionDao td: week2){
+            week2Total.add(td.getTotalAmount());
+        }
+        
+        for(TicketSaleTransactionDao td: week3){
+            week3Total.add(td.getTotalAmount());
+        }
+        
+        for(TicketSaleTransactionDao td: week4){
+            week4Total.add(td.getTotalAmount());
+        }
+        
+       
+        
         er.setMessage("data found: " + String.valueOf(data.size()));
         er.setStatus("success");
         er.setWeek1(week1Total);
@@ -98,6 +115,7 @@ public class TransactionController {
     }
     
 }
+
 
 
 
