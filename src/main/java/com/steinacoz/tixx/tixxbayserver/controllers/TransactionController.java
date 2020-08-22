@@ -76,7 +76,7 @@ public class TransactionController {
     
     @CrossOrigin
     @RequestMapping(value = "/all-ticket-sales", method = RequestMethod.GET)
-    public ResponseEntity<TicketSalesByMonthResponse> allTicketsSalesByMonth(){
+    public ResponseEntity<TicketSalesByMonthResponse> allTicketsSales(){
         TicketSalesByMonthResponse er = new TicketSalesByMonthResponse();
         List<TicketSaleTransactionDao> sales = ttRepo.getAllTicketSaleTrans();
         er.setTicketSales(sales);
@@ -86,6 +86,7 @@ public class TransactionController {
     }
     
 }
+
 
 
 
