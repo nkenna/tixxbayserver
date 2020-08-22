@@ -47,6 +47,10 @@ public class TransactionController {
         List<TicketSaleTransactionDao> week3 = new ArrayList<>();
         List<TicketSaleTransactionDao> week4 = new ArrayList<>();
         
+         double week1Total = 0.0;
+        double week2Total = 0.0;
+        double week3Total = 0.0;
+        double week4Total = 0.0;
               
         List<TicketSaleTransactionDao> data = ttRepo.getAllTicketSaleTransByMonth(tsbm.getYearMonth(), tsbm.getEventCode());
         
@@ -64,24 +68,24 @@ public class TransactionController {
         
         //double sum = items.stream().mapToDouble(Item::getPrice).sum();
         
-         double week1Total = 0.0;
-        double week2Total = 0.0;
-        double week3Total = 0.0;
-        double week4Total = 0.0;
         
         for(TicketSaleTransactionDao td: week1){
+            System.out.println(td.getTotalAmount().doubleValue());
             week1Total =+ td.getTotalAmount().doubleValue(); 
         }
         
         for(TicketSaleTransactionDao td: week2){
+            System.out.println(td.getTotalAmount().doubleValue());
             week2Total =+ td.getTotalAmount().doubleValue();
         }
         
         for(TicketSaleTransactionDao td: week3){
+            System.out.println(td.getTotalAmount().doubleValue());
             week2Total =+ td.getTotalAmount().doubleValue();
         }
         
         for(TicketSaleTransactionDao td: week4){
+            System.out.println(td.getTotalAmount().doubleValue());
             week4Total =+ td.getTotalAmount().doubleValue();
         }
         
@@ -120,6 +124,7 @@ public class TransactionController {
     }
     
 }
+
 
 
 

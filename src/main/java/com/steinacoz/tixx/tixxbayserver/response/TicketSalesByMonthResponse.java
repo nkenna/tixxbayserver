@@ -29,6 +29,22 @@ public class TicketSalesByMonthResponse {
     
     private List<TicketSaleTransactionDao> ticketSales;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public BigDecimal getWeek1() {
         return week1;
     }
@@ -60,26 +76,6 @@ public class TicketSalesByMonthResponse {
     public void setWeek4(BigDecimal week4) {
         this.week4 = week4;
     }
-    
-    
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-    
-    
 
     public List<TicketSaleTransactionDao> getWeek1data() {
         return week1data;
@@ -120,9 +116,10 @@ public class TicketSalesByMonthResponse {
     public void setTicketSales(List<TicketSaleTransactionDao> ticketSales) {
         this.ticketSales = ticketSales;
     }
-    
+
     
 }
+
 
 
 
