@@ -135,6 +135,8 @@ public class EventTeamController {
               return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(etr);  
             }
             
+            user.setUserType(atmr.getRole());
+            users.add(user);
             team.setMembers(users);
             team.setUpdated(LocalDateTime.now());
             EventTeam tt = teamRepo.save(team);
@@ -219,6 +221,7 @@ public class EventTeamController {
         }
     }
 }
+
 
 
 
