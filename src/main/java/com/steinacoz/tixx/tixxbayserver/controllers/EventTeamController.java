@@ -121,8 +121,9 @@ public class EventTeamController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(etr); 
         }else{
             List<User> users = team.getMembers();
+            
             boolean isMember = false;
-            for(int i = 0; i < users.size(); i++){
+            for(int i = 0; i < (users == null ? users.size() : 0); i++){
                 if(users.get(i).getUsername().equalsIgnoreCase(user.getUsername())){
                     isMember = true;
                     break;
@@ -221,6 +222,7 @@ public class EventTeamController {
         }
     }
 }
+
 
 
 
