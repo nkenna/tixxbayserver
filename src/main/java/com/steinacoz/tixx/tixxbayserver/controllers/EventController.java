@@ -412,6 +412,26 @@ public class EventController {
     }
     
     @CrossOrigin
+    @RequestMapping(value = "/event-by-code", method = RequestMethod.POST)
+    public ResponseEntity<EventResponse> eventByCode(@RequestBody Event eve){
+        EventResponse er = new EventResponse();
+        EventDao event = eventRepo.getEventByEventCode(eve.getEventCode());
+        
+        if(event != null){
+            er.setMessage("event found");
+        er.setStatus("success");
+        er.setEventdata(event);
+        return ResponseEntity.ok().body(er);
+        }else{
+           er.setMessage("no event found");
+        er.setStatus("failed");
+        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er); 
+        }
+        
+    }
+    
+    @CrossOrigin
     @RequestMapping(value = "/all-events-by-gps", method = RequestMethod.PUT)
     public ResponseEntity<EventResponse> allEventsByGPS(@RequestBody Event event){
         EventResponse er = new EventResponse();
@@ -471,6 +491,8 @@ public class EventController {
     
     
 }
+
+
 
 
 

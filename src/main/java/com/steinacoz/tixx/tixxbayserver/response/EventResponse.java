@@ -17,7 +17,18 @@ public class EventResponse {
     private String status;
     private String message;
     private Event event;
+    private EventDao eventdata;
     private List<EventDao> events;
+
+    public EventDao getEventdata() {
+        return eventdata;
+    }
+
+    public void setEventdata(EventDao eventdata) {
+        this.eventdata = eventdata;
+    }
+    
+    
 
     public String getStatus() {
         return status;
@@ -53,6 +64,7 @@ public class EventResponse {
     
     
 }
+
 
 
 
