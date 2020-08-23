@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.dao;
 
 import com.steinacoz.tixx.tixxbayserver.model.Event;
+import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.model.User;
@@ -38,10 +39,21 @@ public class EventDao {
     private String eventCode;
     private User createdBy;
     private List<Ticket> tickets;
+    private List<EventTeam> teams;
     
     private Binary image1;
     private Binary image2;
     private Binary image3;
+
+    public List<EventTeam> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<EventTeam> teams) {
+        this.teams = teams;
+    }
+    
+    
 
     public String getLga() {
         return lga;
@@ -238,6 +250,8 @@ public class EventDao {
     
     
 }
+
+
 
 
 
