@@ -18,6 +18,7 @@ import com.steinacoz.tixx.tixxbayserver.response.EventTeamResponse;
 import com.steinacoz.tixx.tixxbayserver.response.TicketResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -120,10 +121,14 @@ public class EventTeamController {
             etr.setMessage("team not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(etr); 
         }else{
-            List<User> users = team.getMembers();
+            List<User> users = new ArrayList<>();
+            
+            if(team.getMembers() != null){
+                users.addAll(team.getMembers());
+            }
             
             boolean isMember = false;
-            for(int i = 0; i < (users == null ? users.size() : 0); i++){
+            for(int i = 0; i < users.size(); i++){
                 if(users.get(i).getUsername().equalsIgnoreCase(user.getUsername())){
                     isMember = true;
                     break;
@@ -222,6 +227,7 @@ public class EventTeamController {
         }
     }
 }
+
 
 
 
