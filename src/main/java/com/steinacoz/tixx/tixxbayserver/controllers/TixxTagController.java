@@ -8,9 +8,11 @@ package com.steinacoz.tixx.tixxbayserver.controllers;
 import com.steinacoz.tixx.tixxbayserver.dao.TixxTagDao;
 import com.steinacoz.tixx.tixxbayserver.model.TixxTag;
 import com.steinacoz.tixx.tixxbayserver.model.Transaction;
+import com.steinacoz.tixx.tixxbayserver.model.VendorSalePackage;
 import com.steinacoz.tixx.tixxbayserver.repo.TixxTagRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.VendorSalePackageRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
 import com.steinacoz.tixx.tixxbayserver.request.TixxTagSearchRequest;
 import com.steinacoz.tixx.tixxbayserver.response.TixxTagResponse;
@@ -48,6 +50,9 @@ public class TixxTagController {
     
     @Autowired
     TransactionRepo transRepo;
+    
+    @Autowired
+    VendorSalePackageRepo vspRepo;
 	
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
@@ -509,12 +514,184 @@ public class TixxTagController {
 		}
 	}
 	
-
+        @RequestMapping(value = "/vendor-sell", method = RequestMethod.POST)
+	public ResponseEntity<TixxTagResponse> vendorSell(@RequestBody VendorSalePackage tbsr){
+		TixxTagResponse tbr = new TixxTagResponse();
+                TixxTagDao tdao = new TixxTagDao();
+		TixxTag tixx = tixxRepo.findByTaguuid(tbsr.getTaguuid());
+		
+		// check if this creditor is an admin  or agent
+		
+		
+		if(tixx != null) {
+			// check if the updater is from our side
+			//get previous previous amt
+			BigDecimal prevAmt = tixx.getPreviousAmount();
+			BigDecimal availAmt = tixx.getAvailableAmount();
+			BigDecimal defAmt = tixx.getDefaultAmount();
+			
+			/**
+			 * check if available AMt == 0
+			 * if true, then check default Amt to know the default amt b4
+			 * if not true, then check for previous amt
+			**/
+			
+			if(tixx.getAvailableAmount().equals(new BigDecimal(0.0))) {
+				// available balance is zero, check for default amt
+				System.out.println("balance is zero");
+				System.out.println("balance is zero, ava: " + String.valueOf(tixx.getAvailableAmount()));
+				System.out.println("balance is zero, def: " + String.valueOf(tixx.getDefaultAmount()));
+				System.out.println("balance is zero, prev: " + String.valueOf(tixx.getPreviousAmount()));
+				
+				// Band balance is zero. insufficient balance
+                                
+                                BeanUtils.copyProperties(tixx, tdao);
+				tbr.setStatus("failed");
+				tbr.setMessage("Insufficient balance");
+				tbr.setTbdao(tdao);
+				tbr.setAmount(tbsr.getTotalAmount());
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tbr);
+				
+			}else {
+				// band available balance is not zero.
+				System.out.println("balance is not zero");
+				
+				// check if amount is less than band available balance
+				if(tbsr.getTotalAmount().compareTo(tixx.getAvailableAmount()) == -1 || tbsr.getTotalAmount().compareTo(tixx.getAvailableAmount()) == 0) {
+					// amount is within available balance
+					// deduct balance
+					if(tbsr.getPreviousAmount().equals(tixx.getPreviousAmount())) {
+						// band previous balance is ok. Band is good
+						System.out.println("balance is not zero1, ava: " + String.valueOf(tixx.getAvailableAmount()));
+						System.out.println("balance is not zero1, def: " + String.valueOf(tixx.getDefaultAmount()));
+						System.out.println("balance is not zero1, prev: " + String.valueOf(tixx.getPreviousAmount()));						
+						
+					}else {
+						// band previous balance is not ok. Band have been tampered with, flag it.
+						tixx.setFlag(true);
+						// Band balance is zero. insufficient balance
+						tixxRepo.save(tixx);
+                                                BeanUtils.copyProperties(tixx, tdao);
+						tbr.setStatus("failed");
+						tbr.setMessage("fraud detected");
+						tbr.setTbdao(tdao);
+						tbr.setAmount(tbsr.getTotalAmount());
+						return ResponseEntity.status(HttpStatus.LOCKED).body(tbr);
+					}
+					
+					if(tbsr.getDefaultAmount().equals(tixx.getDefaultAmount())) {
+						// band default balance is ok. Band is good
+						System.out.println("balance is not zero2, ava: " + String.valueOf(tixx.getAvailableAmount()));
+						System.out.println("balance is not zero2, def: " + String.valueOf(tixx.getDefaultAmount()));
+						System.out.println("balance is not zero2, prev: " + String.valueOf(tixx.getPreviousAmount()));						
+						
+					}else {
+						// band default balance is not ok. Band have been tampered with, flag it.
+						tixx.setFlag(true);
+						tixxRepo.save(tixx);
+                                                BeanUtils.copyProperties(tixx, tdao);
+						tbr.setStatus("failed");
+						tbr.setMessage("fraud detected");
+						tbr.setTbdao(tdao);
+						tbr.setAmount(tbsr.getTotalAmount());
+						return ResponseEntity.status(HttpStatus.LOCKED).body(tbr);
+					}
+					
+					
+					if(tbsr.getAvailableAmount().equals(tixx.getAvailableAmount())) {
+						// band available balance is ok. Band is good
+						System.out.println("balance is not zero3, ava: " + String.valueOf(tixx.getAvailableAmount()));
+						System.out.println("balance is not zero3, def: " + String.valueOf(tixx.getDefaultAmount()));
+						System.out.println("balance is not zero3, prev: " + String.valueOf(tixx.getPreviousAmount()));						
+						
+					}else {
+						// band available balance is not ok. Band have been tampered with, flag it.
+						tixx.setFlag(true);
+						tixxRepo.save(tixx);
+                                                BeanUtils.copyProperties(tixx, tdao);
+						tbr.setStatus("failed");
+						tbr.setMessage("fraud detected");
+						tbr.setTbdao(tdao);
+						tbr.setAmount(tbsr.getAvailableAmount());
+						return ResponseEntity.status(HttpStatus.LOCKED).body(tbr);
+					}
+					
+					
+					BigDecimal result = tixx.getAvailableAmount().subtract(tbsr.getTotalAmount());
+					tixx.setPreviousAmount(tixx.getAvailableAmount());
+					tixx.setAvailableAmount(result);
+				}else {
+					// amount is greater than available
+					//throw insufficient balance
+                                        BeanUtils.copyProperties(tixx, tdao);
+					tbr.setStatus("failed");
+					tbr.setMessage("Insufficient balance");
+					tbr.setTbdao(tdao);
+					tbr.setAmount(tbsr.getTotalAmount());
+					return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tbr);
+					
+				}
+				
+				
+			}
+			
+			
+			tixx.setUpdated(LocalDateTime.now());
+			tixx.setUpdatedById(tbsr.getVendorUsername());
+			try {
+				tixxRepo.save(tixx);
+                                
+				//build transcation data
+				VendorSalePackage transv = new VendorSalePackage();
+				transv.setTotalAmount(tbsr.getTotalAmount());
+				transv.setTransRef(Utils.randomNS(16).toLowerCase());
+				transv.setTransDate(LocalDateTime.now());
+                                transv.setTransStatus(true);
+                                transv.setLocation(tbsr.getLocation());
+				transv.setEventCode(tbsr.getEventCode());
+				transv.setVendorUsername(tbsr.getVendorUsername());
+				transv.setTaguuid(tbsr.getTaguuid());
+                                transv.setVendorSellItems(tbsr.getVendorSellItems());
+                                transv.setTotalQuantity(tbsr.getTotalQuantity());
+                                transv.setCreated(LocalDateTime.now());
+				
+				if(tbsr.getNarration() == null || tbsr.getNarration().isEmpty()) {
+					transv.setNarration("vendor sold item(s)");
+				}else {
+					transv.setNarration(tbsr.getNarration());
+				}
+				
+				vspRepo.save(transv);
+                                BeanUtils.copyProperties(tixx, tdao);
+				tbr.setStatus("success");
+				tbr.setMessage("Band debited successfully");
+                                tbr.setTbdao(tdao);
+				tbr.setAmount(transv.getTotalAmount());
+				return ResponseEntity.ok().body(tbr);
+			}catch(Exception e) {
+				tbr.setStatus("failed");
+				tbr.setMessage("error occurred crediting band");
+				return ResponseEntity.status(500).body(tbr);
+			}			
+			
+			
+		}else {
+			tbr.setStatus("failed");
+			tbr.setMessage("Band not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tbr);
+		}
+	}
+	
 	
 	
 	
     
 }
+
+
+
+
+
 
 
 

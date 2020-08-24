@@ -25,12 +25,14 @@ import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.model.TicketSaleTransaction;
 import com.steinacoz.tixx.tixxbayserver.model.Transaction;
 import com.steinacoz.tixx.tixxbayserver.model.User;
+import com.steinacoz.tixx.tixxbayserver.model.Wallet;
 import com.steinacoz.tixx.tixxbayserver.repo.ChildTicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.IssuedTicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketSaleTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
 import com.steinacoz.tixx.tixxbayserver.request.CheckinTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.CreateChildTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.IssueTicketRequest;
@@ -94,6 +96,9 @@ public class TicketController {
     
     @Autowired
     IssuedTicketRepo istRepo;
+    
+    @Autowired
+    WalletRepo walletRepo;
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
@@ -533,10 +538,12 @@ public class TicketController {
                 trans.setTransDate(LocalDateTime.now());
                 trans.setTransStatus(true);
                 trans.setPayStatus(initializeVerifyResponse.getData().getStatus());
-                trans.setTotalAmount(new BigDecimal(initializeVerifyResponse.getData().getAmount()));
-                trans.setUnitAmount(new BigDecimal(initializeVerifyResponse.getData().getAmount() / str.getQuantity()));
+                trans.setTotalAmount(new BigDecimal(initializeVerifyResponse.getData().getAmount()/100));
+                trans.setUnitAmount(new BigDecimal((initializeVerifyResponse.getData().getAmount()/100) / str.getQuantity()));
                 trans.setTransType(Utils.buyTicket);
                 trans.setQuantity(str.getQuantity());
+                
+                
                 
                 User user = userRepo.findByEmail(str.getBoughtByEmail());
                 trans.setBoughtBy(user);
@@ -571,6 +578,34 @@ public class TicketController {
                     }
 
                     trans.setTicketCodes(tCodes);
+                    
+                    // credit event manager wallet
+                    Event event = eventRepo.findByEventCode(str.getEventCode());
+                    if(event != null){
+                       User manager = userRepo.findByUsername(event.getCreatorUsername());
+                       if(manager != null){
+                           Wallet wallet = walletRepo.findByWalletid(manager.getWalletId());
+                            if(wallet != null){
+                                double newBalance = trans.getTotalAmount().doubleValue() - ((9/100) * trans.getTotalAmount().doubleValue());
+                                wallet.setBalance(wallet.getBalance().add(new BigDecimal(newBalance)));
+                                wallet.setUpdateddate(LocalDateTime.now());
+                                walletRepo.save(wallet);
+                            }else{
+                               tr.setStatus("failed");
+                                tr.setMessage("wallet not found");
+                                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr); 
+                            }
+                       } else{
+                         tr.setStatus("failed");
+                        tr.setMessage("manager not found");
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);  
+                       } 
+                    }else{
+                        tr.setStatus("failed");
+                        tr.setMessage("event not found");
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
+                    }
+                    
         
         
                 }else{
@@ -712,6 +747,12 @@ public class TicketController {
     
     
 }
+
+
+
+
+
+
 
 
 

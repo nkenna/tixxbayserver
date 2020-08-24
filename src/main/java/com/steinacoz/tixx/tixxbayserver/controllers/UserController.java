@@ -170,7 +170,10 @@ public class UserController {
                     wallet.setStatus(true);
                     wallet.setWalletid(Utils.randomNS(12));
                     
-                    walletRepo.save(wallet);
+                    Wallet nWallet = walletRepo.save(wallet);
+                    
+                    newUser.setWalletId(nWallet.getWalletid());
+                    newUser = userRepo.save(user);                   
                     
                    
 			
@@ -732,6 +735,9 @@ public class UserController {
     
    
 }
+
+
+
 
 
 
