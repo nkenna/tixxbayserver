@@ -68,7 +68,7 @@ public class EventController {
     public HttpResponse<JsonNode> sendSimpleMessage(Event event, User user, String fromEmail, String subject, String content) throws UnirestException {
 
     	HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/sandboxf0a305f9cb84423c85c4f4f5c03e176e.mailgun.org") //Unirest.post("https://api.mailgun.net/v3/sandbox54745fe7bf41492087ca09fa024aae27.mailgun.org/messages")
-	            .basicAuth("api", Utils.API_KEY) 
+	            .basicAuth("api", System.getenv("MAILGUN_KEY")) 
 	            .field("from", fromEmail)
 	            .field("to", user.getEmail())
 	            .field("subject", subject)
@@ -491,6 +491,7 @@ public class EventController {
     
     
 }
+
 
 
 

@@ -521,14 +521,7 @@ public class TicketController {
         List<ChildTicket> cts = new ArrayList<>(); 
         List<String> tCodes = new ArrayList<>(); 
        
-        /**
-         
-    
-    private User boughtBy;
-    
-    private Location location;
-    private List<String> ticketCodes;
-         **/
+  
          
         if(initializeVerifyResponse.getStatus() && statusCode == 200){
             if(initializeVerifyResponse.getData().getStatus().toLowerCase().equalsIgnoreCase("success")){
@@ -553,45 +546,39 @@ public class TicketController {
                 Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
                // System.out.println(parentTicket.getTitle());
                
-                if(parentTicket != null){
-                          
-                            
-        
-        for(int i = 0; i < str.getQuantity(); i++){
-            ChildTicket ct = new ChildTicket();
-            ct.setTitle(parentTicket.getTitle());
-            ct.setDescription(parentTicket.getDescription());
-            ct.setTicketCategory(parentTicket.getTicketCategory());
-            ct.setPaidTicket(parentTicket.isPaidTicket());
-            ct.setTicketAmount(parentTicket.getTicketAmount());
-            ct.setEventId(parentTicket.getEventId());
-            ct.setTicketType(parentTicket.getTicketType());
-            ct.setTicketCode(parentTicket.getTicketCode() + Utils.randomNS(8));
-            ct.setParentTicketCode(parentTicket.getTicketCode());
-            ct.setEventCode(parentTicket.getEventCode());
-            ct.setCouponId(parentTicket.getCouponId());
-            ct.setIndividual(parentTicket.isIndividual());
-            ct.setSaleStartDay(parentTicket.getSaleStartDay());
-            ct.setSaleEndDay(parentTicket.getSaleEndDay());
-            ct.setCreated(LocalDateTime.now());
-            ct.setUpdated(LocalDateTime.now()); 
-            ct.setParentTicketId(parentTicket.getId());
-            tCodes.add(ct.getTicketCode());
-            cts.add(ct);
-        }
-        
-        trans.setTicketCodes(tCodes);
+                if(parentTicket != null){ 
+                    for(int i = 0; i < str.getQuantity(); i++){
+                        ChildTicket ct = new ChildTicket();
+                        ct.setTitle(parentTicket.getTitle());
+                        ct.setDescription(parentTicket.getDescription());
+                        ct.setTicketCategory(parentTicket.getTicketCategory());
+                        ct.setPaidTicket(parentTicket.isPaidTicket());
+                        ct.setTicketAmount(parentTicket.getTicketAmount());
+                        ct.setEventId(parentTicket.getEventId());
+                        ct.setTicketType(parentTicket.getTicketType());
+                        ct.setTicketCode(parentTicket.getTicketCode() + Utils.randomNS(8));
+                        ct.setParentTicketCode(parentTicket.getTicketCode());
+                        ct.setEventCode(parentTicket.getEventCode());
+                        ct.setCouponId(parentTicket.getCouponId());
+                        ct.setIndividual(parentTicket.isIndividual());
+                        ct.setSaleStartDay(parentTicket.getSaleStartDay());
+                        ct.setSaleEndDay(parentTicket.getSaleEndDay());
+                        ct.setCreated(LocalDateTime.now());
+                        ct.setUpdated(LocalDateTime.now()); 
+                        ct.setParentTicketId(parentTicket.getId());
+                        tCodes.add(ct.getTicketCode());
+                        cts.add(ct);
+                    }
+
+                    trans.setTicketCodes(tCodes);
         
         
                 }else{
                     tr.setStatus("failed");
-                tr.setMessage("parent ticket not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
+                    tr.setMessage("parent ticket not found");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
                 }
-        
-        
-        
-        
+          
         try{            
             List<ChildTicket> newCTs = ctRepo.insert(cts);
             ttRepo.save(trans); 
@@ -679,7 +666,7 @@ public class TicketController {
        attachments3.setContentId("Banner");
        mail.addAttachments(attachments3);
     
-    SendGrid sg = new SendGrid(Utils.SENDGRID_API);
+    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
     Request request = new Request();
     try {
       request.setMethod(Method.POST);
@@ -725,6 +712,8 @@ public class TicketController {
     
     
 }
+
+
 
 
 
