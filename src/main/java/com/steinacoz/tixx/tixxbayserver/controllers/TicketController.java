@@ -50,7 +50,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
+//import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,6 +58,7 @@ import kong.unirest.ContentType;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -696,13 +697,14 @@ public class TicketController {
     
     byte[] filedata= image.getBytes();   
     
-    String imageDataString = Base64.getEncoder().encodeToString(filedata);
+    Base64 x = new Base64();
+    String imageDataString = x.encodeAsString(filedata);
     Attachments attachments3 = new Attachments();
        attachments3.setContent(imageDataString);
        attachments3.setType("image/png");//"application/pdf"
        attachments3.setFilename("tixxbay-access-" + Utils.randomNS(6) + ".png");
        attachments3.setDisposition("attachment");
-       attachments3.setContentId("qr data");
+       attachments3.setContentId("Banner");
        mail.addAttachments(attachments3);
        
     
@@ -752,6 +754,10 @@ public class TicketController {
     
     
 }
+
+
+
+
 
 
 
