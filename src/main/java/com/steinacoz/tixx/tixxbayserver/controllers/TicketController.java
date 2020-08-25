@@ -687,7 +687,7 @@ public class TicketController {
         
         if(event != null){
           
-                Email from = new Email("nkennannadi@gmail.com");
+                Email from = new Email("support@tixxbay.com");
     String subject = "QR ticket image for " + event.getTitle();
     Email to = new Email(email);
     Content content = new Content("text/plain", "You recently purchased a ticket for " + event.getTitle());
@@ -751,6 +751,7 @@ public class TicketController {
     
     
 }
+
 
 
 
