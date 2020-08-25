@@ -704,6 +704,7 @@ public class TicketController {
        attachments3.setDisposition("attachment");
        attachments3.setContentId("qr data");
        mail.addAttachments(attachments3);
+       
     
     SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
     Request request = new Request();
@@ -751,6 +752,7 @@ public class TicketController {
     
     
 }
+
 
 
 
