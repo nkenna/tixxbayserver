@@ -694,17 +694,16 @@ public class TicketController {
     Mail mail = new Mail(from, subject, to, content);
     System.out.println(mail.from.getEmail());
     
-    //byte[] filedata= image.getBytes();
+    byte[] filedata= image.getBytes();   
     
-    
-   /** String imageDataString = Base64.getEncoder().encodeToString(filedata);
+    String imageDataString = Base64.getEncoder().encodeToString(filedata);
     Attachments attachments3 = new Attachments();
        attachments3.setContent(imageDataString);
        attachments3.setType("image/png");//"application/pdf"
        attachments3.setFilename("tixxbay-access-" + Utils.randomNS(6) + ".png");
        attachments3.setDisposition("attachment");
-       attachments3.setContentId("Banner");
-       mail.addAttachments(attachments3); **/
+       attachments3.setContentId("qr data");
+       mail.addAttachments(attachments3);
     
     SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
     Request request = new Request();
@@ -752,6 +751,8 @@ public class TicketController {
     
     
 }
+
+
 
 
 
