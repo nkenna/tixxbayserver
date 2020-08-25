@@ -459,6 +459,7 @@ public class TicketController {
     public ResponseEntity<TicketResponse> sellTicketByRef (@RequestBody SellTicketReqest str){
         TicketResponse tr = new TicketResponse();
         System.out.println(str.toString());
+        System.out.println(str.getBoughtByEmail());
         InitializeVerifyResponse initializeVerifyResponse = new InitializeVerifyResponse();
          StringBuilder result = new StringBuilder();
          int statusCode = 0;
@@ -541,8 +542,7 @@ public class TicketController {
                 trans.setTotalAmount(new BigDecimal(initializeVerifyResponse.getData().getAmount()/100));
                 trans.setUnitAmount(new BigDecimal((initializeVerifyResponse.getData().getAmount()/100) / str.getQuantity()));
                 trans.setTransType(Utils.buyTicket);
-                trans.setQuantity(str.getQuantity());
-                
+                trans.setQuantity(str.getQuantity());              
                 
                 
                 User user = userRepo.findByEmail(str.getBoughtByEmail());
@@ -748,6 +748,7 @@ public class TicketController {
     
     
 }
+
 
 
 
