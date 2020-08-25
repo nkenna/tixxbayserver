@@ -35,6 +35,9 @@ public class TicketSaleTransactionDao {
     private Location location;
     private List<String> ticketCodes;
     private Event event;
+    
+    
+    
 
     public String getTicketTitle() {
         return ticketTitle;
@@ -186,6 +189,7 @@ public class TicketSaleTransactionDao {
     
     
 }
+
 
 
 
