@@ -27,10 +27,21 @@ public class TicketSaleTransaction {
     private String transType;
     private int quantity;
     private User boughtBy;
+    private String ticketTitle;
     private String eventCode;
     private String narration;
     private Location location;
     private List<String> ticketCodes;
+
+    public String getTicketTitle() {
+        return ticketTitle;
+    }
+
+    public void setTicketTitle(String ticketTitle) {
+        this.ticketTitle = ticketTitle;
+    }
+    
+    
 
     public String getEventCode() {
         return eventCode;
@@ -164,6 +175,7 @@ public class TicketSaleTransaction {
     
     
 }
+
 
 
 

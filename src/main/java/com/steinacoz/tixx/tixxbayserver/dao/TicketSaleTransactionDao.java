@@ -24,6 +24,7 @@ public class TicketSaleTransactionDao {
     private LocalDateTime transDate;
     private boolean transStatus;
     private String payStatus;
+    private String ticketTitle;
     private BigDecimal totalAmount;
     private BigDecimal unitAmount;
     private String transType;
@@ -34,6 +35,16 @@ public class TicketSaleTransactionDao {
     private Location location;
     private List<String> ticketCodes;
     private Event event;
+
+    public String getTicketTitle() {
+        return ticketTitle;
+    }
+
+    public void setTicketTitle(String ticketTitle) {
+        this.ticketTitle = ticketTitle;
+    }
+    
+    
 
     public String getId() {
         return id;
@@ -173,5 +184,7 @@ public class TicketSaleTransactionDao {
     
     
 }
+
+
 
 

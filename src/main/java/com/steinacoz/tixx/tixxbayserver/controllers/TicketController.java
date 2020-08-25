@@ -578,6 +578,7 @@ public class TicketController {
                     }
 
                     trans.setTicketCodes(tCodes);
+                    trans.setTicketTitle(parentTicket.getTitle());
                     
                     // credit event manager wallet
                     Event event = eventRepo.findByEventCode(str.getEventCode());
@@ -747,6 +748,8 @@ public class TicketController {
     
     
 }
+
+
 
 
 
