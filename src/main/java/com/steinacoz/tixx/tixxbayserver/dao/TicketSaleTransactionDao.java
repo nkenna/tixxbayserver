@@ -29,7 +29,7 @@ public class TicketSaleTransactionDao {
     private BigDecimal unitAmount;
     private String transType;
     private int quantity;
-    private User boughtBy;
+    private UserDao boughtBy;
     private String eventCode;
     private String narration;
     private Location location;
@@ -134,13 +134,15 @@ public class TicketSaleTransactionDao {
         this.quantity = quantity;
     }
 
-    public User getBoughtBy() {
+    public UserDao getBoughtBy() {
         return boughtBy;
     }
 
-    public void setBoughtBy(User boughtBy) {
+    public void setBoughtBy(UserDao boughtBy) {
         this.boughtBy = boughtBy;
     }
+
+   
 
     public String getEventCode() {
         return eventCode;
@@ -184,6 +186,7 @@ public class TicketSaleTransactionDao {
     
     
 }
+
 
 
 

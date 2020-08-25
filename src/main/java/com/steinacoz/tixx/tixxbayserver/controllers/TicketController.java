@@ -17,6 +17,7 @@ import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.steinacoz.tixx.tixxbayserver.dao.ChildTicketDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
+import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
 import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.IssuedTicket;
@@ -546,7 +547,9 @@ public class TicketController {
                 
                 
                 User user = userRepo.findByEmail(str.getBoughtByEmail());
-                trans.setBoughtBy(user);
+                UserDao udao = new UserDao();
+                BeanUtils.copyProperties(user, udao);
+                trans.setBoughtBy(udao);
                 trans.setEventCode(str.getEventCode());
                 trans.setNarration("user bought ticket");
                 trans.setLocation(str.getLocation());
@@ -748,6 +751,7 @@ public class TicketController {
     
     
 }
+
 
 
 

@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.model;
 
+import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,7 +27,7 @@ public class TicketSaleTransaction {
     private BigDecimal unitAmount;
     private String transType;
     private int quantity;
-    private User boughtBy;
+    private UserDao boughtBy;
     private String ticketTitle;
     private String eventCode;
     private String narration;
@@ -141,13 +142,15 @@ public class TicketSaleTransaction {
         this.quantity = quantity;
     }
 
-    public User getBoughtBy() {
+    public UserDao getBoughtBy() {
         return boughtBy;
     }
 
-    public void setBoughtBy(User boughtBy) {
+    public void setBoughtBy(UserDao boughtBy) {
         this.boughtBy = boughtBy;
     }
+
+    
 
     public String getNarration() {
         return narration;
@@ -175,6 +178,7 @@ public class TicketSaleTransaction {
     
     
 }
+
 
 
 
