@@ -533,7 +533,7 @@ public class UserController {
     
     
     @CrossOrigin
-    @RequestMapping(value = "auth/reset-user-password-2", method = RequestMethod.GET)
+    @RequestMapping(value = "auth/reset-user-password-2/{enc_aid}", method = RequestMethod.GET)
     public ResponseEntity<UserResponse>  resetUserPassword2(@PathVariable String enc_aid){
         UserResponse ur = new UserResponse();
         UserResponse cur = new UserResponse();
@@ -777,6 +777,7 @@ public class UserController {
     
    
 }
+
 
 
 
