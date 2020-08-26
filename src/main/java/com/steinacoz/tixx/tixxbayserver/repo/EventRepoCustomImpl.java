@@ -56,7 +56,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         LocalDateTime now = LocalDateTime.now();
         System.out.println(username);
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
-        MatchOperation match = Aggregation.match(Criteria.where("creatorUsername").is(username).andOperator(Criteria.where("endDate").is(now), Criteria.where("status").is(true)));
+        MatchOperation match = Aggregation.match(Criteria.where("creatorUsername").is(username).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
       
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
@@ -199,6 +199,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
     
 }
+
 
 
 
