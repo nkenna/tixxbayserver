@@ -26,7 +26,7 @@ public class EventDao {
     private String lga; //
     private String state; //
     private String country; //
-    private String eventCategory; // birthday, wedding, conference, religious, workshop & training, others
+    //private String eventCategory; // birthday, wedding, conference, religious, workshop & training, others
     private String eventType; //virtual or physical
     private Location location;
     private int availableTicket;
@@ -40,6 +40,8 @@ public class EventDao {
     private User createdBy;
     private List<Ticket> tickets;
     private List<EventTeam> teams;
+    private String categoryId;
+    private String categoryName;
     
     private Binary image1;
     private Binary image2;
@@ -158,13 +160,23 @@ public class EventDao {
         this.venue = venue;
     }
 
-    public String getEventCategory() {
-        return eventCategory;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setEventCategory(String eventCategory) {
-        this.eventCategory = eventCategory;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    
 
     public String getEventType() {
         return eventType;
@@ -250,6 +262,7 @@ public class EventDao {
     
     
 }
+
 
 
 
