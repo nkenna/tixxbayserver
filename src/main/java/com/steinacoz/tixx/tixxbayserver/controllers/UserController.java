@@ -330,14 +330,17 @@ public class UserController {
 		if(user != null) {
 			if(ufr.isActive()) {
 				user.setActive(true);
-				BeanUtils.copyProperties(user, adao);
+                                User updatedUser = userRepo.save(user);
+				BeanUtils.copyProperties(updatedUser, adao);
 				ar.setUser(adao);
 				ar.setStatus("success");
 				ar.setMessage("user activated successfully");
 				return ResponseEntity.ok().body(ar);
 			}else {
 				user.setActive(false);
-				BeanUtils.copyProperties(user, adao);
+                                User updatedUser = userRepo.save(user);
+				BeanUtils.copyProperties(updatedUser, adao);
+				
 				ar.setUser(adao);
 				ar.setStatus("success");
 				ar.setMessage("user deactivated successfully");
@@ -772,6 +775,7 @@ public class UserController {
     
    
 }
+
 
 
 
