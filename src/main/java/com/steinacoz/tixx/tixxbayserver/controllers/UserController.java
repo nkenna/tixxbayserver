@@ -465,7 +465,7 @@ public class UserController {
         User user = userRepo.findById(cup.getUserId()).orElseGet(null);
         
         if(user != null){
-            if(bCryptPasswordEncoder.matches( bCryptPasswordEncoder.encode(cup.getOldPassword()), user.getPassword() )){
+            if(bCryptPasswordEncoder.matches( cup.getOldPassword(), user.getPassword() )){
                 String nPwd = bCryptPasswordEncoder.encode(cup.getNewPassword());
                 user.setPassword(nPwd);
                 userRepo.save(user);
@@ -775,6 +775,7 @@ public class UserController {
     
    
 }
+
 
 
 
