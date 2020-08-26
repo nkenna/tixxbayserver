@@ -571,6 +571,9 @@ public class TicketController {
                 trans.setNarration("user bought ticket");
                 trans.setLocation(str.getLocation());
                 Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
+                int pavt = parentTicket.getAvailableTickets() - str.getQuantity();
+                parentTicket.setAvailableTickets(pavt);
+                ticketRepo.save(parentTicket);
                // System.out.println(parentTicket.getTitle());
                
                 if(parentTicket != null){ 
@@ -623,13 +626,7 @@ public class TicketController {
                                 wallet.setBalance(wallet.getBalance().add(new BigDecimal(newBalance)));
                                 wallet.setUpdateddate(LocalDateTime.now());
                                 Wallet nWallet = walletRepo.save(wallet);
-                                
-                             /**
-    private String eventCode;
-    private String narration;
-    private Location location;
-    private double ticketDiscount;
-    private List<String> ticketCodes; **/
+               
                                 
                                 //build wallet transaction record
                                 WalletTransaction wt = new WalletTransaction();
@@ -805,6 +802,7 @@ public class TicketController {
     
     
 }
+
 
 
 

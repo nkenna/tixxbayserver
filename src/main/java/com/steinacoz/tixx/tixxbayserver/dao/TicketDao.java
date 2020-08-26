@@ -28,6 +28,7 @@ public class TicketDao {
     private String eventCode;
     private String ticketType; //electronic, nfc tag or qr code
     private String ticketCode;
+    private int availableTickets;
     private String couponId;
     private boolean individual;
     private LocalDateTime saleStartDay;
@@ -37,6 +38,19 @@ public class TicketDao {
     private Event event;
     private List<ChildTicket> childTickets;
     private List<Coupon> coupons;
+    
+    
+
+    public int getAvailableTickets() {
+        return availableTickets;
+    }
+
+    public void setAvailableTickets(int availableTickets) {
+        this.availableTickets = availableTickets;
+    }
+    
+    
+    
 
     public String getId() {
         return id;
@@ -192,6 +206,7 @@ public class TicketDao {
     
     
 }
+
 
 
 
