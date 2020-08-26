@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.dao;
 
+import com.steinacoz.tixx.tixxbayserver.model.User;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
@@ -33,7 +34,18 @@ public class ChildTicketDao {
     private String parentTicketId;
     private String parentTicketCode;
     private boolean checkedIn;
+    private String boughtByUsername;
     private LocalDateTime checkedinTime;
+
+    public String getBoughtByUsername() {
+        return boughtByUsername;
+    }
+
+    public void setBoughtByUsername(String boughtByUsername) {
+        this.boughtByUsername = boughtByUsername;
+    }
+    
+    
 
     public String getId() {
         return id;
@@ -197,5 +209,6 @@ public class ChildTicketDao {
     
     
 }
+
 
 

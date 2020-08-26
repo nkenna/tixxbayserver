@@ -5,6 +5,13 @@
  */
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import com.steinacoz.tixx.tixxbayserver.config.jwtservice.JwtTokenUtil;
 import com.steinacoz.tixx.tixxbayserver.dao.BankDetailDao;
 import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
@@ -25,6 +32,7 @@ import com.steinacoz.tixx.tixxbayserver.request.UserLoginRequest;
 import com.steinacoz.tixx.tixxbayserver.response.BankDetailResponse;
 import com.steinacoz.tixx.tixxbayserver.response.UserResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -194,13 +202,27 @@ public class UserController {
                         vcRepo.save(vc);
                         
 			System.out.println(enc_aid);
-			HttpResponse<JsonNode> jn = sendSimpleMessage(
-					newUser, 
-					"welcome@tixxbay.ng", 
-					"Welcome to Tixxbay. Activate your account.",
-					"https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/verify-user/" + enc_aid
-			);
-                        
+                        Email from = new Email("support@tixxbay.com");
+                        String subject = "Welcome to Tixxbay. Activate your account.";
+                        Email to = new Email(newUser.getEmail());
+                        Content content = new Content("text/plain", "https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/verify-user/" + enc_aid);
+                        Mail mail = new Mail(from, subject, to, content);
+                        System.out.println(mail.from.getEmail());
+                        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
+                        Request request = new Request();
+                        try {
+                          request.setMethod(Method.POST);
+                          request.setEndpoint("mail/send");
+                          request.setBody(mail.build());
+                          Response response = sg.api(request);
+                          System.out.println(response.getStatusCode());
+                          System.out.println(response.getBody());
+                          System.out.println(response.getHeaders());
+                          
+                        } catch (IOException ex) {
+                          
+                        }
+			
                 UserDao usdao = new UserDao();
                 BeanUtils.copyProperties(newUser, usdao);		
 		
@@ -472,13 +494,28 @@ public class UserController {
             vc.setUsed(false);
             vc.setUser(user.getId());
             vcRepo.save(vc);
-            HttpResponse<JsonNode> jn = sendSimpleMessage(
-					user, 
-					"welcome@tixxbay.ng", 
-					"Password reset request",
-					"https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/reset-password/" + enc_aid
-			); 
-            System.out.println(jn.isSuccess());
+            Email from = new Email("support@tixxbay.com");
+                        String subject = "Password reset request";
+                        Email to = new Email(user.getEmail());
+                        Content content = new Content("text/plain", "https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/reset-password/");
+                        Mail mail = new Mail(from, subject, to, content);
+                        System.out.println(mail.from.getEmail());
+                        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
+                        Request request = new Request();
+                        try {
+                          request.setMethod(Method.POST);
+                          request.setEndpoint("mail/send");
+                          request.setBody(mail.build());
+                          Response response = sg.api(request);
+                          System.out.println(response.getStatusCode());
+                          System.out.println(response.getBody());
+                          System.out.println(response.getHeaders());
+                          
+                        } catch (IOException ex) {
+                          
+                        }
+          
+            //System.out.println(jn.isSuccess());
             ur.setStatus("success");
             ur.setMessage("check your email to continue password reset");
             return ResponseEntity.ok().body(ur);
@@ -735,6 +772,8 @@ public class UserController {
     
    
 }
+
+
 
 
 

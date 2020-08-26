@@ -6,6 +6,13 @@
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
 //import com.mongodb.client.model.geojson.Point;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventKey;
@@ -65,18 +72,7 @@ public class EventController {
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
-    public HttpResponse<JsonNode> sendSimpleMessage(Event event, User user, String fromEmail, String subject, String content) throws UnirestException {
-
-    	HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/sandboxf0a305f9cb84423c85c4f4f5c03e176e.mailgun.org") //Unirest.post("https://api.mailgun.net/v3/sandbox54745fe7bf41492087ca09fa024aae27.mailgun.org/messages")
-	            .basicAuth("api", System.getenv("MAILGUN_KEY")) 
-	            .field("from", fromEmail)
-	            .field("to", user.getEmail())
-	            .field("subject", subject)
-	            .field("text", content)
-	            .asJson();
-
-        return request;
-    }
+   
 
     @CrossOrigin
     @RequestMapping(value = "/add-event", method = RequestMethod.POST)
@@ -127,7 +123,8 @@ public class EventController {
         try{
             event.setAdminStatus(true);
             event.setStatus(true);
-            event.setEventCode(Utils.randomNS(8));
+            event.setAvailableTicket(0);
+            event.setEventCode(Utils.randomNS(6));
             Event newEvent = eventRepo.save(event);
             
             EventKey key = new EventKey();
@@ -138,10 +135,29 @@ public class EventController {
             eventkeyRepo.save(key);
             
             User user = userRepo.findByUsername(event.getCreatorUsername());
+            
+                        
             if(user != null){
-                this.sendSimpleMessage(event, user, "info@tixxbay.com", "New Event created",
-                    "Your new Event have been successfully created. The event details is available on your dashboard."
-                );
+                Email from = new Email("support@tixxbay.com");
+                        String subject = "New Event created at TixxBay";
+                        Email to = new Email(user.getEmail());
+                        Content content = new Content("text/plain", "Your new Event have been successfully created. The event details is available on your dashboard.");
+                        Mail mail = new Mail(from, subject, to, content);
+                        System.out.println(mail.from.getEmail());
+                        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
+                        Request request = new Request();
+                        try {
+                          request.setMethod(Method.POST);
+                          request.setEndpoint("mail/send");
+                          request.setBody(mail.build());
+                          Response response = sg.api(request);
+                          System.out.println(response.getStatusCode());
+                          System.out.println(response.getBody());
+                          System.out.println(response.getHeaders());
+                          
+                        } catch (IOException ex) {
+                          
+                        }
             }            
             er.setStatus("success");
             er.setMessage("event created successfully");
@@ -172,14 +188,14 @@ public class EventController {
             foundEvent.setCategoryId(event.getCategoryId());
             foundEvent.setEventType(event.getEventType());
             foundEvent.setLocation(event.getLocation());
-            foundEvent.setAvailableTicket(event.getAvailableTicket());
+            //foundEvent.setAvailableTicket(event.getAvailableTicket());
             foundEvent.setStartDate(event.getStartDate());
             foundEvent.setEndDate(event.getEndDate());
             foundEvent.setCreatorUsername(event.getCreatorUsername());
             foundEvent.setVirtualUrl(event.getVirtualUrl());
-            foundEvent.setStatus(event.isStatus());
-            foundEvent.setAdminStatus(event.isAdminStatus());
-            foundEvent.setEventCode(event.getEventCode());
+            //foundEvent.setStatus(event.isStatus());
+            //foundEvent.setAdminStatus(event.isAdminStatus());
+            //foundEvent.setEventCode(event.getEventCode());
             foundEvent.setCountry(event.getCountry());
             foundEvent.setState(event.getState());
             foundEvent.setLga(event.getLga());
@@ -291,14 +307,14 @@ public class EventController {
         if(foundEvent != null){
             if(event.isStatus()){
                 foundEvent.setStatus(true);
-                Event savedEvent = eventRepo.save(event);
+                Event savedEvent = eventRepo.save(foundEvent);
                 er.setEvent(event);
                 er.setStatus("success");
                 er.setMessage("event active");
                 return ResponseEntity.ok().body(er);
             }else{
                foundEvent.setStatus(false); 
-               Event savedEvent = eventRepo.save(event);
+               Event savedEvent = eventRepo.save(foundEvent);
                 er.setEvent(event);
                 er.setStatus("success");
                 er.setMessage("event inactive");
@@ -323,14 +339,14 @@ public class EventController {
         if(foundEvent != null){
             if(event.isAdminStatus()){
                 foundEvent.setAdminStatus(true);
-                Event savedEvent = eventRepo.save(event);
+                Event savedEvent = eventRepo.save(foundEvent);
                 er.setEvent(event);
                 er.setStatus("success");
                 er.setMessage("event active");
                 return ResponseEntity.ok().body(er);
             }else{
                foundEvent.setAdminStatus(false); 
-               Event savedEvent = eventRepo.save(event);
+               Event savedEvent = eventRepo.save(foundEvent);
                 er.setEvent(event);
                 er.setStatus("success");
                 er.setMessage("event inactive");
@@ -491,6 +507,12 @@ public class EventController {
     
     
 }
+
+
+
+
+
+
 
 
 

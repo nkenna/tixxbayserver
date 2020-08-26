@@ -34,6 +34,20 @@ public class ChildTicket {
     private String parentTicketCode;
     private boolean checkedIn;
     private LocalDateTime checkedinTime;
+    private String boughtByUsername;
+
+    public String getBoughtByUsername() {
+        return boughtByUsername;
+    }
+
+    public void setBoughtByUsername(String boughtByUsername) {
+        this.boughtByUsername = boughtByUsername;
+    }
+    
+    
+    
+    
+    
 
     public boolean isCheckedIn() {
         return checkedIn;
@@ -203,6 +217,8 @@ public class ChildTicket {
     
     
 }
+
+
 
 
 
