@@ -113,8 +113,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         LocalDateTime now = LocalDateTime.now();
        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
        MatchOperation match = Aggregation.match(Criteria.where("country").is(country)
-               .orOperator(Criteria.where("state").is(state))
-       .orOperator(Criteria.where("lga").is(lga)));
+               .orOperator(Criteria.where("state").is(state), Criteria.where("lga").is(lga)));
         MatchOperation match2 = Aggregation.match((Criteria.where("status").is(true).andOperator(Criteria.where("endDate").gte(now))));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
@@ -199,6 +198,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
     
 }
+
 
 
 
