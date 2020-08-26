@@ -515,7 +515,9 @@ public class UserController {
                           System.out.println(response.getHeaders());
                           
                         } catch (IOException ex) {
-                          
+                          ur.setStatus("failed");
+                            ur.setMessage("error occurred performing operation: " + ex.getMessage());
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ur);
                         }
           
             //System.out.println(jn.isSuccess());
@@ -775,6 +777,7 @@ public class UserController {
     
    
 }
+
 
 
 
