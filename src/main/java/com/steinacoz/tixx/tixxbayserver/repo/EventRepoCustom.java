@@ -24,11 +24,15 @@ public interface EventRepoCustom {
     List<EventDao> aggregateAllEventsByState(String state);
     List<EventDao> aggregateAllEventsByLga(String lga);
     List<EventDao> aggregateAllEventsByCountry(String Country);
+    List<EventDao> aggregateAllEventsBy3Weeks();
+    List<EventDao> aggregateAllEventsByShuffle();
     
     List<EventDao> aggregateAllEventsByUserLocation(String country, String state, String lga);
     List<EventDao> aggregateAllEventsByUserGPSLocation(Point point);
     
 }
+
+
 
 
 
