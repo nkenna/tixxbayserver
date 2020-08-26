@@ -295,7 +295,7 @@ public class UserController {
                     user.setAddress(uur.getAddress());
                     user.setCountry(uur.getCountry());
                     user.setLocation(uur.getLocation());
-                    user.setUserType(uur.getUserType());
+                    //user.setUserType(uur.getUserType());
                     
                     userRepo.save(user);
                     ar.setMessage("user updated successfully");
@@ -772,6 +772,7 @@ public class UserController {
     
    
 }
+
 
 
 
