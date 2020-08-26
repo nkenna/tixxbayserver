@@ -38,7 +38,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
                     
                 List<AggregationOperation> list = new ArrayList<AggregationOperation>();
 		list.add(Aggregation.lookup("event", "id", "creatorId", "events"));
-			
+		list.add(Aggregation.lookup("wallet", "walletId", "walletid", "wallet"));
 		TypedAggregation<User> agg = Aggregation.newAggregation(User.class, list);
 		return mongoTemplate.aggregate(agg, User.class, UserDao.class).getMappedResults();
                 
@@ -49,6 +49,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("email").is(email));
         list.add(Aggregation.lookup("user", "ownerUsername", "username", "user"));
+        list.add(Aggregation.lookup("wallet", "walletId", "walletid", "wallet"));
         //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
        
@@ -61,6 +62,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("mobileNumber").is(phoneNumber));
         list.add(Aggregation.lookup("user", "ownerUsername", "username", "user"));
+        list.add(Aggregation.lookup("wallet", "walletId", "walletid", "wallet"));
         //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
        
@@ -69,6 +71,8 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
+
 
 
 

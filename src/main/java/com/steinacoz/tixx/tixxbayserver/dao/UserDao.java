@@ -41,7 +41,7 @@ public class UserDao {
         private String taguuid;
         private String eventId;
         private TixxTag tixxtag;
-        private List<Wallet> wallet;
+        private Wallet wallet;
         private List<Transaction> donetrans;
         private List<Event> events;
 
@@ -89,14 +89,14 @@ public class UserDao {
         this.donetrans = donetrans;
     }
 
-    public List<Wallet> getWallet() {
+    public Wallet getWallet() {
         return wallet;
     }
 
-    public void setWallet(List<Wallet> wallet) {
+    public void setWallet(Wallet wallet) {
         this.wallet = wallet;
     }
-        
+
     
 
     public String getId() {
@@ -255,6 +255,8 @@ public class UserDao {
         
     
 }
+
+
 
 
 
