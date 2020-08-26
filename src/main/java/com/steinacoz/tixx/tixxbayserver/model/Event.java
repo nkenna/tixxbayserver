@@ -39,6 +39,26 @@ public class Event {
     private Binary image1;
     private Binary image2;
     private Binary image3;
+    private LocalDateTime created; //
+    private LocalDateTime updated; //
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(LocalDateTime updated) {
+        this.updated = updated;
+    }
+    
+    
 
     public String getCategoryId() {
         return categoryId;
@@ -231,6 +251,8 @@ public class Event {
     
     
 }
+
+
 
 
 

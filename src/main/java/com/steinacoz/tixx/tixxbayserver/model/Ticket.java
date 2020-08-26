@@ -26,10 +26,21 @@ public class Ticket {
     private String ticketCode;
     private String couponId;
     private boolean individual;
+    private int availableTickets;
     private LocalDateTime saleStartDay;
     private LocalDateTime saleEndDay;
     private LocalDateTime created;
     private LocalDateTime updated;
+
+    public int getAvailableTickets() {
+        return availableTickets;
+    }
+
+    public void setAvailableTickets(int availableTickets) {
+        this.availableTickets = availableTickets;
+    }
+    
+    
 
     public String getEventCode() {
         return eventCode;
@@ -165,6 +176,7 @@ public class Ticket {
     
     
 }
+
 
 
 

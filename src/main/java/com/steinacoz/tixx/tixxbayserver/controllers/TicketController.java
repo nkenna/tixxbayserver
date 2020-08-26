@@ -27,6 +27,7 @@ import com.steinacoz.tixx.tixxbayserver.model.TicketSaleTransaction;
 import com.steinacoz.tixx.tixxbayserver.model.Transaction;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
+import com.steinacoz.tixx.tixxbayserver.model.WalletTransaction;
 import com.steinacoz.tixx.tixxbayserver.repo.ChildTicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.IssuedTicketRepo;
@@ -34,6 +35,7 @@ import com.steinacoz.tixx.tixxbayserver.repo.TicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketSaleTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.WalletTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.request.CheckinTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.CreateChildTicketRequest;
 import com.steinacoz.tixx.tixxbayserver.request.IssueTicketRequest;
@@ -102,6 +104,9 @@ public class TicketController {
     @Autowired
     WalletRepo walletRepo;
     
+    @Autowired
+    WalletTransactionRepo walletTransRepo;
+    
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
     @CrossOrigin
@@ -114,8 +119,19 @@ public class TicketController {
         
         Event event = eventRepo.findById(ticket.getEventId()).orElseThrow(null);
         
+        if(ticket.getAvailableTickets() > 0){
+            int avt = event.getAvailableTicket() + ticket.getAvailableTickets();
+            event.setAvailableTicket(avt);
+            event.setUpdated(LocalDateTime.now());
+            try{
+                eventRepo.save(event);
+            }catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
+        
         if(event != null){
-          ticket.setTicketCode(event.getEventCode() + Utils.randomNS(8));  
+          ticket.setTicketCode(event.getEventCode() + Utils.randomNS(4));  
         }else{
            tr.setStatus("failed");
             tr.setMessage("parent event not found");
@@ -587,14 +603,49 @@ public class TicketController {
                     // credit event manager wallet
                     Event event = eventRepo.findByEventCode(str.getEventCode());
                     if(event != null){
+                        int avt = event.getAvailableTicket() - str.getQuantity();
+                        event.setAvailableTicket(avt);
+                        try{
+                            eventRepo.save(event);
+                        }catch(Exception e){
+                            System.out.println(e.getMessage());
+                        }
                        User manager = userRepo.findByUsername(event.getCreatorUsername());
                        if(manager != null){
                            Wallet wallet = walletRepo.findByWalletid(manager.getWalletId());
                             if(wallet != null){
-                                double newBalance = trans.getTotalAmount().doubleValue() - ((9/100) * trans.getTotalAmount().doubleValue());
+                                double charge = 9; //normal charge is 9%
+                                if(parentTicket.getTicketType().equalsIgnoreCase("QR")){
+                                     charge =  7.5; //charge 7.5% if ticket is qr code
+                                     
+                                }
+                                double newBalance = trans.getTotalAmount().doubleValue() - ((charge/100) * trans.getTotalAmount().doubleValue());
                                 wallet.setBalance(wallet.getBalance().add(new BigDecimal(newBalance)));
                                 wallet.setUpdateddate(LocalDateTime.now());
-                                walletRepo.save(wallet);
+                                Wallet nWallet = walletRepo.save(wallet);
+                                
+                             /**
+    private String eventCode;
+    private String narration;
+    private Location location;
+    private double ticketDiscount;
+    private List<String> ticketCodes; **/
+                                
+                                //build wallet transaction record
+                                WalletTransaction wt = new WalletTransaction();
+                                wt.setTransRef("TIXX" + Utils.randomNS(12));
+                                wt.setTransDate(LocalDateTime.now());
+                                wt.setTotalAmount(nWallet.getBalance());
+                                wt.setTransType(Utils.creditWallet);
+                                wt.setBoughtBy(udao);
+                                wt.setWalletId(nWallet.getWalletid());
+                                wt.setWalletOwnerUsername(nWallet.getOwnerUsername());
+                                wt.setEventCode(event.getEventCode());
+                                wt.setNarration(trans.getNarration());
+                                wt.setLocation(str.getLocation());
+                                wt.setTicketDiscount(charge);
+                                wt.setTicketCodes(tCodes);
+                                walletTransRepo.save(wt);
                             }else{
                                tr.setStatus("failed");
                                 tr.setMessage("wallet not found");
@@ -754,6 +805,17 @@ public class TicketController {
     
     
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

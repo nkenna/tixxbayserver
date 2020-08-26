@@ -73,7 +73,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         LocalDateTime now = LocalDateTime.now();
       List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         
-        MatchOperation match = Aggregation.match(Criteria.where("state").is(state).andOperator(Criteria.where("status").is(true)).andOperator(Criteria.where("endDate").is(now)));
+        MatchOperation match = Aggregation.match(Criteria.where("state").is(state).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -86,7 +86,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     public List<EventDao> aggregateAllEventsByLga(String lga) {
         LocalDateTime now = LocalDateTime.now();
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-       MatchOperation match = Aggregation.match(Criteria.where("lga").is(lga).andOperator(Criteria.where("status").is(true)).andOperator(Criteria.where("endDate").is(now)));
+       MatchOperation match = Aggregation.match(Criteria.where("lga").is(lga).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -99,7 +99,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     public List<EventDao> aggregateAllEventsByCountry(String country) {
         LocalDateTime now = LocalDateTime.now();
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        MatchOperation match = Aggregation.match(Criteria.where("country").is(country).andOperator(Criteria.where("status").is(true)).andOperator(Criteria.where("endDate").is(now)));
+        MatchOperation match = Aggregation.match(Criteria.where("country").is(country).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -115,7 +115,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
        MatchOperation match = Aggregation.match(Criteria.where("country").is(country)
                .orOperator(Criteria.where("state").is(state))
        .orOperator(Criteria.where("lga").is(lga)));
-        MatchOperation match2 = Aggregation.match((Criteria.where("status").is(true).andOperator(Criteria.where("endDate").gt(now))));
+        MatchOperation match2 = Aggregation.match((Criteria.where("status").is(true).andOperator(Criteria.where("endDate").gte(now))));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -131,7 +131,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
       List<AggregationOperation> list = new ArrayList<AggregationOperation>();
       NearQuery query = NearQuery.near(point).maxDistance(new Distance(10, Metrics.MILES));
       list.add(Aggregation.geoNear(query, "distance"));
-      MatchOperation match = Aggregation.match(Criteria.where("status").is(true).andOperator(Criteria.where("endDate").is(now)));
+      MatchOperation match = Aggregation.match(Criteria.where("status").is(true).andOperator(Criteria.where("endDate").gte(now)));
     
        //MatchOperation match = Aggregation.match((Criteria.where("status").is(true).andOperator(Criteria.where("endDate").gt(now))));
        
@@ -159,7 +159,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
        System.out.println(eventCode);
        LocalDateTime now = LocalDateTime.now();
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
-        MatchOperation match = Aggregation.match(Criteria.where("eventCode").is(eventCode).andOperator(Criteria.where("status").is(true)).andOperator(Criteria.where("endDate").is(now)));
+        MatchOperation match = Aggregation.match(Criteria.where("eventCode").is(eventCode).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
         //MatchOperation match = Aggregation.match(Criteria.where("eventCode").is(eventCode).andOperator(Criteria.where("endDate").gt(now)).andOperator(Criteria.where("status").is(true)));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
@@ -199,6 +199,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
     
 }
+
 
 
 

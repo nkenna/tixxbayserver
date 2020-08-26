@@ -18,10 +18,21 @@ public class Wallet {
     @Id	private String id;
     private String walletid;
     private String ownerid;
+    private String ownerUsername;
     private BigDecimal balance;
     private LocalDateTime createddate;
     private LocalDateTime updateddate;
     private boolean status;
+
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
+    public void setOwnerUsername(String ownerUsername) {
+        this.ownerUsername = ownerUsername;
+    }
+    
+    
 
     public String getId() {
         return id;
@@ -79,6 +90,7 @@ public class Wallet {
     
     
 }
+
 
 
 

@@ -417,6 +417,28 @@ public class EventController {
     }
     
     @CrossOrigin
+    @RequestMapping(value = "/all-events-by-random", method = RequestMethod.GET)
+    public ResponseEntity<EventResponse> allEventsByShuffle(){
+        EventResponse er = new EventResponse();
+        List<EventDao> events = eventRepo.aggregateAllEventsByShuffle();
+       er.setMessage("events found: " + String.valueOf(events.size()));
+        er.setStatus("success");
+        er.setEvents(events);
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-events-by-time-range", method = RequestMethod.GET)
+    public ResponseEntity<EventResponse> allEventsBy3weeks(){
+        EventResponse er = new EventResponse();
+        List<EventDao> events = eventRepo.aggregateAllEventsBy3Weeks();
+       er.setMessage("events found: " + String.valueOf(events.size()));
+        er.setStatus("success");
+        er.setEvents(events);
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
     @RequestMapping(value = "/all-events-by-all", method = RequestMethod.PUT)
     public ResponseEntity<EventResponse> allEventsByAll(@RequestBody Event event){
         EventResponse er = new EventResponse();
@@ -507,6 +529,9 @@ public class EventController {
     
     
 }
+
+
+
 
 
 
