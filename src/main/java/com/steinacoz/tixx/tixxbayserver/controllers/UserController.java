@@ -500,7 +500,7 @@ public class UserController {
             Email from = new Email("support@tixxbay.com");
                         String subject = "Password reset request";
                         Email to = new Email(user.getEmail());
-                        Content content = new Content("text/plain", "https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/reset-password/");
+                        Content content = new Content("text/plain", "https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/auth/reset-user-password-2/" + enc_aid);
                         Mail mail = new Mail(from, subject, to, content);
                         System.out.println(mail.from.getEmail());
                         SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
@@ -775,6 +775,7 @@ public class UserController {
     
    
 }
+
 
 
 
