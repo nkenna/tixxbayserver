@@ -52,7 +52,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-//import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -408,7 +407,8 @@ public class TicketController {
     }
     
     
-   @CrossOrigin
+            
+    @CrossOrigin
     @RequestMapping(value = "/sell-ticket", method = RequestMethod.POST)
     public ResponseEntity<TicketResponse> sellTicket (@RequestBody SellTicketReqest str){
         TicketResponse tr = new TicketResponse();
@@ -729,6 +729,34 @@ public class TicketController {
     }
     
     @CrossOrigin
+    @RequestMapping(value = "/get-child-ticket", method = RequestMethod.POST)
+    public ResponseEntity<TicketResponse> getChildTicket (@RequestBody CheckinTicketRequest ctr){
+        TicketResponse tr = new TicketResponse();
+        ChildTicket ct = ctRepo.findByTicketCode(ctr.getTicketCode());
+        
+                
+        if(ct != null){
+            if(ct.isCheckedIn()){
+                tr.setStatus("failed");
+                tr.setMessage("ticket have been checked in before");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(tr);
+            }
+            
+            ChildTicketDao ctDao = ctRepo.getChildTicketByTicketCode(ct.getTicketCode());
+            tr.setTicketCheckin(ctDao);
+            tr.setStatus("success");
+            tr.setMessage("ticket retrieved");
+            return ResponseEntity.ok().body(tr);
+        }else{
+            tr.setStatus("failed");
+            tr.setMessage("ticket not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
+        }
+        
+        
+    }
+    
+    @CrossOrigin
     @RequestMapping(value = "/send-qr-email", method = RequestMethod.POST)
     public ResponseEntity<EventResponse> sendQRImageToEmail(@RequestParam("image") MultipartFile image, @RequestParam("email") String email, @RequestParam("eventId") String eventId) throws IOException{
         EventResponse er = new EventResponse();
@@ -802,6 +830,10 @@ public class TicketController {
     
     
 }
+
+
+
+
 
 
 
