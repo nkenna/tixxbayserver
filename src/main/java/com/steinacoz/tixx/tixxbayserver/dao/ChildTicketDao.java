@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.dao;
 
+import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,6 +37,17 @@ public class ChildTicketDao {
     private boolean checkedIn;
     private String boughtByUsername;
     private LocalDateTime checkedinTime;
+    private Event event;
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+    
+    
 
     public String getBoughtByUsername() {
         return boughtByUsername;
@@ -209,6 +221,8 @@ public class ChildTicketDao {
     
     
 }
+
+
 
 
 

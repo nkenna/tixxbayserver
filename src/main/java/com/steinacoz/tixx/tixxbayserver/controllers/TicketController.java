@@ -742,6 +742,10 @@ public class TicketController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(tr);
             }
             
+            ct.setCheckedIn(true);
+            ct.setCheckedinTime(LocalDateTime.now());
+            ctRepo.save(ct);
+            
             ChildTicketDao ctDao = ctRepo.getChildTicketByTicketCode(ct.getTicketCode());
             tr.setTicketCheckin(ctDao);
             tr.setStatus("success");
@@ -830,6 +834,7 @@ public class TicketController {
     
     
 }
+
 
 
 
