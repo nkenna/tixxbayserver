@@ -740,9 +740,7 @@ public class TicketController {
                 tr.setStatus("failed");
                 tr.setMessage("ticket have been checked in before");
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(tr);
-            }
-            
-            
+            } 
             
             ct.setCheckedIn(true);
             ct.setCheckedinTime(LocalDateTime.now());
@@ -750,6 +748,8 @@ public class TicketController {
             
             Event event = eventRepo.findByEventCode(ct.getEventCode());
             if(event != null){
+                System.out.println(event.getCategoryName());
+                System.out.println(event.getDiscription());
                 event.setCheckedInTicket(event.getCheckedInTicket() + 1);
             }
             
@@ -841,6 +841,8 @@ public class TicketController {
     
     
 }
+
+
 
 
 

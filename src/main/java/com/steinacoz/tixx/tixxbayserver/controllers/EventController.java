@@ -124,6 +124,8 @@ public class EventController {
             event.setAdminStatus(true);
             event.setStatus(true);
             event.setAvailableTicket(0);
+            event.setCheckedInTicket(0);
+            event.setTotalTicket(0);
             event.setEventCode(Utils.randomNS(6));
             Event newEvent = eventRepo.save(event);
             
@@ -529,6 +531,8 @@ public class EventController {
     
     
 }
+
+
 
 
 
