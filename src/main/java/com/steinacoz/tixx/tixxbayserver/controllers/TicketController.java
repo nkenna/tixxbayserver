@@ -742,9 +742,16 @@ public class TicketController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(tr);
             }
             
+            
+            
             ct.setCheckedIn(true);
             ct.setCheckedinTime(LocalDateTime.now());
             ctRepo.save(ct);
+            
+            Event event = eventRepo.findByEventCode(ct.getEventCode());
+            if(event != null){
+                event.setCheckedInTicket(event.getCheckedInTicket() + 1);
+            }
             
             ChildTicketDao ctDao = ctRepo.getChildTicketByTicketCode(ct.getTicketCode());
             tr.setTicketCheckin(ctDao);
@@ -834,6 +841,8 @@ public class TicketController {
     
     
 }
+
+
 
 
 

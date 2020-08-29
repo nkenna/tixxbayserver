@@ -49,6 +49,27 @@ public class EventDao {
     
     private LocalDateTime created; //
     private LocalDateTime updated; //
+    
+    private int totalTicket;
+    private int checkedInTicket;
+
+    public int getTotalTicket() {
+        return totalTicket;
+    }
+
+    public void setTotalTicket(int totalTicket) {
+        this.totalTicket = totalTicket;
+    }
+
+    public int getCheckedInTicket() {
+        return checkedInTicket;
+    }
+
+    public void setCheckedInTicket(int checkedInTicket) {
+        this.checkedInTicket = checkedInTicket;
+    }
+    
+    
 
     public LocalDateTime getCreated() {
         return created;
@@ -283,6 +304,7 @@ public class EventDao {
     
     
 }
+
 
 
 

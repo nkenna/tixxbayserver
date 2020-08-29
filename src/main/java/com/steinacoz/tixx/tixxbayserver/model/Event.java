@@ -27,6 +27,8 @@ public class Event {
     private String eventType; //virtual or physical
     private Location location;
     private int availableTicket;
+    private int totalTicket;
+    private int checkedInTicket;
     private LocalDateTime startDate; //
     private LocalDateTime endDate; //
     private String creatorUsername; //
@@ -41,6 +43,25 @@ public class Event {
     private Binary image3;
     private LocalDateTime created; //
     private LocalDateTime updated; //
+
+    public int getTotalTicket() {
+        return totalTicket;
+    }
+
+    public void setTotalTicket(int totalTicket) {
+        this.totalTicket = totalTicket;
+    }
+
+    public int getCheckedInTicket() {
+        return checkedInTicket;
+    }
+
+    public void setCheckedInTicket(int checkedInTicket) {
+        this.checkedInTicket = checkedInTicket;
+    }
+    
+    
+    
 
     public LocalDateTime getCreated() {
         return created;
@@ -251,6 +272,7 @@ public class Event {
     
     
 }
+
 
 
 
