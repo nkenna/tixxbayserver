@@ -714,6 +714,14 @@ public class TicketController {
             ct.setCheckedinTime(LocalDateTime.now());
             ctRepo.save(ct);
             
+            Event event = eventRepo.findByEventCode(ct.getEventCode());
+            if(event != null){
+                System.out.println(event.getCategoryName());
+                System.out.println(event.getDiscription());
+                event.setCheckedInTicket(event.getCheckedInTicket() + 1);
+                eventRepo.save(event);
+            }
+            
             ChildTicketDao ctDao = ctRepo.getChildTicketByTicketCode(ct.getTicketCode());
             tr.setTicketCheckin(ctDao);
             tr.setStatus("success");
@@ -751,6 +759,7 @@ public class TicketController {
                 System.out.println(event.getCategoryName());
                 System.out.println(event.getDiscription());
                 event.setCheckedInTicket(event.getCheckedInTicket() + 1);
+                eventRepo.save(event);
             }
             
             ChildTicketDao ctDao = ctRepo.getChildTicketByTicketCode(ct.getTicketCode());
@@ -841,6 +850,7 @@ public class TicketController {
     
     
 }
+
 
 
 
