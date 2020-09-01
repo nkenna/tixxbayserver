@@ -175,7 +175,7 @@ public class EventController {
     
     @CrossOrigin
     @RequestMapping(value = "/edit-event", method = RequestMethod.PUT)
-    public ResponseEntity<EventResponse> editEvent(@RequestBody EventUpdateRequest event){
+    public ResponseEntity<EventResponse> editEvent(@RequestBody Event event){
         EventResponse er = new EventResponse();
         
         Event foundEvent = eventRepo.findById(event.getId()).orElseGet(null);
@@ -531,6 +531,7 @@ public class EventController {
     
     
 }
+
 
 
 
