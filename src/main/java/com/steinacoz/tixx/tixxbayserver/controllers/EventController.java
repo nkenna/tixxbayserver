@@ -183,6 +183,7 @@ public class EventController {
         
         if(foundEvent != null){
            try{
+               
                foundEvent.setTitle(event.getTitle());
             foundEvent.setDiscription(event.getDiscription());
             foundEvent.setVenue(event.getVenue());
@@ -531,6 +532,7 @@ public class EventController {
     
     
 }
+
 
 
 
