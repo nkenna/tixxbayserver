@@ -47,6 +47,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         MatchOperation match3 = Aggregation.match(Criteria.where("endDate").is(now).andOperator(Criteria.where("status").is(true)));
 	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
 	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
     }    
@@ -54,10 +55,10 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     @Override
     public List<EventDao> aggregateAllEventsByCreator(String username) {
         LocalDateTime now = LocalDateTime.now();
-        System.out.println(username);
+        System.out.println(username); //childTicket
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
         MatchOperation match = Aggregation.match(Criteria.where("creatorUsername").is(username).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
-      
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
@@ -75,6 +76,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         
         MatchOperation match = Aggregation.match(Criteria.where("state").is(state).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
+        list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
        
@@ -89,6 +92,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
        MatchOperation match = Aggregation.match(Criteria.where("lga").is(lga).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(match);
        
 	TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
@@ -102,6 +107,9 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         MatchOperation match = Aggregation.match(Criteria.where("country").is(country).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
+        
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(match);
        
 	TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
@@ -116,7 +124,9 @@ public class EventRepoCustomImpl implements EventRepoCustom {
                .orOperator(Criteria.where("state").is(state), Criteria.where("lga").is(lga)));
         MatchOperation match2 = Aggregation.match((Criteria.where("status").is(true).andOperator(Criteria.where("endDate").gte(now))));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(match);
         list.add(match2);
        
@@ -135,6 +145,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
        //MatchOperation match = Aggregation.match((Criteria.where("status").is(true).andOperator(Criteria.where("endDate").gt(now))));
        
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
+        list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);      
        
@@ -147,6 +159,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("status").is(true));
 	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
+        list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
         TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
@@ -161,6 +175,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         MatchOperation match = Aggregation.match(Criteria.where("eventCode").is(eventCode).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
         //MatchOperation match = Aggregation.match(Criteria.where("eventCode").is(eventCode).andOperator(Criteria.where("endDate").gt(now)).andOperator(Criteria.where("status").is(true)));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);       
@@ -175,6 +190,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
         MatchOperation match = Aggregation.match(Criteria.where("startDate").lt(futureDate).andOperator(Criteria.where("status").is(true)));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);       
@@ -189,6 +205,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         MatchOperation match = Aggregation.match(Criteria.where("endDate").gt(now).andOperator(Criteria.where("status").is(true)));
         SampleOperation matchStage = Aggregation.sample(5);
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);       
@@ -198,6 +215,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
     
 }
+
 
 
 
