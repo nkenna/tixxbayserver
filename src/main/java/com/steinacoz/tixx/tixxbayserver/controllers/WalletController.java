@@ -48,7 +48,7 @@ public class WalletController {
     
     @CrossOrigin
     @RequestMapping(value = "/create-wallet", method = RequestMethod.POST)
-    public ResponseEntity<WalletResponse> createAgent(@RequestBody Wallet walletReq){
+    public ResponseEntity<WalletResponse> createWallet(@RequestBody Wallet walletReq){
         WalletResponse wr = new WalletResponse();
         WalletDao wdao = new WalletDao();
         
@@ -90,7 +90,32 @@ public class WalletController {
         
         
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/get-user-wallet", method = RequestMethod.PUT)
+    public ResponseEntity<WalletResponse> getUserWallet(@RequestBody Wallet wal){
+        WalletResponse wr = new WalletResponse();
+        WalletDao wdao = new WalletDao();       
+        
+        
+        Wallet wallet = walletRepo.findByWalletid(wal.getWalletid());
+        
+        if(wallet != null){
+            BeanUtils.copyProperties(wallet, wdao);
+            wr.setStatus("success");
+            wr.setWallet(wdao);
+            wr.setMessage("wallet found");
+            return ResponseEntity.ok().body(wr);
+        }else{
+          wr.setStatus("failed");
+            wr.setMessage("wallet not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(wr);  
+        }
+    }
 }
+
+
+
 
 
 
