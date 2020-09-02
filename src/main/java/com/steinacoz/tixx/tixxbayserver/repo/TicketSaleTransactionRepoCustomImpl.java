@@ -49,6 +49,15 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
         TypedAggregation<TicketSaleTransaction> agg = Aggregation.newAggregation(TicketSaleTransaction.class, list);
 	return mongoTemplate.aggregate(agg, TicketSaleTransaction.class, TicketSaleTransactionDao.class).getMappedResults();
     }
+    
+    @Override
+    public List<TicketSaleTransactionDao> getAllTicketSaleTransByEventCode(String eventCode) {        
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        MatchOperation match1 = Aggregation.match(Criteria.where("eventCode").is(eventCode));
+        list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        TypedAggregation<TicketSaleTransaction> agg = Aggregation.newAggregation(TicketSaleTransaction.class, list);
+	return mongoTemplate.aggregate(agg, TicketSaleTransaction.class, TicketSaleTransactionDao.class).getMappedResults();
+    }
 
     @Override
     public TicketSaleTransactionDao getTicketSaleTrans(String ref) {
@@ -60,6 +69,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
     }
     
 }
+
 
 
 

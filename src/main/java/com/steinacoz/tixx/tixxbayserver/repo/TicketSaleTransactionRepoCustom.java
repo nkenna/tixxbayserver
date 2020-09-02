@@ -18,7 +18,9 @@ public interface TicketSaleTransactionRepoCustom {
     List<TicketSaleTransactionDao> getAllTicketSaleTrans();
     List<TicketSaleTransactionDao> getAllTicketSaleTransByMonth(LocalDate date, String eventCode);
     TicketSaleTransactionDao getTicketSaleTrans(String transRef);
+    List<TicketSaleTransactionDao> getAllTicketSaleTransByEventCode(String eventCode);
 }
+
 
 
 
