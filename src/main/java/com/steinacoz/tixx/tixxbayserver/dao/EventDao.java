@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.dao;
 
+import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
@@ -52,6 +53,18 @@ public class EventDao {
     
     private int totalTicket;
     private int checkedInTicket;
+    
+    private List<ChildTicket> childtickets;
+
+    public List<ChildTicket> getChildtickets() {
+        return childtickets;
+    }
+
+    public void setChildtickets(List<ChildTicket> childtickets) {
+        this.childtickets = childtickets;
+    }
+    
+    
 
     public int getTotalTicket() {
         return totalTicket;
@@ -304,6 +317,7 @@ public class EventDao {
     
     
 }
+
 
 
 
