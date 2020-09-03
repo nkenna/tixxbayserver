@@ -39,6 +39,12 @@ public class Utils {
 	final public static String typeEventManager = "EVENT_MANAGER";
         final public static String typeUser = "USER";
         
+        final public static String payPaid = "PAID";
+        final public static String payPending = "PENDING";
+        final public static String payDeclined = "DECLINED";
+        final public static String payTypeVendor = "VENDOR PAY";
+        final public static String payTypeTicket = "TICKET PAY";
+        
     
     public static final long EXPIRATION_TIME = 864_000_000; // 10 days
     public static final String TOKEN_PREFIX = "Bearer ";
@@ -109,6 +115,7 @@ public class Utils {
         return null;
     }
 }
+
 
 
 
