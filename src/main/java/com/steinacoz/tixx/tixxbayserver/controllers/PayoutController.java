@@ -69,7 +69,7 @@ public class PayoutController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(pr);
         }
         
-        if(payReq.getPayType().equalsIgnoreCase("TICKET PAY") == false || payReq.getPayType().equalsIgnoreCase("VENDOR PAY") == false){
+        if(payReq.getPayType().equalsIgnoreCase("TICKET PAY") == false && payReq.getPayType().equalsIgnoreCase("VENDOR PAY") == false){
             pr.setStatus("failed");
             pr.setMessage("invalid pay type. Pay type can either be TICKET PAY or VENDOR PAY");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(pr);
@@ -241,6 +241,7 @@ public class PayoutController {
         
     }
 }
+
 
 
 
