@@ -142,8 +142,8 @@ public class PayoutController {
             //send Email
             from = new Email("support@tixxbay.com");
             subject = "TixxBay payout request";
-            to = new Email(user.getEmail());
-            content = new Content("text/plain", "You requested a payout. Your payout is being processed");
+            to = new Email("support@tixxbay.com");
+            content = new Content("text/plain", "A payout have been requested. Open dashboard to fulfil it");
             mail = new Mail(from, subject, to, content);
             System.out.println(mail.from.getEmail());
             sg = new SendGrid(System.getenv("SENDGRID_API")); 
@@ -241,6 +241,7 @@ public class PayoutController {
         
     }
 }
+
 
 
 
