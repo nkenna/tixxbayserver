@@ -58,6 +58,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
                 )
             );
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(match2);
         //list.add(Aggregation.lookup("user", "eventCode", "eventCode", "event"));
         TypedAggregation<TicketSaleTransaction> agg = Aggregation.newAggregation(TicketSaleTransaction.class, list);
 	return mongoTemplate.aggregate(agg, TicketSaleTransaction.class, TicketSaleTransactionDao.class).getMappedResults();
@@ -82,6 +83,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
     }
     
 }
+
 
 
 
