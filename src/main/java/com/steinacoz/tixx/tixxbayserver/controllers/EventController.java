@@ -613,7 +613,11 @@ public class EventController {
         
         try{
            for(City city: stateReq.getCity()){
-               cityRepo.save(city);
+               City ci = new City();
+               ci.setName(city.getName());
+               ci.setState(city.getState());
+               System.out.println(city.toString());
+               cityRepo.save(ci);
            }
           //List<State> states = stateRepo.insert(stateReq.getState());
           sr.setStatus("success");
@@ -621,7 +625,7 @@ public class EventController {
           return ResponseEntity.ok().body(sr);
         }catch(Exception e){
             sr.setStatus("failed");
-          sr.setStatus("error adding cities: " + e.getMessage());
+          sr.setMessage("error adding cities: " + e.getMessage());
           return ResponseEntity.ok().body(sr);
         }
         
@@ -631,6 +635,10 @@ public class EventController {
     
     
 }
+
+
+
+
 
 
 
