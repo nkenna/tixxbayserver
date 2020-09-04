@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -538,25 +539,42 @@ public class EventController {
     @RequestMapping(value = "/event-by-vendor", method = RequestMethod.POST)
     public ResponseEntity<EventResponse> eventByVendor(@RequestBody Event eve){
         EventResponse er = new EventResponse();
-        EventDao event = eventRepo.getEventByEventCode(eve.getEventCode());
+        List<EventDao> finalEvents = new ArrayList<EventDao>();
+        List<EventDao> events = eventRepo.aggregateAllEventsByVendor(eve.getEventCode());
         
-        if(event != null){
-            er.setMessage("event found");
+        for(int i = 0; i < events.size(); i++){ // loop through found events
+            if(events.get(i).getTeams() != null){ // make sure each event is not null before operating on it
+                for(int j = 0; j < events.get(i).getTeams().size(); j++){ // loop through found teams
+                    if(events.get(i).getTeams().get(j).getMembers() != null){ // make sure each memebers is not null before operating on it
+                        for(int k = 0; k < events.get(i).getTeams().get(j).getMembers().size(); k++){ //loop through memebers
+                            if(events.get(i).getTeams().get(j).getMembers().get(k).getLinkedEvents() != null){
+                                for (String linkedEvent : events.get(i).getTeams().get(j).getMembers().get(k).getLinkedEvents()) {
+                                    if(linkedEvent.equalsIgnoreCase(events.get(i).getEventCode())){
+                                        // add to the final Event array
+                                        finalEvents.add(events.get(i));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+           
+        }   
+        
+        
+        er.setMessage("events found: " + String.valueOf(finalEvents.size()));
         er.setStatus("success");
-        er.setEventdata(event);
+        er.setEvents(finalEvents);
         return ResponseEntity.ok().body(er);
-        }else{
-           er.setMessage("no event found");
-        er.setStatus("failed");
-        
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er); 
-        }
         
     }
     
     
     
 }
+
+
 
 
 

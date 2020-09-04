@@ -213,18 +213,18 @@ public class EventTeamController {
            
            if(user.getLinkedEvents() != null){
                List<String> linkedEvents = user.getLinkedEvents();
-           boolean isLinked = false;
-            for(int j = 0; j < linkedEvents.size(); j++){
-                if(linkedEvents.get(j).equalsIgnoreCase(team.getEventCode())){
-                    user.getLinkedEvents().remove(linkedEvents.get(j));
-                    
-                    user.setLinkedEvents(user.getLinkedEvents());
-                    user.setUpdated(LocalDateTime.now());
-                    userRepo.save(user);
-                    isLinked = true;
-                    break;
-                }
-            }
+                boolean isLinked = false;
+                 for(int j = 0; j < linkedEvents.size(); j++){
+                     if(linkedEvents.get(j).equalsIgnoreCase(team.getEventCode())){
+                         user.getLinkedEvents().remove(linkedEvents.get(j));
+
+                         user.setLinkedEvents(user.getLinkedEvents());
+                         user.setUpdated(LocalDateTime.now());
+                         userRepo.save(user);
+                         isLinked = true;
+                         break;
+                     }
+                 }
            }
            
            users.clear();
@@ -280,6 +280,7 @@ public class EventTeamController {
         }
     }
 }
+
 
 
 

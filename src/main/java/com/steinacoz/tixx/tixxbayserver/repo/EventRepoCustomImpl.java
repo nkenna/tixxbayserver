@@ -216,9 +216,9 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
 
     @Override
-    public List<EventDao> aggregateAllEventsByVendor(String vendorUsername) {
+    public List<EventDao> aggregateAllEventsByVendor(String eventCode) {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        MatchOperation match = Aggregation.match(Criteria.where(""));
+        MatchOperation match = Aggregation.match(Criteria.where("eventCode").is(eventCode));
 	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
@@ -230,6 +230,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     
     
 }
+
+
 
 
 
