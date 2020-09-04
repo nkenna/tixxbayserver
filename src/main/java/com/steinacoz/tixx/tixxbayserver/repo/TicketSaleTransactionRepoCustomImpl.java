@@ -54,7 +54,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
                 Criteria.where("eventCode").is(eventCode)
                 .andOperator(
                         Criteria.where("transDate").lt(end),
-                        Criteria.where("transDate").gte(start)
+                        Criteria.where("transDate").gt(start)
                 )
             );
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
@@ -83,6 +83,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
     }
     
 }
+
 
 
 
