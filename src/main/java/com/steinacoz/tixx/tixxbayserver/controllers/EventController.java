@@ -541,7 +541,7 @@ public class EventController {
     @RequestMapping(value = "/event-by-vendor", method = RequestMethod.POST)
     public ResponseEntity<EventResponse> eventByVendor(@RequestBody PayoutRequest pr){
         EventResponse er = new EventResponse();
-        List<EventDao> finalEvents = new ArrayList<EventDao>();
+        List<Event> finalEvents = new ArrayList<Event>();
         User user = userRepo.findByUsername(pr.getUsername());
         
         if(user != null){
@@ -551,9 +551,9 @@ public class EventController {
                     if(linkedEvents != null && !linkedEvents.isEmpty() ){
                         Event event = eventRepo.findByEventCode(linkedEvents);;
                         if(event != null){
-                            EventDao evd = new EventDao();
-                            BeanUtils.copyProperties(event, evd);
-                            finalEvents.add(evd);
+                            //EventDao evd = new EventDao();
+                            //BeanUtils.copyProperties(event, evd);
+                            finalEvents.add(event);
                         }
                     }
                 }
@@ -573,6 +573,7 @@ public class EventController {
     
     
 }
+
 
 
 
