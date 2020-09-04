@@ -45,6 +45,7 @@ import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
@@ -546,10 +547,13 @@ public class EventController {
         if(user != null){
             if(user.getLinkedEvents() != null){
                 for(String linkedEvents : user.getLinkedEvents()){
+                    System.out.println(linkedEvents);
                     if(linkedEvents != null && !linkedEvents.isEmpty() ){
-                        EventDao eventDao = eventRepo.getEventByVendor(linkedEvents);
-                        if(eventDao != null){
-                            finalEvents.add(eventDao);
+                        Event event = eventRepo.findByEventCode(linkedEvents);;
+                        if(event != null){
+                            EventDao evd = new EventDao();
+                            BeanUtils.copyProperties(event, evd);
+                            finalEvents.add(evd);
                         }
                     }
                 }
@@ -569,6 +573,8 @@ public class EventController {
     
     
 }
+
+
 
 
 
