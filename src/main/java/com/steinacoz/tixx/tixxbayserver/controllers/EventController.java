@@ -14,12 +14,14 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
+import com.steinacoz.tixx.tixxbayserver.model.City;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventKey;
 import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.State;
 import com.steinacoz.tixx.tixxbayserver.model.User;
+import com.steinacoz.tixx.tixxbayserver.repo.CityRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventKeyRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventTeamRepo;
@@ -85,6 +87,9 @@ public class EventController {
     
     @Autowired
     StateRepo stateRepo;
+    
+    @Autowired
+    CityRepo cityRepo;
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
@@ -601,9 +606,33 @@ public class EventController {
         
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/add-city", method = RequestMethod.POST)
+    public ResponseEntity<StateResponse> addCity(@RequestBody StateRequest stateReq){
+        StateResponse sr = new StateResponse();        
+        
+        try{
+           for(City city: stateReq.getCity()){
+               cityRepo.save(city);
+           }
+          //List<State> states = stateRepo.insert(stateReq.getState());
+          sr.setStatus("success");
+          sr.setMessage("cities added: ");
+          return ResponseEntity.ok().body(sr);
+        }catch(Exception e){
+            sr.setStatus("failed");
+          sr.setStatus("error adding state" );
+          return ResponseEntity.ok().body(sr);
+        }
+        
+        
+    }
+    
     
     
 }
+
+
 
 
 

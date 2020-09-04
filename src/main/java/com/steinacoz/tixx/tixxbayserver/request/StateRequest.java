@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.request;
 
+import com.steinacoz.tixx.tixxbayserver.model.City;
 import com.steinacoz.tixx.tixxbayserver.model.State;
 import java.util.List;
 
@@ -14,6 +15,17 @@ import java.util.List;
  */
 public class StateRequest {
     private List<State> state;
+    private List<City> city;
+
+    public List<City> getCity() {
+        return city;
+    }
+
+    public void setCity(List<City> city) {
+        this.city = city;
+    }
+    
+    
 
     public List<State> getState() {
         return state;
@@ -27,6 +39,8 @@ public class StateRequest {
     
     
 }
+
+
 
 
 
