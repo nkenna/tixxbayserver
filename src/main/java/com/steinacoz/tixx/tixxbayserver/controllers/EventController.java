@@ -621,7 +621,7 @@ public class EventController {
           return ResponseEntity.ok().body(sr);
         }catch(Exception e){
             sr.setStatus("failed");
-          sr.setStatus("error adding state" );
+          sr.setStatus("error adding cities: " + e.getMessage());
           return ResponseEntity.ok().body(sr);
         }
         
@@ -631,6 +631,7 @@ public class EventController {
     
     
 }
+
 
 
 
