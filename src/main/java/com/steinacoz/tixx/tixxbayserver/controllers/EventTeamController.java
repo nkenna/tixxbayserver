@@ -211,7 +211,8 @@ public class EventTeamController {
               return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(etr);  
             }
            
-           List<String> linkedEvents = user.getLinkedEvents();
+           if(user.getLinkedEvents() != null){
+               List<String> linkedEvents = user.getLinkedEvents();
            boolean isLinked = false;
             for(int j = 0; j < linkedEvents.size(); j++){
                 if(linkedEvents.get(j).equalsIgnoreCase(team.getEventCode())){
@@ -224,6 +225,7 @@ public class EventTeamController {
                     break;
                 }
             }
+           }
            
            users.clear();
            users = team.getMembers();
@@ -278,6 +280,7 @@ public class EventTeamController {
         }
     }
 }
+
 
 
 
