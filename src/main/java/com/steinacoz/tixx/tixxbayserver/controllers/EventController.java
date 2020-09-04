@@ -624,9 +624,10 @@ public class EventController {
           sr.setMessage("cities added: ");
           return ResponseEntity.ok().body(sr);
         }catch(Exception e){
+            e.printStackTrace();
             sr.setStatus("failed");
           sr.setMessage("error adding cities: " + e.getMessage());
-          return ResponseEntity.ok().body(sr);
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(sr);
         }
         
         
@@ -635,6 +636,8 @@ public class EventController {
     
     
 }
+
+
 
 
 
