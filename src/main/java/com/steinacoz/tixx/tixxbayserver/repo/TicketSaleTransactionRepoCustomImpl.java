@@ -42,8 +42,8 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
     public List<TicketSaleTransactionDao> getAllTicketSaleTransByMonth(LocalDate date, String eventCode) {
         YearMonth month = YearMonth.from(date);
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        MatchOperation match1 = Aggregation.match(Criteria.where("eventCode").is(eventCode));
-        MatchOperation match2 = Aggregation.match(Criteria.where("transDate").lt(month.atEndOfMonth()).andOperator(Criteria.where("transDate").gt(month.atDay(1))));
+        //MatchOperation match1 = Aggregation.match();
+        MatchOperation match2 = Aggregation.match(Criteria.where("transDate").lt(month.atEndOfMonth()).andOperator(Criteria.where("transDate").gt(month.atDay(1)), Criteria.where("eventCode").is(eventCode)));
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
         //list.add(Aggregation.lookup("user", "eventCode", "eventCode", "event"));
         TypedAggregation<TicketSaleTransaction> agg = Aggregation.newAggregation(TicketSaleTransaction.class, list);
@@ -69,6 +69,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
     }
     
 }
+
 
 
 
