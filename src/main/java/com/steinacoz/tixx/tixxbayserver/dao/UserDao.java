@@ -42,8 +42,19 @@ public class UserDao {
         private String eventId;
         private TixxTag tixxtag;
         private Wallet wallet;
+        private List<String> linkedEvents; // events this user was added to as a team member
         private List<Transaction> donetrans;
         private List<Event> events;
+
+    public List<String> getLinkedEvents() {
+        return linkedEvents;
+    }
+
+    public void setLinkedEvents(List<String> linkedEvents) {
+        this.linkedEvents = linkedEvents;
+    }
+        
+        
 
     public List<Event> getEvents() {
         return events;
@@ -255,6 +266,7 @@ public class UserDao {
         
     
 }
+
 
 
 

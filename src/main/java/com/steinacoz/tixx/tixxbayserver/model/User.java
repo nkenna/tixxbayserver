@@ -38,13 +38,13 @@ public class User {
     private String walletId;
     private String taguuid;
     private String eventId;
-    private List<Event> linkedEvents; // events this user have bought ticket for
+    private List<String> linkedEvents; // events this user was added to as a team member
 
-    public List<Event> getLinkedEvents() {
+    public List<String> getLinkedEvents() {
         return linkedEvents;
     }
 
-    public void setLinkedEvents(List<Event> linkedEvents) {
+    public void setLinkedEvents(List<String> linkedEvents) {
         this.linkedEvents = linkedEvents;
     }
     
@@ -250,6 +250,7 @@ public class User {
     
     
 }
+
 
 
 

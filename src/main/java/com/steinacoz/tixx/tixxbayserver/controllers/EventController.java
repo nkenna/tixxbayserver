@@ -16,10 +16,12 @@ import com.sendgrid.helpers.mail.objects.Email;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventKey;
+import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.EventKeyRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.EventTeamRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.request.EventKeyReq;
 import com.steinacoz.tixx.tixxbayserver.request.EventUpdateRequest;
@@ -69,6 +71,9 @@ public class EventController {
     
     @Autowired
     EventKeyRepo eventkeyRepo;
+    
+    @Autowired
+    EventTeamRepo eventTeamRepo;
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
@@ -529,9 +534,31 @@ public class EventController {
         }
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/event-by-vendor", method = RequestMethod.POST)
+    public ResponseEntity<EventResponse> eventByVendor(@RequestBody Event eve){
+        EventResponse er = new EventResponse();
+        EventDao event = eventRepo.getEventByEventCode(eve.getEventCode());
+        
+        if(event != null){
+            er.setMessage("event found");
+        er.setStatus("success");
+        er.setEventdata(event);
+        return ResponseEntity.ok().body(er);
+        }else{
+           er.setMessage("no event found");
+        er.setStatus("failed");
+        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(er); 
+        }
+        
+    }
+    
     
     
 }
+
+
 
 
 

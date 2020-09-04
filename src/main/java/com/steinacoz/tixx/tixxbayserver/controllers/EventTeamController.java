@@ -142,6 +142,26 @@ public class EventTeamController {
             }
             
             user.setUserType(atmr.getRole());
+            List<String> linkedEvents = new ArrayList<>();
+            if(user.getLinkedEvents() != null){
+                linkedEvents.addAll(linkedEvents);
+            }
+            boolean isLinked = false;
+            for(int j = 0; j < linkedEvents.size(); j++){
+                if(linkedEvents.get(j).equalsIgnoreCase(team.getEventCode())){
+                    isLinked = true;
+                    break;
+                }
+            }
+            
+            if(!isLinked){
+                linkedEvents.add(team.getEventCode());
+                user.setLinkedEvents(linkedEvents);
+                user.setUpdated(LocalDateTime.now());
+                userRepo.save(user);
+            }
+                            
+            
             users.add(user);
             team.setMembers(users);
             team.setUpdated(LocalDateTime.now());
@@ -191,6 +211,20 @@ public class EventTeamController {
               return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(etr);  
             }
            
+           List<String> linkedEvents = user.getLinkedEvents();
+           boolean isLinked = false;
+            for(int j = 0; j < linkedEvents.size(); j++){
+                if(linkedEvents.get(j).equalsIgnoreCase(team.getEventCode())){
+                    user.getLinkedEvents().remove(linkedEvents.get(j));
+                    
+                    user.setLinkedEvents(user.getLinkedEvents());
+                    user.setUpdated(LocalDateTime.now());
+                    userRepo.save(user);
+                    isLinked = true;
+                    break;
+                }
+            }
+           
            users.clear();
            users = team.getMembers();
            
@@ -211,8 +245,25 @@ public class EventTeamController {
     @CrossOrigin
     @RequestMapping(value = "/event-team", method = RequestMethod.POST)
     public ResponseEntity<EventTeamResponse> getEventTeam(@RequestBody AddTeamMemberRequest atmr){
-        EventTeamResponse etr = new EventTeamResponse();
+        EventTeamResponse etr = new EventTeamResponse();        
+        EventTeam team = teamRepo.findByTeamRef(atmr.getTeamRef());
         
+        if(team != null){
+            etr.setTeam(team);
+            etr.setStatus("success");
+            etr.setMessage("team retrieved successfully");
+            return ResponseEntity.ok().body(etr);
+        }else{
+           etr.setStatus("success");
+            etr.setMessage("team not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(etr); 
+        }
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/event-team-by-memeber", method = RequestMethod.POST)
+    public ResponseEntity<EventTeamResponse> getEventTeamByMemberId(@RequestBody AddTeamMemberRequest atmr){
+        EventTeamResponse etr = new EventTeamResponse();        
         EventTeam team = teamRepo.findByTeamRef(atmr.getTeamRef());
         
         if(team != null){
@@ -227,6 +278,11 @@ public class EventTeamController {
         }
     }
 }
+
+
+
+
+
 
 
 
