@@ -50,8 +50,13 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
         
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         //MatchOperation match1 = Aggregation.match();
-        MatchOperation match2 = Aggregation.match(Criteria.where("transDate").gte(start).lt(end)
-                .andOperator(Criteria.where("eventCode").is(eventCode)));
+        MatchOperation match2 = Aggregation.match(
+                Criteria.where("eventCode").is(eventCode)
+                .andOperator(
+                        Criteria.where("transDate").lt(end),
+                        Criteria.where("transDate").gte(start)
+                )
+            );
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
         //list.add(Aggregation.lookup("user", "eventCode", "eventCode", "event"));
         TypedAggregation<TicketSaleTransaction> agg = Aggregation.newAggregation(TicketSaleTransaction.class, list);
@@ -77,6 +82,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
     }
     
 }
+
 
 
 
