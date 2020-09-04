@@ -29,6 +29,7 @@ import com.steinacoz.tixx.tixxbayserver.request.PayoutRequest;
 import com.steinacoz.tixx.tixxbayserver.request.RemoveImageRequest;
 import com.steinacoz.tixx.tixxbayserver.response.EventKeyResponse;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
+import com.steinacoz.tixx.tixxbayserver.response.EventResponseVendor;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -539,8 +540,8 @@ public class EventController {
     
     @CrossOrigin
     @RequestMapping(value = "/event-by-vendor", method = RequestMethod.POST)
-    public ResponseEntity<EventResponse> eventByVendor(@RequestBody PayoutRequest pr){
-        EventResponse er = new EventResponse();
+    public ResponseEntity<EventResponseVendor> eventByVendor(@RequestBody PayoutRequest pr){
+        EventResponseVendor er = new EventResponseVendor();
         List<Event> finalEvents = new ArrayList<Event>();
         User user = userRepo.findByUsername(pr.getUsername());
         
@@ -566,6 +567,7 @@ public class EventController {
         er.setMessage("events found: " + String.valueOf(finalEvents.size()));
         er.setStatus("success");
         er.setEvents(finalEvents);
+        
         return ResponseEntity.ok().body(er);
         
     }
@@ -573,6 +575,7 @@ public class EventController {
     
     
 }
+
 
 
 
