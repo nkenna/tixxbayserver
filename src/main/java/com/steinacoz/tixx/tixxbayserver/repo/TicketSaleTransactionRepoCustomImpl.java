@@ -45,6 +45,9 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
         LocalDate end = month.atEndOfMonth();
         LocalDate start = month.atDay(1);
         
+        System.out.println(start);        
+        System.out.println(end);
+        
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         //MatchOperation match1 = Aggregation.match();
         MatchOperation match2 = Aggregation.match(Criteria.where("transDate").lt(end)
@@ -75,6 +78,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
     }
     
 }
+
 
 
 
