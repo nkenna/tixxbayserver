@@ -18,18 +18,22 @@ import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventKey;
 import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
+import com.steinacoz.tixx.tixxbayserver.model.State;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.EventKeyRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventTeamRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.StateRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.request.EventKeyReq;
 import com.steinacoz.tixx.tixxbayserver.request.EventUpdateRequest;
 import com.steinacoz.tixx.tixxbayserver.request.PayoutRequest;
 import com.steinacoz.tixx.tixxbayserver.request.RemoveImageRequest;
+import com.steinacoz.tixx.tixxbayserver.request.StateRequest;
 import com.steinacoz.tixx.tixxbayserver.response.EventKeyResponse;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponseVendor;
+import com.steinacoz.tixx.tixxbayserver.response.StateResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -78,6 +82,9 @@ public class EventController {
     
     @Autowired
     EventTeamRepo eventTeamRepo;
+    
+    @Autowired
+    StateRepo stateRepo;
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
@@ -572,9 +579,32 @@ public class EventController {
         
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/add-state", method = RequestMethod.POST)
+    public ResponseEntity<StateResponse> addState(@RequestBody StateRequest stateReq){
+        StateResponse sr = new StateResponse();        
+        
+        try{
+          List<State> states = stateRepo.insert(stateReq.getState());
+          sr.setStatus("success");
+          sr.setStatus("states added: " + String.valueOf(states.size()));
+          return ResponseEntity.ok().body(sr);
+        }catch(Exception e){
+            sr.setStatus("failed");
+          sr.setStatus("error adding state" );
+          return ResponseEntity.ok().body(sr);
+        }
+    }
+    
     
     
 }
+
+
+
+
+
+
 
 
 
