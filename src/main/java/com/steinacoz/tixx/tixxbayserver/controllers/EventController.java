@@ -585,9 +585,12 @@ public class EventController {
         StateResponse sr = new StateResponse();        
         
         try{
-          List<State> states = stateRepo.insert(stateReq.getState());
+            for(State state : stateReq.getState()){
+                stateRepo.insert(state);
+            }
+          //List<State> states = stateRepo.insert(stateReq.getState());
           sr.setStatus("success");
-          sr.setStatus("states added: " + String.valueOf(states.size()));
+          sr.setStatus("states added");
           return ResponseEntity.ok().body(sr);
         }catch(Exception e){
             sr.setStatus("failed");
@@ -601,6 +604,8 @@ public class EventController {
     
     
 }
+
+
 
 
 
