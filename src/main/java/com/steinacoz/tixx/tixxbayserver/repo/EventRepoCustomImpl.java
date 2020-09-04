@@ -216,7 +216,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     }
 
     @Override
-    public List<EventDao> aggregateAllEventsByVendor(String eventCode) {
+    public EventDao getEventByVendor(String eventCode) {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("eventCode").is(eventCode));
 	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
@@ -224,12 +224,15 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
-	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
+	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getUniqueMappedResult();
     }
+
+    
     
     
     
 }
+
 
 
 
