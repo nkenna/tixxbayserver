@@ -839,7 +839,7 @@ public class UserController {
     @RequestMapping(value = "/create-role", method = RequestMethod.POST)
     public ResponseEntity createRole(@RequestBody RoleRequest rr){
         if(rr.getName() != null){
-            Role role = roleRepo.findByName(rr.getName()).orElseThrow(null);
+            Role role = roleRepo.findByName(rr.getName()).orElseGet(null);
             
             if(role == null){
                 Role newRole = new Role();
@@ -856,6 +856,7 @@ public class UserController {
     
    
 }
+
 
 
 
