@@ -209,7 +209,6 @@ public class UserController {
 					Role eventmanagerRole = roleRepo.findByName(ERole.ROLE_EVENTMANAGER)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(eventmanagerRole);
-
 					break;        
 				default:
 					Role userRole = roleRepo.findByName(ERole.ROLE_USER)
@@ -838,6 +837,7 @@ public class UserController {
     
    
 }
+
 
 
 
