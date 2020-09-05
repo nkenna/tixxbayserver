@@ -13,6 +13,7 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
+import com.steinacoz.tixx.tixxbayserver.dao.CityDao;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.dao.StateDao;
 import com.steinacoz.tixx.tixxbayserver.model.City;
@@ -666,8 +667,23 @@ public class EventController {
     }
     
     
+    @CrossOrigin
+    @RequestMapping(value = "/all-cities", method = RequestMethod.GET)
+    public ResponseEntity<StateResponse> allCities(){
+       StateResponse sr = new StateResponse(); 
+       List<CityDao> cities = cityRepo.getAllCities();      
+       sr.setStatus("success");
+       sr.setMessage("cities found: " + String.valueOf(cities.size()));
+       sr.setCities(cities);
+       return ResponseEntity.ok().body(sr);
+    }
+    
+    
     
 }
+
+
+
 
 
 

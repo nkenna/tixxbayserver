@@ -16,10 +16,11 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * @author nkenn
  */
 @RepositoryRestResource(collectionResourceRel = "cities", path = "cities")
-public interface CityRepo extends MongoRepository<City, String> {
+public interface CityRepo extends MongoRepository<City, String>, CityRepoCustom {
     City findByName(String name);
     List<City> findByState(String state);
 }
+
 
 
 
