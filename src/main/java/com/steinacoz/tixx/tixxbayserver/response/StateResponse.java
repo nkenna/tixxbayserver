@@ -18,7 +18,18 @@ public class StateResponse {
     private String status;
     private String message;
     private List<StateDao> states;
+    private StateDao state;
     private List<City> cities;
+
+    public StateDao getState() {
+        return state;
+    }
+
+    public void setState(StateDao state) {
+        this.state = state;
+    }
+    
+    
 
     public List<StateDao> getStates() {
         return states;
@@ -56,6 +67,7 @@ public class StateResponse {
     
     
 }
+
 
 
 

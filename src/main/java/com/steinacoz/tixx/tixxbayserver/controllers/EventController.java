@@ -638,8 +638,7 @@ public class EventController {
     @RequestMapping(value = "/all-states", method = RequestMethod.GET)
     public ResponseEntity<StateResponse> allStates(){
        StateResponse sr = new StateResponse(); 
-       List<StateDao> states = stateRepo.getAllStates();
-       
+       List<StateDao> states = stateRepo.getAllStates();      
        sr.setStatus("success");
        sr.setMessage("states found: " + String.valueOf(states.size()));
        sr.setStates(states);
@@ -647,8 +646,8 @@ public class EventController {
     }
     
     @CrossOrigin
-    @RequestMapping(value = "/all-states", method = RequestMethod.GET)
-    public ResponseEntity<StateResponse> allStates(){
+    @RequestMapping(value = "/state-by-name", method = RequestMethod.POST)
+    public ResponseEntity<StateResponse> getStateByname(@RequestBody StateRequest stateReq){
        StateResponse sr = new StateResponse(); 
        List<StateDao> states = stateRepo.getAllStates();
        
@@ -661,6 +660,8 @@ public class EventController {
     
     
 }
+
+
 
 
 
