@@ -30,6 +30,7 @@ import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
 import com.steinacoz.tixx.tixxbayserver.request.ChangeUserPasswordRequest;
 import com.steinacoz.tixx.tixxbayserver.request.CreateUserRequest;
 import com.steinacoz.tixx.tixxbayserver.request.RestUserPasswordRequest;
+import com.steinacoz.tixx.tixxbayserver.request.RoleRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UpdateUserRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UserFlagRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UserLoginRequest;
@@ -835,8 +836,30 @@ public class UserController {
 		
     }
     
+    @RequestMapping(value = "/create-role", method = RequestMethod.POST)
+    public ResponseEntity createRole(@RequestBody RoleRequest rr){
+        if(rr.getName() == null){
+            Role role = roleRepo.findByName(rr.getName()).orElseThrow(null);
+            
+            if(role == null){
+                Role newRole = new Role();
+                newRole.setName(rr.getName());
+                roleRepo.save(newRole);
+                return ResponseEntity.ok(role);
+            }else{
+                return ResponseEntity.badRequest().body(role);
+            }
+        }else{
+            return ResponseEntity.badRequest().body("no data");
+        }
+    }
+    
    
 }
+
+
+
+
 
 
 
