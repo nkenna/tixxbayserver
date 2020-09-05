@@ -150,7 +150,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ar);
 		}
                 
-                User newUser = null;
+                User newUser = new User();
 		
 		//generate username and check for it exist before
 		String gen_username = Utils.randomNS(6);
@@ -838,6 +838,7 @@ public class UserController {
     
    
 }
+
 
 
 
