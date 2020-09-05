@@ -5,6 +5,11 @@
  */
 package com.steinacoz.tixx.tixxbayserver.response;
 
+import com.steinacoz.tixx.tixxbayserver.dao.StateDao;
+import com.steinacoz.tixx.tixxbayserver.model.City;
+import com.steinacoz.tixx.tixxbayserver.model.State;
+import java.util.List;
+
 /**
  *
  * @author nkenn
@@ -12,6 +17,26 @@ package com.steinacoz.tixx.tixxbayserver.response;
 public class StateResponse {
     private String status;
     private String message;
+    private List<StateDao> states;
+    private List<City> cities;
+
+    public List<StateDao> getStates() {
+        return states;
+    }
+
+    public void setStates(List<StateDao> states) {
+        this.states = states;
+    }
+
+    public List<City> getCities() {
+        return cities;
+    }
+
+    public void setCities(List<City> cities) {
+        this.cities = cities;
+    }
+    
+    
 
     public String getStatus() {
         return status;
@@ -31,6 +56,8 @@ public class StateResponse {
     
     
 }
+
+
 
 
 

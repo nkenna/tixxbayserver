@@ -14,6 +14,7 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
+import com.steinacoz.tixx.tixxbayserver.dao.StateDao;
 import com.steinacoz.tixx.tixxbayserver.model.City;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventKey;
@@ -633,9 +634,24 @@ public class EventController {
         
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/all-states", method = RequestMethod.GET)
+    public ResponseEntity<StateResponse> allStates(@RequestBody StateRequest stateReq){
+       StateResponse sr = new StateResponse(); 
+       List<StateDao> states = stateRepo.getAllStates();
+       
+       sr.setStatus("success");
+       sr.setMessage("states found: " + String.valueOf(states.size()));
+       sr.setStates(states);
+       return ResponseEntity.ok().body(sr);
+    }
+    
     
     
 }
+
+
+
 
 
 

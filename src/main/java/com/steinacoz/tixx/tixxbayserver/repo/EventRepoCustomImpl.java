@@ -44,12 +44,14 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     public List<EventDao> aggregateAllEvents() {
         LocalDateTime now = LocalDateTime.now();
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        MatchOperation match3 = Aggregation.match(Criteria.where("endDate").is(now).andOperator(Criteria.where("status").is(true)));
+        MatchOperation match = Aggregation.match(Criteria.where("endDate").is(now).andOperator(Criteria.where("status").is(true)));
 	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
+        list.add(match);
         TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+        
 	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
     }    
 
@@ -232,6 +234,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     
     
 }
+
 
 
 
