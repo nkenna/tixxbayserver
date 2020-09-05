@@ -115,6 +115,11 @@ public class TicketController {
         ticket.setCreated(LocalDateTime.now());
         ticket.setUpdated(LocalDateTime.now());
         
+        if(ticket.getSaleStartDay() == null){
+            tr.setStatus("failed");
+            tr.setMessage("ticket sale start date is required");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }
         
         Event event = eventRepo.findById(ticket.getEventId()).orElseThrow(null);
         
@@ -130,6 +135,24 @@ public class TicketController {
         }
         
         if(event != null){
+            // if ticket is NFC and ticket sale end day is after event start date, flag it
+            if(ticket.getTicketType().equalsIgnoreCase("NFC")){
+               if(ticket.getSaleEndDay().isAfter(event.getStartDate())){
+                    tr.setStatus("failed");
+                    tr.setMessage("ticket sale end date must be before event start date");
+                    return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(tr);
+               }
+
+                LocalDateTime daysDiff = event.getStartDate().minusDays(14);    
+
+                if(daysDiff.isBefore(ticket.getSaleEndDay()) ){ // the days difference between event start date and ticket sale end day must be greater than 14
+                    tr.setStatus("failed");
+                    tr.setMessage("ticket sale end date must be 14days away from the event start date");
+                    return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(tr);
+                } 
+            }
+            
+            
           ticket.setTicketCode(event.getEventCode() + Utils.randomNS(4));  
         }else{
            tr.setStatus("failed");
@@ -850,6 +873,9 @@ public class TicketController {
     
     
 }
+
+
+
 
 
 
