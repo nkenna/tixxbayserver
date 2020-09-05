@@ -20,7 +20,18 @@ public class StateResponse {
     private String message;
     private List<StateDao> states;
     private StateDao state;
+    private CityDao city;
     private List<CityDao> cities;
+
+    public CityDao getCity() {
+        return city;
+    }
+
+    public void setCity(CityDao city) {
+        this.city = city;
+    }
+    
+    
 
     public StateDao getState() {
         return state;
@@ -70,6 +81,8 @@ public class StateResponse {
     
     
 }
+
+
 
 
 

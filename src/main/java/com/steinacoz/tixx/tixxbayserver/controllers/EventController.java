@@ -678,9 +678,30 @@ public class EventController {
        return ResponseEntity.ok().body(sr);
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/city-by-name", method = RequestMethod.POST)
+    public ResponseEntity<StateResponse> getCityByname(@RequestBody StateRequest stateReq){
+       StateResponse sr = new StateResponse(); 
+       CityDao city = cityRepo.getCityByName(stateReq.getName());
+       
+       if(city == null){
+           sr.setStatus("failed");
+           sr.setMessage("city not found");
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(sr);
+       }else{
+           sr.setStatus("success");
+            sr.setMessage("city found");
+            sr.setCity(city);
+            return ResponseEntity.ok().body(sr);
+       }
+       
+       
+    }
+    
     
     
 }
+
 
 
 

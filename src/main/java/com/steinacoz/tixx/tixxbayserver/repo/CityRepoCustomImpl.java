@@ -15,7 +15,9 @@ import java.util.List;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 
 /**
  *
@@ -34,11 +36,22 @@ public class CityRepoCustomImpl implements CityRepoCustom {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         //MatchOperation match3 = Aggregation.match(Criteria.where("endDate").is(now).andOperator(Criteria.where("status").is(true)));
 	list.add(Aggregation.lookup("state", "state", "name", "stateData"));        
-        TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+        TypedAggregation<City> agg = Aggregation.newAggregation(City.class, list);
 	return mongoTemplate.aggregate(agg, City.class, CityDao.class).getMappedResults();
+    }
+
+    @Override
+    public CityDao getCityByName(String name) {
+       List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        MatchOperation match = Aggregation.match(Criteria.where("name").is(name));
+	list.add(Aggregation.lookup("state", "state", "name", "stateData"));  
+        list.add(match);
+        TypedAggregation<City> agg = Aggregation.newAggregation(City.class, list);
+	return mongoTemplate.aggregate(agg, City.class, CityDao.class).getUniqueMappedResult(); 
     }
     
 }
+
 
 
 

@@ -36,7 +36,7 @@ public class StateRepoCustomImpl implements StateRepoCustom {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         //MatchOperation match3 = Aggregation.match(Criteria.where("endDate").is(now).andOperator(Criteria.where("status").is(true)));
 	list.add(Aggregation.lookup("city", "name", "state", "cities"));        
-        TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+        TypedAggregation<State> agg = Aggregation.newAggregation(State.class, list);
 	return mongoTemplate.aggregate(agg, State.class, StateDao.class).getMappedResults();
     }
 
@@ -46,11 +46,12 @@ public class StateRepoCustomImpl implements StateRepoCustom {
         MatchOperation match = Aggregation.match(Criteria.where("name").is(name));
 	list.add(Aggregation.lookup("city", "name", "state", "cities"));    
         list.add(match);
-        TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+        TypedAggregation<State> agg = Aggregation.newAggregation(State.class, list);
 	return mongoTemplate.aggregate(agg, State.class, StateDao.class).getUniqueMappedResult(); 
     }
     
 }
+
 
 
 

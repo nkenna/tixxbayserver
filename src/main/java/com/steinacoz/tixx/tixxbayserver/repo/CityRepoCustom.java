@@ -14,6 +14,8 @@ import java.util.List;
  */
 public interface CityRepoCustom {
     List<CityDao> getAllCities();
+    CityDao getCityByName(String name);
 }
+
 
 
