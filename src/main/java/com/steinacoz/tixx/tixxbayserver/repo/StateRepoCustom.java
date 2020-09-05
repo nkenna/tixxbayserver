@@ -15,7 +15,9 @@ import java.util.List;
  */
 public interface StateRepoCustom {
     List<StateDao> getAllStates();
+    StateDao getStateByName(String name);
 }
+
 
 
 

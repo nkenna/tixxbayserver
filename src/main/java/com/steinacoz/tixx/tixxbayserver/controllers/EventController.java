@@ -649,17 +649,26 @@ public class EventController {
     @RequestMapping(value = "/state-by-name", method = RequestMethod.POST)
     public ResponseEntity<StateResponse> getStateByname(@RequestBody StateRequest stateReq){
        StateResponse sr = new StateResponse(); 
-       List<StateDao> states = stateRepo.getAllStates();
+       StateDao state = stateRepo.getStateByName(stateReq.getName());
        
-       sr.setStatus("success");
-       sr.setMessage("states found: " + String.valueOf(states.size()));
-       sr.setStates(states);
-       return ResponseEntity.ok().body(sr);
+       if(state == null){
+           sr.setStatus("failed");
+           sr.setMessage("state not found");
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(sr);
+       }else{
+           sr.setStatus("success");
+            sr.setMessage("states found");
+            sr.setState(state);
+            return ResponseEntity.ok().body(sr);
+       }
+       
+       
     }
     
     
     
 }
+
 
 
 

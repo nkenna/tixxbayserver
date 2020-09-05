@@ -39,8 +39,20 @@ public class StateRepoCustomImpl implements StateRepoCustom {
         TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
 	return mongoTemplate.aggregate(agg, State.class, StateDao.class).getMappedResults();
     }
+
+    @Override
+    public StateDao getStateByName(String name) {
+       List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        MatchOperation match = Aggregation.match(Criteria.where("name").is(name));
+	list.add(Aggregation.lookup("city", "name", "state", "cities"));    
+        list.add(match);
+        TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+	return mongoTemplate.aggregate(agg, State.class, StateDao.class).getUniqueMappedResult(); 
+    }
     
 }
+
+
 
 
 
