@@ -31,7 +31,7 @@ public class TixxTag {
 	private boolean active;
 	private Location location;
 	private String role;
-	private String eventName; //event management
+	private String eventCode; //event management
 	private String eventId;
 
     public String getId() {
@@ -167,13 +167,23 @@ public class TixxTag {
         this.role = role;
     }
 
-    public String getEventName() {
-        return eventName;
+    public String getTaguuid() {
+        return taguuid;
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
+    public void setTaguuid(String taguuid) {
+        this.taguuid = taguuid;
     }
+
+    public String getEventCode() {
+        return eventCode;
+    }
+
+    public void setEventCode(String eventCode) {
+        this.eventCode = eventCode;
+    }
+
+   
 
     public String getEventId() {
         return eventId;
@@ -185,6 +195,7 @@ public class TixxTag {
         
         
 }
+
 
 
 

@@ -26,6 +26,17 @@ public class UserResponse {
     private List<UserDao> allUsers;
     private List<Wallet> wallet;
     private List<Transaction> donetrans;
+    List<String> roles;
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+    
+    
 
     public String getToken() {
         return token;
@@ -106,6 +117,7 @@ public class UserResponse {
     
     
 }
+
 
 
 

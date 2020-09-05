@@ -16,15 +16,19 @@ import com.steinacoz.tixx.tixxbayserver.config.jwtservice.JwtTokenUtil;
 import com.steinacoz.tixx.tixxbayserver.dao.BankDetailDao;
 import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
 import com.steinacoz.tixx.tixxbayserver.model.BankDetail;
+import com.steinacoz.tixx.tixxbayserver.model.ERole;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
+import com.steinacoz.tixx.tixxbayserver.model.Role;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.model.VerifyCode;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
 import com.steinacoz.tixx.tixxbayserver.repo.BankDetailRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.RoleRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.VerifyCodeRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
 import com.steinacoz.tixx.tixxbayserver.request.ChangeUserPasswordRequest;
+import com.steinacoz.tixx.tixxbayserver.request.CreateUserRequest;
 import com.steinacoz.tixx.tixxbayserver.request.RestUserPasswordRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UpdateUserRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UserFlagRequest;
@@ -37,7 +41,10 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
@@ -46,6 +53,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -85,6 +93,9 @@ public class UserController {
     BankDetailRepo bankDetailsRepo;
     
     @Autowired
+    RoleRepo roleRepo;
+    
+    @Autowired
     AuthenticationManager authenticationManager;
     
  
@@ -108,7 +119,7 @@ public class UserController {
     
     
     @RequestMapping(value = "/create-user", method = RequestMethod.POST)
-    public ResponseEntity<UserResponse> createAgent(@RequestBody User user) {
+    public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest user) {
 		
 		UserResponse ar = new UserResponse();
 		User foundUser;
@@ -138,6 +149,8 @@ public class UserController {
 			ar.setStatus("failed");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ar);
 		}
+                
+                User newUser = null;
 		
 		//generate username and check for it exist before
 		String gen_username = Utils.randomNS(6);
@@ -154,21 +167,63 @@ public class UserController {
 		
 		//encyprt paswword
 		String enc_password = bCryptPasswordEncoder.encode(user.getPassword());
-		user.setUsername(gen_username);
-		user.setPassword(enc_password);
+		newUser.setUsername(gen_username);
+		newUser.setPassword(enc_password);
 		//agent.setUserType(ag);
-		user.setVerified(false);
-		user.setActive(true);
-		user.setCreated(LocalDateTime.now());
-		user.setUpdated(LocalDateTime.now());
-                user.setFlag(false);
+		newUser.setVerified(false);
+		newUser.setActive(true);
+		newUser.setCreated(LocalDateTime.now());
+		newUser.setUpdated(LocalDateTime.now());
+                newUser.setFlag(false);
                 
-                                    		
-		User newUser = null;
+                //set user roles
+                Set<String> strRoles = user.getRoles();
+		Set<Role> roles = new HashSet<>();
+                
+                if (strRoles == null) {
+			Role userRole = roleRepo.findByName(ERole.ROLE_USER)
+					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+			roles.add(userRole);
+		}else {
+			strRoles.forEach(role -> {
+				switch (role) {
+				case "admin":
+					Role adminRole = roleRepo.findByName(ERole.ROLE_ADMIN)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					roles.add(adminRole);
+
+					break;
+				case "vendor":
+					Role vendorRole = roleRepo.findByName(ERole.ROLE_VENDOR)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					roles.add(vendorRole);
+
+					break;
+                                case "superadmin":
+					Role superAdminRole = roleRepo.findByName(ERole.ROLE_SUPERADMIN)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					roles.add(superAdminRole);
+
+					break;
+                                case "eventmanager":
+					Role eventmanagerRole = roleRepo.findByName(ERole.ROLE_EVENTMANAGER)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					roles.add(eventmanagerRole);
+
+					break;        
+				default:
+					Role userRole = roleRepo.findByName(ERole.ROLE_USER)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					roles.add(userRole);
+				}
+			});
+		}
+                
+                newUser.setRoles(roles);
 		
 		try {
                                       
-                  newUser = userRepo.save(user);
+                  newUser = userRepo.save(newUser);
                     //create wallet for user
                     Wallet wallet = new Wallet();
                     wallet.setOwnerid(newUser.getId());
@@ -181,7 +236,7 @@ public class UserController {
                     Wallet nWallet = walletRepo.save(wallet);
                     
                     newUser.setWalletId(nWallet.getWalletid());
-                    newUser = userRepo.save(user);                   
+                    newUser = userRepo.save(newUser);                   
                     
                    
 			
@@ -396,6 +451,10 @@ public class UserController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
+        List<String> roles = authentication.getAuthorities().stream()
+				.map(item -> item.getAuthority())
+				.collect(Collectors.toList());
+        
       
 
                 
@@ -406,6 +465,7 @@ public class UserController {
                 cur.setUser(aDao);
     		cur.setStatus("success");
                 cur.setToken(token);
+                cur.setRoles(roles);
 		cur.setMessage("user logged in successfully");
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(cur);
                 
@@ -568,6 +628,7 @@ public class UserController {
     
     
     @RequestMapping(value = "/all-users", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> allUsers(){
             
 		UserResponse ar = new UserResponse();
@@ -777,6 +838,14 @@ public class UserController {
     
    
 }
+
+
+
+
+
+
+
+
 
 
 

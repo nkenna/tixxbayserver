@@ -6,7 +6,9 @@
 package com.steinacoz.tixx.tixxbayserver.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -39,6 +41,17 @@ public class User {
     private String taguuid;
     private String eventId;
     private List<String> linkedEvents; // events this user was added to as a team member
+    private Set<Role> roles = new HashSet<>(); // admin, user, vendor, superadmin, eventmanager
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+    
+    
 
     public List<String> getLinkedEvents() {
         return linkedEvents;
@@ -250,6 +263,9 @@ public class User {
     
     
 }
+
+
+
 
 
 

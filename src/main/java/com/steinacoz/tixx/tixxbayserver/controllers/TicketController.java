@@ -646,6 +646,9 @@ public class TicketController {
                                      
                                 }
                                 double newBalance = trans.getTotalAmount().doubleValue() - ((charge/100) * trans.getTotalAmount().doubleValue());
+                                if(parentTicket.getTicketType().equalsIgnoreCase("NFC")){
+                                    newBalance = newBalance - 500.0;  // deduct N500 which is money for TAG
+                                }
                                 wallet.setBalance(wallet.getBalance().add(new BigDecimal(newBalance)));
                                 wallet.setUpdateddate(LocalDateTime.now());
                                 Wallet nWallet = walletRepo.save(wallet);
@@ -873,6 +876,9 @@ public class TicketController {
     
     
 }
+
+
+
 
 
 

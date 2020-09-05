@@ -9,7 +9,9 @@ import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl implements UserDetailsService {
+    
     @Autowired
     private UserRepo userDao;
 
@@ -36,15 +39,17 @@ public class UserServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Invalid email was provided");
 	}
         //getAuthority().add(new SimpleGrantedAuthority("USER"));
-	return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthority());
+        List<GrantedAuthority> authorities = user.getRoles().stream()
+				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
+				.collect(Collectors.toList());
+	return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
 	}
 
-	private List<SimpleGrantedAuthority> getAuthority() {
-            return Arrays.asList(new SimpleGrantedAuthority("AGENT"));
-	}
+    
 
 
 }
+
 
 
 
