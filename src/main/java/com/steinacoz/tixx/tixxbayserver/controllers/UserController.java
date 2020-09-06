@@ -20,10 +20,12 @@ import com.steinacoz.tixx.tixxbayserver.model.ERole;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.Role;
 import com.steinacoz.tixx.tixxbayserver.model.User;
+import com.steinacoz.tixx.tixxbayserver.model.UserPoint;
 import com.steinacoz.tixx.tixxbayserver.model.VerifyCode;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
 import com.steinacoz.tixx.tixxbayserver.repo.BankDetailRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.RoleRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.UserPointRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.VerifyCodeRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
@@ -95,6 +97,9 @@ public class UserController {
     
     @Autowired
     RoleRepo roleRepo;
+    
+    @Autowired
+    UserPointRepo upRepo;
     
     @Autowired
     AuthenticationManager authenticationManager;
@@ -255,6 +260,13 @@ public class UserController {
                     Wallet nWallet = walletRepo.save(wallet);
                     
                     newUser.setWalletId(nWallet.getWalletid());
+                    
+                    //create user point
+                    UserPoint up = new UserPoint();
+                    up.setUsername(newUser.getUsername());
+                    up.setPoints(0.2);
+                    upRepo.save(up);
+                    
                     newUser = userRepo.save(newUser);                   
                     
                    
@@ -875,6 +887,9 @@ public class UserController {
     
    
 }
+
+
+
 
 
 

@@ -13,7 +13,12 @@ import org.springframework.data.annotation.Id;
  */
 public class UserPoint {
     @Id private String id;
-    private double points;
+    //0.2pt for account creation
+    //0.5pt for making transaction with tixxbay tag
+    //1pt for attending event with tixx tag
+    //1pt if your referred starts selling ticket
+    
+    private double points; 
     private String username;
     private String taguuid;
 
@@ -51,5 +56,6 @@ public class UserPoint {
     
     
 }
+
 
 
