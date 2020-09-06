@@ -26,6 +26,7 @@ import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.model.TicketSaleTransaction;
 import com.steinacoz.tixx.tixxbayserver.model.Transaction;
 import com.steinacoz.tixx.tixxbayserver.model.User;
+import com.steinacoz.tixx.tixxbayserver.model.UserPoint;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
 import com.steinacoz.tixx.tixxbayserver.model.WalletTransaction;
 import com.steinacoz.tixx.tixxbayserver.repo.ChildTicketRepo;
@@ -33,6 +34,7 @@ import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.IssuedTicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketSaleTransactionRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.UserPointRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletTransactionRepo;
@@ -102,6 +104,9 @@ public class TicketController {
     
     @Autowired
     WalletRepo walletRepo;
+    
+    @Autowired
+    UserPointRepo upRepo;
     
     @Autowired
     WalletTransactionRepo walletTransRepo;
@@ -648,6 +653,19 @@ public class TicketController {
                                 double newBalance = trans.getTotalAmount().doubleValue() - ((charge/100) * trans.getTotalAmount().doubleValue());
                                 if(parentTicket.getTicketType().equalsIgnoreCase("NFC")){
                                     newBalance = newBalance - 500.0;  // deduct N500 which is money for TAG
+                                    UserPoint up = upRepo.findByUsername(user.getUsername());
+                                    if(up != null){
+                                        if(trans.getTotalAmount().doubleValue() < 5000.0){
+                                            up.setPoints(up.getPoints() + 0.3);
+                                        }else if(trans.getTotalAmount().doubleValue() > 5000.0 && trans.getTotalAmount().doubleValue() < 25000.0){
+                                            up.setPoints(up.getPoints() + 0.4);
+                                        }else if(trans.getTotalAmount().doubleValue() > 25000.0 && trans.getTotalAmount().doubleValue() < 50000.0){
+                                            up.setPoints(up.getPoints() + 0.5);
+                                        }else if(trans.getTotalAmount().doubleValue() > 50000.0 ){
+                                            up.setPoints(up.getPoints() + 0.75);
+                                        }
+                                        upRepo.save(up);
+                                    }
                                 }
                                 wallet.setBalance(wallet.getBalance().add(new BigDecimal(newBalance)));
                                 wallet.setUpdateddate(LocalDateTime.now());
@@ -746,6 +764,17 @@ public class TicketController {
                 System.out.println(event.getDiscription());
                 event.setCheckedInTicket(event.getCheckedInTicket() + 1);
                 eventRepo.save(event);
+            }
+            
+            //
+            if(ct.getTicketType().equalsIgnoreCase("NFC")){
+                UserPoint up = upRepo.findByUsername(ct.getBoughtByUsername());
+                up.setPoints(up.getPoints() + 1);
+                upRepo.save(up);
+            }else{
+                UserPoint up = upRepo.findByUsername(ct.getBoughtByUsername());
+                up.setPoints(up.getPoints() + 0.05);
+                upRepo.save(up);
             }
             
             ChildTicketDao ctDao = ctRepo.getChildTicketByTicketCode(ct.getTicketCode());
@@ -876,6 +905,10 @@ public class TicketController {
     
     
 }
+
+
+
+
 
 
 
