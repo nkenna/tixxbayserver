@@ -169,6 +169,8 @@ public class UserController {
 		//encyprt paswword
 		String enc_password = bCryptPasswordEncoder.encode(user.getPassword());
 		newUser.setUsername(gen_username);
+                newUser.setEmail(user.getEmail());
+                newUser.setMobileNumber(user.getMobileNumber());
 		newUser.setPassword(enc_password);
 		//agent.setUserType(ag);
 		newUser.setVerified(false);
@@ -873,6 +875,7 @@ public class UserController {
     
    
 }
+
 
 
 
