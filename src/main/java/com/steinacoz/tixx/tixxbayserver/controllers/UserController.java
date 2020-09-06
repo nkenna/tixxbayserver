@@ -182,38 +182,55 @@ public class UserController {
 		Set<Role> roles = new HashSet<>();
                 
                 if (strRoles == null) {
-			Role userRole = roleRepo.findByName(ERole.ROLE_USER)
-					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-			roles.add(userRole);
+			Role userRole = roleRepo.findByName("ROLE_USER");
+			if(userRole != null){
+                            roles.add(userRole);
+                        }else{
+                            ar.setMessage("role not found");
+                            ar.setStatus("failed");
+                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ar);
+                        }		
+			
 		}else {
 			strRoles.forEach(role -> {
 				switch (role) {
 				case "admin":
-					Role adminRole = roleRepo.findByName(ERole.ROLE_ADMIN)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					Role adminRole = roleRepo.findByName("ROLE_ADMIN");
+                                        if(adminRole == null){
+                                            throw( new RuntimeException("Error: admin Role is not found."));
+                                        }
+					
 					roles.add(adminRole);
 
 					break;
 				case "vendor":
-					Role vendorRole = roleRepo.findByName(ERole.ROLE_VENDOR)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					Role vendorRole = roleRepo.findByName("ROLE_VENDOR");
+					if(vendorRole  == null){
+                                            throw( new RuntimeException("Error: vendor Role not found."));
+                                        }
 					roles.add(vendorRole);
 
 					break;
                                 case "superadmin":
-					Role superAdminRole = roleRepo.findByName(ERole.ROLE_SUPERADMIN)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					Role superAdminRole = roleRepo.findByName("ROLE_SUPERADMIN");
+					if(superAdminRole  == null){
+                                            throw( new RuntimeException("Error: super adminRole not found."));
+                                        }
 					roles.add(superAdminRole);
 
 					break;
                                 case "eventmanager":
-					Role eventmanagerRole = roleRepo.findByName(ERole.ROLE_EVENTMANAGER)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					Role eventmanagerRole = roleRepo.findByName("ROLE_EVENTMANAGER");
+					if(eventmanagerRole  == null){
+                                            throw( new RuntimeException("Error: event manager Role  not found."));
+                                        }
 					roles.add(eventmanagerRole);
 					break;        
 				default:
-					Role userRole = roleRepo.findByName(ERole.ROLE_USER)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					Role userRole = roleRepo.findByName("ROLE_USER");
+					if(userRole  == null){
+                                            throw( new RuntimeException("Error: user Role2 not found."));
+                                        }
 					roles.add(userRole);
 				}
 			});
@@ -839,7 +856,7 @@ public class UserController {
     @RequestMapping(value = "/create-role", method = RequestMethod.POST)
     public ResponseEntity createRole(@RequestBody RoleRequest rr){
         if(rr.getName() != null){
-            Role role = roleRepo.findByName(rr.getName()).orElseGet(null);
+            Role role = roleRepo.findByName(rr.getName());
             
             if(role == null){
                 Role newRole = new Role();
@@ -856,6 +873,8 @@ public class UserController {
     
    
 }
+
+
 
 
 

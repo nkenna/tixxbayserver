@@ -12,20 +12,23 @@ import com.steinacoz.tixx.tixxbayserver.model.ERole;
  * @author nkenn
  */
 public class RoleRequest {
-    private ERole name;
+    private String name;
 
-    public ERole getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(ERole name) {
+    public void setName(String name) {
         this.name = name;
     }
+
+   
 
     
     
     
 }
+
 
 
 
