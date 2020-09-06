@@ -37,6 +37,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     public List<UserDao> aggregateAllUsers() {
                     
                 List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+                list.add(Aggregation.lookup("userPoint", "username", "username", "userPoint"));
 		list.add(Aggregation.lookup("event", "id", "creatorId", "events"));
 		list.add(Aggregation.lookup("wallet", "walletId", "walletid", "wallet"));
 		TypedAggregation<User> agg = Aggregation.newAggregation(User.class, list);
@@ -48,7 +49,8 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     public UserDao getUserByEmail(String email) {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("email").is(email));
-        list.add(Aggregation.lookup("user", "ownerUsername", "username", "user"));
+        list.add(Aggregation.lookup("userPoint", "username", "username", "userPoint"));
+	list.add(Aggregation.lookup("event", "id", "creatorId", "events"));
         list.add(Aggregation.lookup("wallet", "walletId", "walletid", "wallet"));
         //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -61,7 +63,8 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     public UserDao getUserByPhoneNumber(String phoneNumber) {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("mobileNumber").is(phoneNumber));
-        list.add(Aggregation.lookup("user", "ownerUsername", "username", "user"));
+        list.add(Aggregation.lookup("userPoint", "username", "username", "userPoint"));
+	list.add(Aggregation.lookup("event", "id", "creatorId", "events"));
         list.add(Aggregation.lookup("wallet", "walletId", "walletid", "wallet"));
         //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -71,6 +74,9 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
+
+
 
 
 

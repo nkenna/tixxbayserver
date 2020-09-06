@@ -10,6 +10,7 @@ import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.Role;
 import com.steinacoz.tixx.tixxbayserver.model.TixxTag;
 import com.steinacoz.tixx.tixxbayserver.model.Transaction;
+import com.steinacoz.tixx.tixxbayserver.model.UserPoint;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -49,6 +50,19 @@ public class UserDao {
         private List<String> linkedEvents; // events this user was added to as a team member
         private List<Transaction> donetrans;
         private List<Event> events;
+        private UserPoint userPoint;
+
+    public UserPoint getUserPoint() {
+        return userPoint;
+    }
+
+    public void setUserPoint(UserPoint userPoint) {
+        this.userPoint = userPoint;
+    }
+        
+        
+        
+        
 
     public Set<Role> getRoles() {
         return roles;
@@ -280,6 +294,8 @@ public class UserDao {
         
     
 }
+
+
 
 
 
