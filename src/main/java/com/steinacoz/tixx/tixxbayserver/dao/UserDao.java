@@ -7,11 +7,14 @@ package com.steinacoz.tixx.tixxbayserver.dao;
 
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
+import com.steinacoz.tixx.tixxbayserver.model.Role;
 import com.steinacoz.tixx.tixxbayserver.model.TixxTag;
 import com.steinacoz.tixx.tixxbayserver.model.Transaction;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -34,6 +37,7 @@ public class UserDao {
 	private LocalDateTime created;
 	private LocalDateTime updated;
 	private String userType;
+        private Set<Role> roles = new HashSet<>(); // admin, user, vendor, superadmin, eventmanager
 	private boolean verified;
 	private boolean active;
         private boolean flag;
@@ -45,6 +49,16 @@ public class UserDao {
         private List<String> linkedEvents; // events this user was added to as a team member
         private List<Transaction> donetrans;
         private List<Event> events;
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+        
+        
 
     public List<String> getLinkedEvents() {
         return linkedEvents;
@@ -266,6 +280,7 @@ public class UserDao {
         
     
 }
+
 
 
 
