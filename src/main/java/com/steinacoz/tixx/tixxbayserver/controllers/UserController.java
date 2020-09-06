@@ -264,7 +264,7 @@ public class UserController {
                     //create user point
                     UserPoint up = new UserPoint();
                     up.setUsername(newUser.getUsername());
-                    up.setPoints(0.2);
+                    up.setPoints(0.1); // free points for creating account
                     upRepo.save(up);
                     
                     newUser = userRepo.save(newUser);                   
@@ -887,6 +887,9 @@ public class UserController {
     
    
 }
+
+
+
 
 
 
