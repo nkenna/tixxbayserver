@@ -21,12 +21,14 @@ import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventKey;
 import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
+import com.steinacoz.tixx.tixxbayserver.model.Role;
 import com.steinacoz.tixx.tixxbayserver.model.State;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.CityRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventKeyRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventTeamRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.RoleRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.StateRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.request.EventKeyReq;
@@ -44,7 +46,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import kong.unirest.ContentType;
@@ -92,6 +96,9 @@ public class EventController {
     
     @Autowired
     CityRepo cityRepo;
+    
+    @Autowired
+    RoleRepo roleRepo;
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
@@ -163,6 +170,16 @@ public class EventController {
             
                         
             if(user != null){
+                Set<Role> roles = new HashSet<>();
+                Role eventmanagerRole = roleRepo.findByName("ROLE_EVENTMANAGER");
+                    if(eventmanagerRole  == null){
+                        throw( new RuntimeException("Error: event manager Role not found."));
+                    }
+                roles.add(eventmanagerRole);  
+                Set<Role> rr = user.getRoles();
+                rr.addAll(roles);
+                user.setRoles(rr);
+                userRepo.save(user);
                 Email from = new Email("support@tixxbay.com");
                         String subject = "New Event created at TixxBay";
                         Email to = new Email(user.getEmail());
@@ -701,6 +718,7 @@ public class EventController {
     
     
 }
+
 
 
 
