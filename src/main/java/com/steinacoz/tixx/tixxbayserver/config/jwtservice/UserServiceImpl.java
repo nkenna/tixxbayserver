@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserDetailsService {
 	}
         //getAuthority().add(new SimpleGrantedAuthority("USER"));
         List<GrantedAuthority> authorities = user.getRoles().stream()
-				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
+				.map(role -> new SimpleGrantedAuthority(role.getName()))
 				.collect(Collectors.toList());
 	return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
 	}
@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserDetailsService {
 
 
 }
+
 
 
 
