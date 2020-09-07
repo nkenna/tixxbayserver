@@ -47,7 +47,7 @@ public class TixxScheduleTask {
     @Autowired
     UserPointRepo upRepo;
     
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 300000000)
     public void checkUserPoints(){
         
         //get all user points
@@ -56,6 +56,8 @@ public class TixxScheduleTask {
         tasklog.info("length of resolved data: {}", String.valueOf(ups.size()));
     }
 }
+
+
 
 
 
