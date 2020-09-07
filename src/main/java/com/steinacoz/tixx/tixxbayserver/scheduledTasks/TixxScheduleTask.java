@@ -85,7 +85,7 @@ public class TixxScheduleTask {
                     wallet.setUpdateddate(LocalDateTime.now());
                     
                     // deduct points
-                    up.setPoints(0);
+                    up.setPoints(up.getPoints() - 20.0);
                     
                     //save all updated date
                     upRepo.save(up);
@@ -133,6 +133,7 @@ public class TixxScheduleTask {
         }
     }
 }
+
 
 
 
