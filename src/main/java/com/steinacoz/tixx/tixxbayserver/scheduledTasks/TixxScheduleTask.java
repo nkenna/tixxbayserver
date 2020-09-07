@@ -65,7 +65,7 @@ public class TixxScheduleTask {
     @Autowired
     WalletTransactionRepo walletTransRepo;
     
-    @Scheduled(fixedRate = 21600)
+    @Scheduled(fixedRate = 21600000)
     public void checkUserPoints(){
         
         //get all user points
@@ -133,6 +133,7 @@ public class TixxScheduleTask {
         }
     }
 }
+
 
 
 
