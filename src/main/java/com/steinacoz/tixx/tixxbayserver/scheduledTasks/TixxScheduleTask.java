@@ -65,11 +65,11 @@ public class TixxScheduleTask {
     @Autowired
     WalletTransactionRepo walletTransRepo;
     
-    @Scheduled(fixedRate = 300000000)
+    @Scheduled(fixedRate = 21600)
     public void checkUserPoints(){
         
         //get all user points
-        List<UserPoint> ups = upRepo.findByPointsGreaterThanQuery(0.1);
+        List<UserPoint> ups = upRepo.findByPointsGreaterThanQuery(20.0);
         System.out.println("length of resolved data" +  String.valueOf(ups.size()));
         tasklog.info("length of resolved data: {}", String.valueOf(ups.size()));
         
@@ -133,6 +133,9 @@ public class TixxScheduleTask {
         }
     }
 }
+
+
+
 
 
 
