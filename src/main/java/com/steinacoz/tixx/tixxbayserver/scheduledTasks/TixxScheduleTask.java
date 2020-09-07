@@ -51,11 +51,12 @@ public class TixxScheduleTask {
     public void checkUserPoints(){
         
         //get all user points
-        List<UserPoint> ups = upRepo.findByPointsGreaterThanQueryOrEqualTo(1.0);
+        List<UserPoint> ups = upRepo.findByPointsGreaterThanQuery(1.0);
         System.out.println("length of resolved data" +  String.valueOf(ups.size()));
         tasklog.info("length of resolved data: {}", String.valueOf(ups.size()));
     }
 }
+
 
 
 

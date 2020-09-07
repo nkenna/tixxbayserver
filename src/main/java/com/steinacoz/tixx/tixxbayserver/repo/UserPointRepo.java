@@ -21,10 +21,10 @@ public interface UserPointRepo extends MongoRepository<UserPoint, String> {
     UserPoint findByUsername(String username);
     UserPoint findByTaguuid(String taguuid);
     
-    public List<UserPoint> findByPointsGreaterThanQueryOrEqualTo(double points);
+    @Query("{'points' : {$gte : ?0}}")
+    public List<UserPoint> findByPointsGreaterThanQuery(double points);
     
 }
-
 
 
 
