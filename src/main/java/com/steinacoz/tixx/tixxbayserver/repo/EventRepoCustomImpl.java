@@ -44,7 +44,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     public List<EventDao> aggregateAllEvents() {
         LocalDateTime now = LocalDateTime.now();
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        MatchOperation match = Aggregation.match(Criteria.where("endDate").is(now).andOperator(Criteria.where("status").is(true)));
+        MatchOperation match = Aggregation.match(Criteria.where("endDate").lt(now).andOperator(Criteria.where("status").is(true)));
 	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
@@ -234,6 +234,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     
     
 }
+
 
 
 
