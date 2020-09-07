@@ -76,6 +76,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  * @author nkenn
  */
+
 @RestController
 @RequestMapping("/tixxbay/api/user/v1")
 public class UserController {
@@ -626,7 +627,7 @@ public class UserController {
 	
         
         
-    @CrossOrigin
+    
     @RequestMapping(value = "auth/login-user", method = RequestMethod.POST)
     public ResponseEntity<UserResponse>  loginUser(@RequestBody UserLoginRequest alr){
     	UserResponse cur = new UserResponse();
@@ -1071,6 +1072,7 @@ public class UserController {
     
    
 }
+
 
 
 
