@@ -19,6 +19,7 @@ import org.springframework.data.geo.Point;
 public interface EventRepoCustom {
     EventDao getEventByEventCode(String eventCode);
     List<EventDao> aggregateAllEvents();
+    List<EventDao> aggregateAllEventsByName(String title);
     List<EventDao> aggregateAllEventsByStatus();
     List<EventDao> aggregateAllEventsByCreator(String creatorId);
     List<EventDao> aggregateAllEventsByState(String state);
@@ -32,6 +33,7 @@ public interface EventRepoCustom {
     EventDao getEventByVendor(String eventCode);
     
 }
+
 
 
 

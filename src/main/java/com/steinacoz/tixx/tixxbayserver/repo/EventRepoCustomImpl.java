@@ -229,11 +229,28 @@ public class EventRepoCustomImpl implements EventRepoCustom {
 	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getUniqueMappedResult();
     }
 
+    @Override
+    public List<EventDao> aggregateAllEventsByName(String title) {
+        LocalDateTime now = LocalDateTime.now();
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
+        MatchOperation match = Aggregation.match(Criteria.where("creatorUsername").regex(title).andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
+        list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
+        list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
+        list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
+        list.add(match);
+      
+       
+	TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
+    }
+
     
     
     
     
 }
+
 
 
 
