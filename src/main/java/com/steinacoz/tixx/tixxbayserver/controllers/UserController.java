@@ -110,18 +110,7 @@ public class UserController {
 	
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
 	
-    public HttpResponse<JsonNode> sendSimpleMessage(User user, String fromEmail, String subject, String content) throws UnirestException {
-
-    	HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/sandboxf0a305f9cb84423c85c4f4f5c03e176e.mailgun.org")
-	            .basicAuth("api", System.getenv("MAILGUN_KEY"))
-	            .field("from", fromEmail)
-	            .field("to", user.getEmail())
-	            .field("subject", subject)
-	            .field("text", content)
-	            .asJson();
-
-        return request;
-    }
+   
     
     
     @RequestMapping(value = "/create-user", method = RequestMethod.POST)
@@ -887,6 +876,7 @@ public class UserController {
     
    
 }
+
 
 
 
