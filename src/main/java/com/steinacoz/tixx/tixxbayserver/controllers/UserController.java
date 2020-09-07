@@ -307,6 +307,201 @@ public class UserController {
 		return ResponseEntity.ok().body(ar);
 		
 	}
+    
+    @RequestMapping(value = "/create-user-admin", method = RequestMethod.POST)
+    public ResponseEntity<UserResponse> createUserAdmin(@RequestBody CreateUserRequest user) {
+		
+		UserResponse ar = new UserResponse();
+		User foundUser;
+                
+                if(user.getEmail() == null || user.getEmail().isEmpty()){
+                    ar.setMessage("user email is required");
+			ar.setStatus("failed");
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ar);
+                }
+                
+                if(user.getPassword() == null || user.getPassword().isEmpty()){
+                    ar.setMessage("user password is required");
+                    ar.setStatus("failed");
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ar);
+                }
+                
+                if(user.getPassword().length() < 8){
+                    ar.setMessage("user password must be more than 8 characters");
+                    ar.setStatus("failed");
+                    return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ar);
+                }
+		
+		//search for duplicate email
+		foundUser = userRepo.findByEmail(user.getEmail());
+		if(foundUser != null) {
+			ar.setMessage("user with email already exist");
+			ar.setStatus("failed");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ar);
+		}
+                
+                User newUser = new User();
+		
+		//generate username and check for it exist before
+		String gen_username = Utils.randomNS(6);
+		boolean username_check = false;
+		while(username_check) {
+			User us = userRepo.findByUsername(gen_username);
+			if(us == null) {
+                            username_check = false;
+			}
+			gen_username = Utils.randomNS(6);
+		}
+		
+		System.out.println(gen_username);
+		
+		//encyprt paswword
+		String enc_password = bCryptPasswordEncoder.encode(user.getPassword());
+		newUser.setUsername(gen_username);
+                newUser.setEmail(user.getEmail());
+                newUser.setMobileNumber(user.getMobileNumber());
+		newUser.setPassword(enc_password);
+		//agent.setUserType(ag);
+		newUser.setVerified(false);
+		newUser.setActive(true);
+		newUser.setCreated(LocalDateTime.now());
+		newUser.setUpdated(LocalDateTime.now());
+                newUser.setFlag(false);
+                
+                //set user roles
+                Set<String> strRoles = user.getRoles();
+		Set<Role> roles = new HashSet<>();
+                
+                if (strRoles == null) {
+			Role userRole = roleRepo.findByName("ROLE_USER");
+			if(userRole != null){
+                            roles.add(userRole);
+                        }else{
+                            ar.setMessage("role not found");
+                            ar.setStatus("failed");
+                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ar);
+                        }		
+			
+		}else {
+			strRoles.forEach(role -> {
+				switch (role) {
+				case "admin":
+					Role adminRole = roleRepo.findByName("ROLE_ADMIN");
+                                        if(adminRole == null){
+                                            throw( new RuntimeException("Error: admin Role is not found."));
+                                        }
+					
+					roles.add(adminRole);
+
+					break;
+				case "vendor":
+					Role vendorRole = roleRepo.findByName("ROLE_VENDOR");
+					if(vendorRole  == null){
+                                            throw( new RuntimeException("Error: vendor Role not found."));
+                                        }
+					roles.add(vendorRole);
+
+					break;
+                                case "superadmin":
+					Role superAdminRole = roleRepo.findByName("ROLE_SUPERADMIN");
+					if(superAdminRole  == null){
+                                            throw( new RuntimeException("Error: super adminRole not found."));
+                                        }
+					roles.add(superAdminRole);
+
+					break;
+                                case "eventmanager":
+					Role eventmanagerRole = roleRepo.findByName("ROLE_EVENTMANAGER");
+					if(eventmanagerRole  == null){
+                                            throw( new RuntimeException("Error: event manager Role  not found."));
+                                        }
+					roles.add(eventmanagerRole);
+					break;        
+				default:
+					Role userRole = roleRepo.findByName("ROLE_USER");
+					if(userRole  == null){
+                                            throw( new RuntimeException("Error: user Role2 not found."));
+                                        }
+					roles.add(userRole);
+				}
+			});
+		}
+                
+                newUser.setRoles(roles);
+		
+		try {
+                                      
+                  newUser = userRepo.save(newUser);
+                    //create wallet for user
+                    Wallet wallet = new Wallet();
+                    wallet.setOwnerid(newUser.getId());
+                    wallet.setBalance(BigDecimal.ZERO);
+                    wallet.setCreateddate(LocalDateTime.now());
+                    wallet.setUpdateddate(LocalDateTime.now());
+                    wallet.setStatus(true);
+                    wallet.setWalletid(Utils.randomNS(12));
+                    
+                    Wallet nWallet = walletRepo.save(wallet);
+                    
+                    newUser.setWalletId(nWallet.getWalletid());
+                    
+                    //create user point
+                    UserPoint up = new UserPoint();
+                    up.setUsername(newUser.getUsername());
+                    up.setPoints(0.1); // free points for creating account
+                    upRepo.save(up);
+                    
+                    newUser = userRepo.save(newUser);                   
+                    
+                   
+			
+		}catch(Exception e) {
+			ar.setMessage("error occurred saving user: " + e.getMessage());
+			ar.setStatus("failed");
+			return ResponseEntity.status(500).body(ar);
+		}
+		
+	
+			String enc_aid = Utils.randomNS(15);
+                        
+                        VerifyCode vc = new VerifyCode();
+                        vc.setCode(enc_aid);
+                        vc.setUsed(false);
+                        vc.setUser(newUser.getId());
+                        
+                        vcRepo.save(vc);
+                        
+			System.out.println(enc_aid);
+                        Email from = new Email("support@tixxbay.com");
+                        String subject = "Your Admin account is ready.";
+                        Email to = new Email(newUser.getEmail());
+                        Content content = new Content("text/plain", "https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/verify-user/" + enc_aid);
+                        Mail mail = new Mail(from, subject, to, content);
+                        System.out.println(mail.from.getEmail());
+                        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
+                        Request request = new Request();
+                        try {
+                          request.setMethod(Method.POST);
+                          request.setEndpoint("mail/send");
+                          request.setBody(mail.build());
+                          Response response = sg.api(request);
+                          System.out.println(response.getStatusCode());
+                          System.out.println(response.getBody());
+                          System.out.println(response.getHeaders());
+                          
+                        } catch (IOException ex) {
+                          
+                        }
+			
+                UserDao usdao = new UserDao();
+                BeanUtils.copyProperties(newUser, usdao);		
+		
+		ar.setStatus("success");
+		ar.setMessage("user saved successfully");
+                ar.setUser(usdao);
+		return ResponseEntity.ok().body(ar);
+		
+	}
         
     @CrossOrigin
     @RequestMapping(value = "/verify-user/{enc_aid}", method = RequestMethod.GET)
@@ -876,6 +1071,7 @@ public class UserController {
     
    
 }
+
 
 
 
