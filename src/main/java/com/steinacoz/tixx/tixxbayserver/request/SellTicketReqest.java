@@ -6,7 +6,9 @@
 package com.steinacoz.tixx.tixxbayserver.request;
 
 import com.steinacoz.tixx.tixxbayserver.model.Location;
+import com.steinacoz.tixx.tixxbayserver.model.ParentTicketSellData;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -15,43 +17,13 @@ import java.math.BigDecimal;
 public class SellTicketReqest {
     private BigDecimal totalAmount;
     private BigDecimal unitAmount;
-    private String ticketCode;
+    //private String ticketCode;
     private String eventCode;
-    private String parentTicketCode;
+    private List<ParentTicketSellData> parentTicketData;
     private Location location;
-    private int quantity;
+    //private int quantity;
     private String reference;
     private String boughtByEmail;
-
-    public String getBoughtByEmail() {
-        return boughtByEmail;
-    }
-
-    public void setBoughtByEmail(String boughtByEmail) {
-        this.boughtByEmail = boughtByEmail;
-    }
-    
-    
-
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
-    }
-    
-    
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-    
-    
 
     public BigDecimal getTotalAmount() {
         return totalAmount;
@@ -69,14 +41,6 @@ public class SellTicketReqest {
         this.unitAmount = unitAmount;
     }
 
-    public String getTicketCode() {
-        return ticketCode;
-    }
-
-    public void setTicketCode(String ticketCode) {
-        this.ticketCode = ticketCode;
-    }
-
     public String getEventCode() {
         return eventCode;
     }
@@ -85,12 +49,12 @@ public class SellTicketReqest {
         this.eventCode = eventCode;
     }
 
-    public String getParentTicketCode() {
-        return parentTicketCode;
+    public List<ParentTicketSellData> getParentTicketData() {
+        return parentTicketData;
     }
 
-    public void setParentTicketCode(String parentTicketCode) {
-        this.parentTicketCode = parentTicketCode;
+    public void setParentTicketData(List<ParentTicketSellData> parentTicketData) {
+        this.parentTicketData = parentTicketData;
     }
 
     public Location getLocation() {
@@ -101,15 +65,33 @@ public class SellTicketReqest {
         this.location = location;
     }
 
-    @Override
-    public String toString() {
-        return "SellTicketReqest{" + "totalAmount=" + totalAmount + ", unitAmount=" + unitAmount + ", ticketCode=" + ticketCode + ", eventCode=" + eventCode + ", parentTicketCode=" + parentTicketCode + ", location=" + location + ", quantity=" + quantity + ", reference=" + reference + '}';
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public String getBoughtByEmail() {
+        return boughtByEmail;
+    }
+
+    public void setBoughtByEmail(String boughtByEmail) {
+        this.boughtByEmail = boughtByEmail;
     }
     
     
+
+    @Override
+    public String toString() {
+        return "SellTicketReqest{" + "totalAmount=" + totalAmount + ", unitAmount=" + unitAmount + ", eventCode=" + eventCode + ", parentTicketData=" + parentTicketData + ", location=" + location + ", reference=" + reference + ", boughtByEmail=" + boughtByEmail + '}';
+    }
+
     
     
 }
+
 
 
 

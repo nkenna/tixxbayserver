@@ -22,6 +22,7 @@ import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.IssuedTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
+import com.steinacoz.tixx.tixxbayserver.model.ParentTicketSellData;
 import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.model.TicketSaleTransaction;
 import com.steinacoz.tixx.tixxbayserver.model.Transaction;
@@ -124,6 +125,12 @@ public class TicketController {
             tr.setStatus("failed");
             tr.setMessage("ticket sale start date is required");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }
+        
+        if(ticket.isPaidTicket() == false && ticket.getTicketType().equalsIgnoreCase("NFC")){
+           tr.setStatus("failed");
+            tr.setMessage("NFC tickets cannot be free");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr); 
         }
         
         Event event = eventRepo.findById(ticket.getEventId()).orElseThrow(null);
@@ -439,51 +446,120 @@ public class TicketController {
     @CrossOrigin
     @RequestMapping(value = "/sell-ticket", method = RequestMethod.POST)
     public ResponseEntity<TicketResponse> sellTicket (@RequestBody SellTicketReqest str){
-        TicketResponse tr = new TicketResponse();
+         TicketResponse tr = new TicketResponse();
+        System.out.println(str.toString());
+        System.out.println(str.getBoughtByEmail());
+        //InitializeVerifyResponse initializeVerifyResponse = new InitializeVerifyResponse();
+        // StringBuilder result = new StringBuilder();
+        // int statusCode = 0;
         
         if(str.getEventCode() == null || str.getEventCode().isEmpty()){
             tr.setStatus("failed");
             tr.setMessage("event code is required");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
-        }else if(str.getParentTicketCode() == null || str.getParentTicketCode().isEmpty()){
-            tr.setStatus("failed");
-            tr.setMessage("parent ticket code is required");
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
-        }else if(str.getQuantity() == 0){
+        }
+        boolean badCode = false;
+        boolean badQty = false;
+        
+        for (ParentTicketSellData ptsd: str.getParentTicketData()){
+          if(ptsd.getTicketCode() == null || ptsd.getTicketCode().isEmpty()){
+              badCode = true;
+              break;
+            
+        }
+        
+        if(ptsd.getQuantity() == 0){
+            badQty = true;
+            break;
+            
+            }  
+        }
+        
+        if(badCode){
+          tr.setStatus("failed");
+          tr.setMessage("parent ticket code is required");
+          return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);  
+        }else if(badQty){
             tr.setStatus("failed");
             tr.setMessage("ticket quantity cannot be zero");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
         }
         
-        Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
+        List<ChildTicket> cts = new ArrayList<>(); 
+        List<String> tCodes = new ArrayList<>();
         
-        List<ChildTicket> cts = new ArrayList<>();       
-   
+        int allParentTicketQty = 0;
         
-        for(int i = 0; i < str.getQuantity(); i++){
-            ChildTicket ct = new ChildTicket();
-            ct.setTitle(parentTicket.getTitle());
-            ct.setDescription(parentTicket.getDescription());
-            ct.setTicketCategory(parentTicket.getTicketCategory());
-            ct.setPaidTicket(parentTicket.isPaidTicket());
-            ct.setTicketAmount(parentTicket.getTicketAmount());
-            ct.setEventId(parentTicket.getEventId());
-            ct.setTicketType(parentTicket.getTicketType());
-            ct.setTicketCode(parentTicket.getTicketCode() + Utils.randomNS(8));
-            ct.setParentTicketCode(parentTicket.getTicketCode());
-            ct.setEventCode(parentTicket.getEventCode());
-            ct.setCouponId(parentTicket.getCouponId());
-            ct.setIndividual(parentTicket.isIndividual());
-            ct.setSaleStartDay(parentTicket.getSaleStartDay());
-            ct.setSaleEndDay(parentTicket.getSaleEndDay());
-            ct.setCreated(LocalDateTime.now());
-            ct.setUpdated(LocalDateTime.now()); 
-            ct.setParentTicketId(parentTicket.getId());
-            cts.add(ct);
-        }
-        
-        
-        
+        User user = userRepo.findByEmail(str.getBoughtByEmail());
+        UserDao udao = new UserDao();
+        BeanUtils.copyProperties(user, udao);
+                      
+        for (ParentTicketSellData ptsd: str.getParentTicketData()){
+            Ticket parentTicket = ticketRepo.findByTicketCode(ptsd.getTicketCode());
+            int pavt = parentTicket.getAvailableTickets() - ptsd.getQuantity();
+            parentTicket.setAvailableTickets(pavt);
+            ticketRepo.save(parentTicket);
+                    
+            //create child ticket starts
+                    
+            if(parentTicket != null){ 
+                for(int i = 0; i < ptsd.getQuantity(); i++){
+                    ChildTicket ct = new ChildTicket();
+                    ct.setTitle(parentTicket.getTitle());
+                    ct.setDescription(parentTicket.getDescription());
+                    ct.setTicketCategory(parentTicket.getTicketCategory());
+                    ct.setPaidTicket(parentTicket.isPaidTicket());
+                    ct.setTicketAmount(parentTicket.getTicketAmount());
+                    ct.setEventId(parentTicket.getEventId());
+                    ct.setTicketType(parentTicket.getTicketType());
+                    ct.setTicketCode(parentTicket.getTicketCode() + Utils.randomNS(8));
+                    ct.setParentTicketCode(parentTicket.getTicketCode());
+                    ct.setEventCode(parentTicket.getEventCode());
+                    ct.setCouponId(parentTicket.getCouponId());
+                    ct.setIndividual(parentTicket.isIndividual());
+                    ct.setSaleStartDay(parentTicket.getSaleStartDay());
+                    ct.setSaleEndDay(parentTicket.getSaleEndDay());
+                    ct.setCreated(LocalDateTime.now());
+                    ct.setUpdated(LocalDateTime.now()); 
+                    ct.setParentTicketId(parentTicket.getId());
+                    tCodes.add(ct.getTicketCode());
+                    cts.add(ct);
+                }
+                
+                allParentTicketQty += allParentTicketQty + ptsd.getQuantity();
+                    //trans.setTicketTitle(parentTicket.getTitle());
+                    //trans.setTicketCodes(tCodes);
+                    
+                    
+                // credit event manager wallet
+                Event event = eventRepo.findByEventCode(str.getEventCode());
+                if(event != null){
+                    int avt = event.getAvailableTicket() - ptsd.getQuantity();
+                    event.setAvailableTicket(avt);
+                        try{
+                            eventRepo.save(event);
+                        }catch(Exception e){
+                            System.out.println(e.getMessage());
+                        }
+                       User manager = userRepo.findByUsername(event.getCreatorUsername());
+                       
+                }else{
+                    tr.setStatus("failed");
+                    tr.setMessage("event not found");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
+                }
+                    
+                    }else{
+                    tr.setStatus("failed");
+                    tr.setMessage("parent ticket not found");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
+                }
+                    
+                    // create child ticket ends
+               }
+              
+                
+          
         try{            
             List<ChildTicket> newCTs = ctRepo.insert(cts);
             tr.setChildTickets(newCTs);
@@ -495,9 +571,10 @@ public class TicketController {
             tr.setMessage("error occurred creating tickets: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tr);
         }
-        
-        
+       
     }
+        
+       
     
     
     @CrossOrigin
@@ -514,15 +591,38 @@ public class TicketController {
             tr.setStatus("failed");
             tr.setMessage("event code is required");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
-        }else if(str.getParentTicketCode() == null || str.getParentTicketCode().isEmpty()){
-            tr.setStatus("failed");
-            tr.setMessage("parent ticket code is required");
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
-        }else if(str.getQuantity() == 0){
+        }
+        boolean badCode = false;
+        boolean badQty = false;
+        
+        for (ParentTicketSellData ptsd: str.getParentTicketData()){
+            System.out.println("used have parent ticket");
+            System.out.println(ptsd.getTicketCode());
+          if(ptsd.getTicketCode() == null || ptsd.getTicketCode().isEmpty()){
+              badCode = true;
+              break;
+            
+        }
+        
+        if(ptsd.getQuantity() == 0){
+            badQty = true;
+            break;
+            
+            }  
+        }
+        
+        if(badCode){
+          tr.setStatus("failed");
+          tr.setMessage("parent ticket code is required");
+          return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);  
+        }else if(badQty){
             tr.setStatus("failed");
             tr.setMessage("ticket quantity cannot be zero");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
-        }else if(str.getReference() == null || str.getReference().isEmpty()){
+        }
+        
+        
+        if(str.getReference() == null || str.getReference().isEmpty()){
             tr.setStatus("failed");
             tr.setMessage("payment reference is needed");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
@@ -577,6 +677,7 @@ public class TicketController {
          
         if(initializeVerifyResponse.getStatus() && statusCode == 200){
             if(initializeVerifyResponse.getData().getStatus().toLowerCase().equalsIgnoreCase("success")){
+                int allParentTicketQty = 0;
                 // create transcation data
                 TicketSaleTransaction trans = new TicketSaleTransaction();
                 trans.setTransRef("TIXX" + Utils.randomNS(10));
@@ -586,9 +687,9 @@ public class TicketController {
                 trans.setTransStatus(true);
                 trans.setPayStatus(initializeVerifyResponse.getData().getStatus());
                 trans.setTotalAmount(new BigDecimal(initializeVerifyResponse.getData().getAmount()/100));
-                trans.setUnitAmount(new BigDecimal((initializeVerifyResponse.getData().getAmount()/100) / str.getQuantity()));
+                //trans.setUnitAmount(new BigDecimal((initializeVerifyResponse.getData().getAmount()/100) / str.getQuantity()));
                 trans.setTransType(Utils.buyTicket);
-                trans.setQuantity(str.getQuantity());              
+                             
                 
                 
                 User user = userRepo.findByEmail(str.getBoughtByEmail());
@@ -598,14 +699,19 @@ public class TicketController {
                 trans.setEventCode(str.getEventCode());
                 trans.setNarration("user bought ticket");
                 trans.setLocation(str.getLocation());
-                Ticket parentTicket = ticketRepo.findByTicketCode(str.getParentTicketCode());
-                int pavt = parentTicket.getAvailableTickets() - str.getQuantity();
-                parentTicket.setAvailableTickets(pavt);
-                ticketRepo.save(parentTicket);
+                
                // System.out.println(parentTicket.getTitle());
                
-                if(parentTicket != null){ 
-                    for(int i = 0; i < str.getQuantity(); i++){
+               for (ParentTicketSellData ptsd: str.getParentTicketData()){
+                   Ticket parentTicket = ticketRepo.findByTicketCode(ptsd.getTicketCode());
+                    int pavt = parentTicket.getAvailableTickets() - ptsd.getQuantity();
+                    parentTicket.setAvailableTickets(pavt);
+                    ticketRepo.save(parentTicket);
+                    
+                    //create child ticket starts
+                    
+                    if(parentTicket != null){ 
+                    for(int i = 0; i < ptsd.getQuantity(); i++){
                         ChildTicket ct = new ChildTicket();
                         ct.setTitle(parentTicket.getTitle());
                         ct.setDescription(parentTicket.getDescription());
@@ -627,6 +733,7 @@ public class TicketController {
                         tCodes.add(ct.getTicketCode());
                         cts.add(ct);
                     }
+                    allParentTicketQty += allParentTicketQty + ptsd.getQuantity();
                     trans.setTicketTitle(parentTicket.getTitle());
                     trans.setTicketCodes(tCodes);
                     
@@ -634,7 +741,7 @@ public class TicketController {
                     // credit event manager wallet
                     Event event = eventRepo.findByEventCode(str.getEventCode());
                     if(event != null){
-                        int avt = event.getAvailableTicket() - str.getQuantity();
+                        int avt = event.getAvailableTicket() - ptsd.getQuantity();
                         event.setAvailableTicket(avt);
                         try{
                             eventRepo.save(event);
@@ -703,13 +810,16 @@ public class TicketController {
                         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
                     }
                     
-        
-        
-                }else{
+                    }else{
                     tr.setStatus("failed");
                     tr.setMessage("parent ticket not found");
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr);
                 }
+                    
+                    // create child ticket ends
+               }
+               trans.setQuantity(allParentTicketQty); 
+                
           
         try{            
             List<ChildTicket> newCTs = ctRepo.insert(cts);
@@ -905,6 +1015,11 @@ public class TicketController {
     
     
 }
+
+
+
+
+
 
 
 

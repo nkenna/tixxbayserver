@@ -307,25 +307,25 @@ public class EventController {
         EventResponse er = new EventResponse();
         Event foundEvent = eventRepo.findById(eventId).orElseThrow(null);
         
-        File file = new File("src/main/resources/newimage.png");
+        //File file = new File("src/main/resources/newimage.png");
         
-        File overlay = new File("src/main/resources/loginlogo.png");
-        File output = new File("src/main/resources/watermarked.png");
+        //File overlay = new File("src/main/resources/loginlogo.png");
+        //File output = new File("src/main/resources/watermarked.png");
         
         
-        try (OutputStream os = new FileOutputStream(file)) {
+        /**try (OutputStream os = new FileOutputStream(file)) {
             os.write(image.getBytes());
             // adding text as overlay to an image
-        Utils.addImageWatermark(overlay, "png", file, output);
+            Utils.addImageWatermark(overlay, "png", file, output);
         
-        //compress image
-        output = Utils.compressImage(output, output);
+            //compress image
+            output = Utils.compressImage(output, output);
         
         } catch (FileNotFoundException ex) {
             Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } **/
         
         
         
@@ -336,13 +336,13 @@ public class EventController {
             try{
                 switch (position) {
                     case 1:
-                        foundEvent.setImage1(new Binary(BsonBinarySubType.BINARY, Files.readAllBytes(output.toPath())));
+                        foundEvent.setImage1(new Binary(BsonBinarySubType.BINARY, image.getBytes()));
                         break;
                     case 2:
-                        foundEvent.setImage2(new Binary(BsonBinarySubType.BINARY, Files.readAllBytes(output.toPath())));
+                        foundEvent.setImage2(new Binary(BsonBinarySubType.BINARY, image.getBytes()));
                         break;
                     case 3:
-                        foundEvent.setImage3(new Binary(BsonBinarySubType.BINARY, Files.readAllBytes(output.toPath())));
+                        foundEvent.setImage3(new Binary(BsonBinarySubType.BINARY, image.getBytes()));
                         break;
                     default:
                         er.setStatus("failed");
@@ -759,6 +759,8 @@ public class EventController {
     
     
 }
+
+
 
 
 
