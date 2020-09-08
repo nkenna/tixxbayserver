@@ -317,14 +317,17 @@ public class EventController {
             os.write(image.getBytes());
             // adding text as overlay to an image
         Utils.addImageWatermark(overlay, "png", file, output);
+        
+        //compress image
+        output = Utils.compressImage(output, output);
+        
         } catch (FileNotFoundException ex) {
             Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        // overlay settings
-        //File input = new File();
+        
         
 
         
@@ -756,6 +759,8 @@ public class EventController {
     
     
 }
+
+
 
 
 
