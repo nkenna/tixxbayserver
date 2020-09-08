@@ -173,7 +173,7 @@ public class Utils {
         //File output = new File("/tmp/duke-compressed-005.jpg");
         OutputStream out = new FileOutputStream(output);
 
-        ImageWriter writer =  ImageIO.getImageWritersByFormatName("jpg").next();
+        ImageWriter writer =  ImageIO.getImageWritersByFormatName("png").next();
         ImageOutputStream ios = ImageIO.createImageOutputStream(out);
         writer.setOutput(ios);
 
@@ -195,6 +195,7 @@ public class Utils {
  
 
 }
+
 
 
 
