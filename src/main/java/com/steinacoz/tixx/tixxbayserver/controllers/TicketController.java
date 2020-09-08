@@ -728,6 +728,7 @@ public class TicketController {
                         ct.setSaleEndDay(parentTicket.getSaleEndDay());
                         ct.setCreated(LocalDateTime.now());
                         ct.setUpdated(LocalDateTime.now()); 
+                        ct.setBoughtByUsername(user.getUsername());
                         ct.setParentTicketId(parentTicket.getId());
                         tCodes.add(ct.getTicketCode());
                         cts.add(ct);
@@ -1014,6 +1015,7 @@ public class TicketController {
     
     
 }
+
 
 
 
