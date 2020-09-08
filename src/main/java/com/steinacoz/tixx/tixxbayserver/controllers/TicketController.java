@@ -824,6 +824,39 @@ public class TicketController {
         try{            
             List<ChildTicket> newCTs = ctRepo.insert(cts);
             ttRepo.save(trans); 
+            //send out email to user
+            StringBuilder sb = new StringBuilder();
+            for(ChildTicket ct: newCTs){
+                String data = "\n" +
+                              "Ticket Code: " + ct.getTicketCode() + "\n" +
+                              "Event Code: " + ct.getEventCode() + "\n" +
+                              "Amount: " + ct.getTicketAmount().toString() + "\n" +
+                              "Currency: " + "NGN" + "\n";
+                sb.append(data);
+            }
+            Email from = new Email("support@tixxbay.com");
+                        String subject = "Ticket Data";
+                        Email to = new Email(user.getEmail());
+                        Content content = new Content("text/plain", "You recently bought some tickets from tixxbay for an event. Below are the details for the ticket(s): " + "\n" + 
+                                sb.toString() + "\n" +
+                                "Save this data and your QR code. It meant be handy on the event day.");
+                        Mail mail = new Mail(from, subject, to, content);
+                        System.out.println(mail.from.getEmail());
+                        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
+                        Request request = new Request();
+                        try {
+                          request.setMethod(Method.POST);
+                          request.setEndpoint("mail/send");
+                          request.setBody(mail.build());
+                          Response response = sg.api(request);
+                          System.out.println(response.getStatusCode());
+                          System.out.println(response.getBody());
+                          System.out.println(response.getHeaders());
+                          
+                        } catch (IOException ex) {
+                          
+                        }
+                        
             tr.setChildTickets(newCTs);
             tr.setStatus("success");
             tr.setMessage("Child Tickets created successful");
@@ -1015,6 +1048,7 @@ public class TicketController {
     
     
 }
+
 
 
 
