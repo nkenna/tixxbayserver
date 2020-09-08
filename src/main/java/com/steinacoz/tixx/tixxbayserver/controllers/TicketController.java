@@ -600,8 +600,7 @@ public class TicketController {
             System.out.println(ptsd.getTicketCode());
           if(ptsd.getTicketCode() == null || ptsd.getTicketCode().isEmpty()){
               badCode = true;
-              break;
-            
+              break;            
         }
         
         if(ptsd.getQuantity() == 0){
@@ -1015,6 +1014,7 @@ public class TicketController {
     
     
 }
+
 
 
 
