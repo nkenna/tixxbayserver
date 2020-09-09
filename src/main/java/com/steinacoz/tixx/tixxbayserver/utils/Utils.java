@@ -116,7 +116,7 @@ public class Utils {
             }else if(text.length() > 15){
                 text = text.substring(0, 14);
             }
-            BufferedImage bi = new BufferedImage(image.getWidth(), image.getHeight() + space, BufferedImage.TRANSLUCENT);
+            BufferedImage bi = new BufferedImage(image.getWidth(), image.getHeight() + space, BufferedImage.OPAQUE);
             Graphics2D g2d = (Graphics2D) bi.createGraphics();
             g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
             g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
@@ -130,7 +130,7 @@ public class Utils {
             int textWidth = fm.stringWidth(text);
 
             //center text at bottom of image in the new space
-            g2d.drawString(text, (bi.getWidth() / 2) - textWidth / 2, bi.getHeight());
+            g2d.drawString(text, (bi.getWidth() / 2) - textWidth / 2, bi.getHeight() - 10);
 
             g2d.dispose();
             return bi;
@@ -208,6 +208,7 @@ public class Utils {
  
 
 }
+
 
 
 
