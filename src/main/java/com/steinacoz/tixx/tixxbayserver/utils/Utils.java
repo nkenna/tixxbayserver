@@ -125,7 +125,7 @@ public class Utils {
             g2d.drawImage(image, 0, 0, null);
 
             g2d.setColor(Color.BLACK);
-            g2d.setFont(new Font("Calibri", Font.PLAIN, 16));
+            g2d.setFont(new Font("Calibri", Font.PLAIN, 14));
             FontMetrics fm = g2d.getFontMetrics();
             int textWidth = fm.stringWidth(text);
 
@@ -208,6 +208,7 @@ public class Utils {
  
 
 }
+
 
 
 
