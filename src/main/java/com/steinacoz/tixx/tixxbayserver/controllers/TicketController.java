@@ -857,6 +857,9 @@ public class TicketController {
                 String qrData = ct.getEventCode() + ":::" + ct.getTicketCode() + ":::" + ct.getTicketAmount().toString() +
                                 ":::" + "NGN" + ":::" + "" + ":::" + "" + ":::" + "ACCESS";
                 
+                System.out.println("show qr data");
+                System.out.println(qrData);
+                
                 
                 
                 BufferedImage bi = Utils.generateQRCodeImage(qrData);
@@ -1096,6 +1099,8 @@ public class TicketController {
     
     
 }
+
+
 
 
 
