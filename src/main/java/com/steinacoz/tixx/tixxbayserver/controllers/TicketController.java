@@ -834,6 +834,7 @@ public class TicketController {
                 
           
         try{      
+            System.out.println("Is the error here");
             Attachments attachments3 = new Attachments();
             //Mail mail = new Mail();
             Email from = new Email("support@tixxbay.com");
@@ -914,6 +915,7 @@ public class TicketController {
             tr.setMessage("Child Tickets created successful");
             return ResponseEntity.ok().body(tr);
         }catch(Exception e){
+            e.printStackTrace();
             tr.setStatus("failed");
             tr.setMessage("error occurred creating tickets: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tr);
@@ -1100,6 +1102,8 @@ public class TicketController {
     
     
 }
+
+
 
 
 
