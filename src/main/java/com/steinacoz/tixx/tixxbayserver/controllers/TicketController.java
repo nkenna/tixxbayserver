@@ -1105,8 +1105,20 @@ public class TicketController {
         }
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/user-bought-tickets", method = RequestMethod.PUT)
+    public ResponseEntity<TicketResponse> getChildTicketBoughtByUser(@RequestBody ChildTicket ticket){
+        TicketResponse tr = new TicketResponse();
+        List<ChildTicketDao> ticks = ctRepo.getChildTicketsByUsername(ticket.getBoughtByUsername());
+        tr.setStatus("success");
+        tr.setMessage("tickets found: " + String.valueOf(ticks.size()));
+        tr.setChildTicketsData(ticks);
+        return ResponseEntity.ok().body(tr);
+    }
     
 }
+
+
 
 
 

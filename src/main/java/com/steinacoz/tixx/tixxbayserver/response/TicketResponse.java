@@ -24,6 +24,18 @@ public class TicketResponse {
     private List<ChildTicket> childTickets;
     private ChildTicketDao ticketCheckin;
     private List<ChildTicketDao> ticketCheckins;
+    private List<ChildTicketDao> childTicketsData;
+    
+
+    public List<ChildTicketDao> getChildTicketsData() {
+        return childTicketsData;
+    }
+
+    public void setChildTicketsData(List<ChildTicketDao> childTicketsData) {
+        this.childTicketsData = childTicketsData;
+    }
+    
+    
 
     public ChildTicketDao getTicketCheckin() {
         return ticketCheckin;
@@ -98,6 +110,9 @@ public class TicketResponse {
     
     
 }
+
+
+
 
 
 

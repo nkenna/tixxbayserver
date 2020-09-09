@@ -58,7 +58,9 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
         MatchOperation match = Aggregation.match(Criteria.where("boughtByUsername").is(username));
         list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
         list.add(Aggregation.lookup("ticket", "ticketCode", "parentTicketCode", "parentTicketData"));
-        list.add(Aggregation.lookup("user", "boughtByUsername", "username", "userData"));
+        list.add(Aggregation.lookup("user", "boughtByUsername", "username", "user"));
+        list.add(Aggregation.unwind("user"));
+        list.add(Aggregation.project("username"));
         list.add(match);
        
 	TypedAggregation<ChildTicket> agg = Aggregation.newAggregation(ChildTicket.class, list);
@@ -67,6 +69,10 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
     
     
 }
+
+
+
+
 
 
 
