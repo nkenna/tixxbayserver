@@ -3,28 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.steinacoz.tixx.tixxbayserver.model;
+package com.steinacoz.tixx.tixxbayserver.dao;
 
+import com.steinacoz.tixx.tixxbayserver.model.Event;
+import com.steinacoz.tixx.tixxbayserver.model.User;
 import java.math.BigDecimal;
-import org.springframework.data.annotation.Id;
+import java.util.List;
 
 /**
  *
  * @author nkenn
  */
-public class VendorSellItem {
-    @Id private String id;
+public class VendorSellItemDao {
+    private String id;
     private String name;
     private BigDecimal amount;
     private int quantity;
     private String vendorUsername;
     private String eventCode;
+    private List<Event> events;
+    private User vendor;
 
     public String getId() {
         return id;
     }
 
-   
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -65,14 +71,24 @@ public class VendorSellItem {
     public void setEventCode(String eventCode) {
         this.eventCode = eventCode;
     }
-    
-    
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    public User getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(User vendor) {
+        this.vendor = vendor;
+    }
     
     
 }
-
-
-
-
 
 

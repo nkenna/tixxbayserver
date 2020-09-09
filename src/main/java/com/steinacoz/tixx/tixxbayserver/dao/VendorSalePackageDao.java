@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.steinacoz.tixx.tixxbayserver.model;
+package com.steinacoz.tixx.tixxbayserver.dao;
 
+import com.steinacoz.tixx.tixxbayserver.model.Location;
+import com.steinacoz.tixx.tixxbayserver.model.VendorSellItem;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,9 +16,9 @@ import org.springframework.data.annotation.Id;
  *
  * @author nkenn
  */
-public class VendorSalePackage {
+public class VendorSalePackageDao {
     //report data
-    @Id private String id;
+    private String id;
     private String transRef;//
     private LocalDateTime transDate;//
     private boolean transStatus;//
@@ -39,7 +41,7 @@ public class VendorSalePackage {
         return id;
     }
 
-  
+    
     public String getTransRef() {
         return transRef;
     }
@@ -79,10 +81,7 @@ public class VendorSalePackage {
     public void setLocation(Location location) {
         this.location = location;
     }
-    
-    
 
-   
     public String getEventCode() {
         return eventCode;
     }
@@ -165,12 +164,6 @@ public class VendorSalePackage {
     
     
 }
-
-
-
-
-
-
 
 
 

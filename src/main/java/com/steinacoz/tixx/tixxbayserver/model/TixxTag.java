@@ -15,7 +15,7 @@ import org.springframework.data.annotation.Id;
  */
 public class TixxTag {
     @Id private String id;
-	private String taguuid;
+	private String taguuid;//-
 	private String content;
 	private String addedById;
 	private String updatedById;
@@ -38,14 +38,7 @@ public class TixxTag {
         return id;
     }
 
-    
-    public String getTagUuid() {
-        return taguuid;
-    }
-
-    public void setTagUuid(String taguuid) {
-        this.taguuid = taguuid;
-    }
+   
 
     public String getContent() {
         return content;
@@ -195,6 +188,7 @@ public class TixxTag {
         
         
 }
+
 
 
 

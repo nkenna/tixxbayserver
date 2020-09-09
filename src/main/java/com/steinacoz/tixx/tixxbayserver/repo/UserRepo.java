@@ -23,12 +23,14 @@ public interface UserRepo extends MongoRepository<User, String>, UserRepoCustom 
     User findByEmail(String email);
     User findByWalletId(String walletId);
     User findByUsernameOrEmail(String username, String email);
+    User findByTaguuid(String taguuid);
     
 	
     @Query(value="{}", fields="{password : 0}")
     List<User> findAllAndExcludePassword();
     
 }
+
 
 
 

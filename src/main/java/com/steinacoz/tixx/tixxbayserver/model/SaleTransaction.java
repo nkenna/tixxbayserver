@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.model;
 
+import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,28 +18,15 @@ import org.springframework.data.annotation.Id;
 public class SaleTransaction {
     @Id private String id;
     private String transRef;
-    private String title;
-    private LocalDateTime transDate;
-    private boolean transStatus;
+    private LocalDateTime transDate;    
     private BigDecimal totalAmount;
-    private BigDecimal unitAmount;
-    private String transType;
-    private int quantity;
-    private User boughtBy;
-    private User soldBy;
+    private UserDao boughtBy;
+    private UserDao soldBy;
     private String eventCode;
     private String narration;
     private Location location;
     private String taguuid;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    
     
 
     public String getId() {
@@ -65,13 +53,7 @@ public class SaleTransaction {
         this.transDate = transDate;
     }
 
-    public boolean isTransStatus() {
-        return transStatus;
-    }
-
-    public void setTransStatus(boolean transStatus) {
-        this.transStatus = transStatus;
-    }
+    
 
     public BigDecimal getTotalAmount() {
         return totalAmount;
@@ -81,45 +63,25 @@ public class SaleTransaction {
         this.totalAmount = totalAmount;
     }
 
-    public BigDecimal getUnitAmount() {
-        return unitAmount;
-    }
+   
 
-    public void setUnitAmount(BigDecimal unitAmount) {
-        this.unitAmount = unitAmount;
-    }
-
-    public String getTransType() {
-        return transType;
-    }
-
-    public void setTransType(String transType) {
-        this.transType = transType;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public User getBoughtBy() {
+    public UserDao getBoughtBy() {
         return boughtBy;
     }
 
-    public void setBoughtBy(User boughtBy) {
+    public void setBoughtBy(UserDao boughtBy) {
         this.boughtBy = boughtBy;
     }
 
-    public User getSoldBy() {
+    public UserDao getSoldBy() {
         return soldBy;
     }
 
-    public void setSoldBy(User soldBy) {
+    public void setSoldBy(UserDao soldBy) {
         this.soldBy = soldBy;
     }
+
+    
 
     public String getEventCode() {
         return eventCode;
@@ -155,6 +117,8 @@ public class SaleTransaction {
     
     
 }
+
+
 
 
 

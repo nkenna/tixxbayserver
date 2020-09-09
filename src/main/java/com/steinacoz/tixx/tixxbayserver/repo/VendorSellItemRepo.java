@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.model.VendorSalePackage;
+import com.steinacoz.tixx.tixxbayserver.model.VendorSellItem;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -13,10 +14,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  *
  * @author nkenn
  */
-@RepositoryRestResource(collectionResourceRel = "vendorsalestrans", path = "vendorsalestrans")
-public interface VendorSalePackageRepo extends MongoRepository<VendorSalePackage, String> {
-    VendorSalePackage findByTransRef(String transRef);
+@RepositoryRestResource(collectionResourceRel = "vendorsellitem", path = "vendorsellitem")
+public interface VendorSellItemRepo extends MongoRepository<VendorSellItem, String>  {
+    
 }
-
 
 
