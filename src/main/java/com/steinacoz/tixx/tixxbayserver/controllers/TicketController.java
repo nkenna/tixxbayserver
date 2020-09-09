@@ -835,7 +835,7 @@ public class TicketController {
           
         try{      
             System.out.println("Is the error here");
-            Attachments attachments3 = new Attachments();
+            List<Attachments> attas = new ArrayList<Attachments>();
             //Mail mail = new Mail();
             Email from = new Email("support@tixxbay.com");
             String subject = "Ticket Data";
@@ -870,6 +870,7 @@ public class TicketController {
                 baos.flush();
                 byte[] imageInByte = baos.toByteArray();
                 baos.close();
+                Attachments attachments3 = new Attachments();
                 
                 Base64 x = new Base64();
                 String imageDataString = x.encodeAsString(imageInByte);
@@ -878,6 +879,7 @@ public class TicketController {
                 attachments3.setFilename("x.png");
                 attachments3.setDisposition("attachment");
                 attachments3.setContentId("Banner");
+                attas.add(attachments3);
                 //mail.addAttachments(attachments3);
             }
             
@@ -887,6 +889,7 @@ public class TicketController {
                                 sb.toString() + "\n" +
                                 "Save this data and your QR code. It meant be handy on the event day.");
             Mail mail = new Mail(from, subject, to, content);
+           mail.attachments = attas;
             //mail.setFrom(from);
             //mail.addContent(content);
             
@@ -1103,6 +1106,7 @@ public class TicketController {
     
     
 }
+
 
 
 
