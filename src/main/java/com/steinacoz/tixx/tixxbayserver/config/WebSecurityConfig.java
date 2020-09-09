@@ -77,7 +77,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .antMatchers(HttpMethod.GET, "/tixxbay/api/event/v1/all-events").permitAll()
                 .antMatchers(HttpMethod.GET, "/tixxbay/api/event/v1/all-events-by-time-range").permitAll()
                 .antMatchers(HttpMethod.PUT, "/tixxbay/api/event/v1/all-events-by-name").permitAll()
+                .antMatchers(HttpMethod.PUT, "/tixxbay/api/event/v1/all-events-by-state").permitAll()
                 .antMatchers(HttpMethod.GET, "/tixxbay/api/event/v1/all-events-by-random").permitAll()
+                .antMatchers(HttpMethod.GET, "/tixxbay/api/event/v1/all-states").permitAll()
+                .antMatchers(HttpMethod.GET, "/tixxbay/api/event/v1/all-cities").permitAll()
                 .antMatchers(HttpMethod.POST, "/tixxbay/api/event/v1/event-by-code").permitAll()
                 .antMatchers(HttpMethod.POST, "/tixxbay/api/mailing/v1/add-email-list").permitAll()
                 .antMatchers(HttpMethod.POST, "/tixxbay/api/mailing/v1/remove-email-list").permitAll()
@@ -101,6 +104,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     }
     
 }
+
 
 
 
