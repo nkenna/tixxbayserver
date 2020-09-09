@@ -10,8 +10,12 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -101,9 +105,39 @@ public class Utils {
     public static BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
         QRCodeWriter barcodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = 
-        barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 300, 300);
- 
+        barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 300, 300); 
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
+    }
+    
+    public static BufferedImage drawTextOnImage(String text, BufferedImage image, int space) {
+        if(image != null){
+            if(text == null || text.isEmpty()){
+                text = "Tixxbay Ticket";
+            }else if(text.length() > 15){
+                text = text.substring(0, 14);
+            }
+            BufferedImage bi = new BufferedImage(image.getWidth(), image.getHeight() + space, BufferedImage.TRANSLUCENT);
+            Graphics2D g2d = (Graphics2D) bi.createGraphics();
+            g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+            g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
+            g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON));
+
+            g2d.drawImage(image, 0, 0, null);
+
+            g2d.setColor(Color.BLACK);
+            g2d.setFont(new Font("Calibri", Font.PLAIN, 16));
+            FontMetrics fm = g2d.getFontMetrics();
+            int textWidth = fm.stringWidth(text);
+
+            //center text at bottom of image in the new space
+            g2d.drawString(text, (bi.getWidth() / 2) - textWidth / 2, bi.getHeight());
+
+            g2d.dispose();
+            return bi;
+        }else {
+            return image;
+        }
+    
 }
     
     
@@ -174,6 +208,8 @@ public class Utils {
  
 
 }
+
+
 
 
 

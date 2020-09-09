@@ -864,7 +864,7 @@ public class TicketController {
                 System.out.println(qrData);               
                 
                 
-                BufferedImage bi = Utils.generateQRCodeImage(qrData);
+                BufferedImage bi = Utils.drawTextOnImage(ct.getTitle(), Utils.generateQRCodeImage(qrData), 15);
                 //BufferedImage originalImage = ImageIO.read(new File("c:\\image\\mypic.jpg"));
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write( bi, "png", baos );
@@ -1107,6 +1107,7 @@ public class TicketController {
     
     
 }
+
 
 
 
