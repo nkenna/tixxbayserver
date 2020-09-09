@@ -94,12 +94,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         
     }
     
+    
     @Bean
     public BCryptPasswordEncoder encoder(){
         return new BCryptPasswordEncoder();
     }
     
 }
+
 
 
 
