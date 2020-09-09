@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.dao.ChildTicketDao;
+import java.util.List;
 
 /**
  *
@@ -14,6 +15,9 @@ import com.steinacoz.tixx.tixxbayserver.dao.ChildTicketDao;
 public interface ChildTicketRepoCustom {
     ChildTicketDao getChildTicketByTicketCode(String ticketCode);
     ChildTicketDao getChildTicketByEventCode(String eventCode);
+    //List<ChildTicketDao> getChildTicketsByUsername(String username);
 }
+
+
 
 

@@ -840,9 +840,9 @@ public class TicketController {
             Email from = new Email("support@tixxbay.com");
             String subject = "Ticket Data";
             Email to = new Email(user.getEmail());
-            Mail mail = new Mail(null, subject, to, null);
+            
             EventKey evtKey = eventkeyRepo.findByEventId(event.getId());
-            Content content = new Content();
+            
             
             List<ChildTicket> newCTs = ctRepo.insert(cts);
             ttRepo.save(trans); 
@@ -860,8 +860,7 @@ public class TicketController {
                                 ":::" + "NGN" + ":::" + "" + ":::" + "" + ":::" + "ACCESS";
                 
                 System.out.println("show qr data");
-                System.out.println(qrData);
-                
+                System.out.println(qrData);               
                 
                 
                 BufferedImage bi = Utils.generateQRCodeImage(qrData);
@@ -879,17 +878,17 @@ public class TicketController {
                 attachments3.setFilename("x.png");
                 attachments3.setDisposition("attachment");
                 attachments3.setContentId("Banner");
-                mail.addAttachments(attachments3);
+                //mail.addAttachments(attachments3);
             }
             
             
             //Mail mail = new Mail(from, subject, to, content);
-            content.setType("text/plain");
-            content.setValue("You recently bought some tickets from tixxbay for an event. Below are the details for the ticket(s): " + "\n" + 
+            Content content = new Content("text/plain", "You recently bought some tickets from tixxbay for an event. Below are the details for the ticket(s): " + "\n" + 
                                 sb.toString() + "\n" +
                                 "Save this data and your QR code. It meant be handy on the event day.");
-            mail.setFrom(from);
-            mail.addContent(content);
+            Mail mail = new Mail(from, subject, to, content);
+            //mail.setFrom(from);
+            //mail.addContent(content);
             
             
            
@@ -1104,6 +1103,7 @@ public class TicketController {
     
     
 }
+
 
 
 

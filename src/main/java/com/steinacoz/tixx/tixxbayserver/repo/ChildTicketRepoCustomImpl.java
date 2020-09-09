@@ -51,8 +51,14 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
 	TypedAggregation<ChildTicket> agg = Aggregation.newAggregation(ChildTicket.class, list);
 	return mongoTemplate.aggregate(agg, ChildTicket.class, ChildTicketDao.class).getUniqueMappedResult();
     }
+
+   // @Override
+  //  public List<ChildTicketDao> getChildTicketsByUsername(String username) {
+       
+   // }
     
     
 }
+
 
 
