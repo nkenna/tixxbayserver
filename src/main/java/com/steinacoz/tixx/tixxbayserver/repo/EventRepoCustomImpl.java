@@ -233,7 +233,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     public List<EventDao> aggregateAllEventsByName(String title) {
         LocalDateTime now = LocalDateTime.now();
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
-        MatchOperation match = Aggregation.match(Criteria.where("title").regex(title, "i").andOperator(Criteria.where("endDate").gte(now), Criteria.where("status").is(true)));
+        MatchOperation match = Aggregation.match(Criteria.where("title").regex(title, "i").orOperator(Criteria.where("lga").regex(title, "i"), Criteria.where("state").regex(title, "i"), Criteria.where("country").regex(title, "i")));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
@@ -250,6 +250,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     
     
 }
+
 
 
 
