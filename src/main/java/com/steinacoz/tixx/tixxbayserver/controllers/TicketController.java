@@ -687,6 +687,7 @@ public class TicketController {
          
         if(initializeVerifyResponse.getStatus() && statusCode == 200){
             if(initializeVerifyResponse.getData().getStatus().toLowerCase().equalsIgnoreCase("success")){
+                System.out.println("it got here succesfukky1");
                 int allParentTicketQty = 0;
                 // create transcation data
                 TicketSaleTransaction trans = new TicketSaleTransaction();
@@ -1099,6 +1100,7 @@ public class TicketController {
     
     
 }
+
 
 
 
