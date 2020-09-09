@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.dao;
 
 import com.steinacoz.tixx.tixxbayserver.model.Event;
+import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,7 +39,27 @@ public class ChildTicketDao {
     private String boughtByUsername;
     private LocalDateTime checkedinTime;
     private Event event;
+    private Ticket parentTicketData;
+    private User user;
 
+    public Ticket getParentTicketData() {
+        return parentTicketData;
+    }
+
+    public void setParentTicketData(Ticket parentTicketData) {
+        this.parentTicketData = parentTicketData;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    
+    
     public Event getEvent() {
         return event;
     }
@@ -221,6 +242,7 @@ public class ChildTicketDao {
     
     
 }
+
 
 
 

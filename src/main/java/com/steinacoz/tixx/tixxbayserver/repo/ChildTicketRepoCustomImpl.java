@@ -52,13 +52,24 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
 	return mongoTemplate.aggregate(agg, ChildTicket.class, ChildTicketDao.class).getUniqueMappedResult();
     }
 
-   // @Override
-  //  public List<ChildTicketDao> getChildTicketsByUsername(String username) {
+   @Override
+   public List<ChildTicketDao> getChildTicketsByUsername(String username) {
+       List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        MatchOperation match = Aggregation.match(Criteria.where("boughtByUsername").is(username));
+        list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(Aggregation.lookup("ticket", "ticketCode", "parentTicketCode", "parentTicketData"));
+        list.add(Aggregation.lookup("user", "boughtByUsername", "username", "userData"));
+        list.add(match);
        
-   // }
+	TypedAggregation<ChildTicket> agg = Aggregation.newAggregation(ChildTicket.class, list);
+	return mongoTemplate.aggregate(agg, ChildTicket.class, ChildTicketDao.class).getMappedResults();
+    }
     
     
 }
+
+
+
 
 
 
