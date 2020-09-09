@@ -850,6 +850,7 @@ public class TicketController {
             StringBuilder sb = new StringBuilder();
             for(ChildTicket ct: newCTs){
                 String data = "\n" +
+                               "Ticket Name: " + ct.getTitle() + "\n" +
                               "Ticket Code: " + ct.getTicketCode() + "\n" +
                               "Event Code: " + ct.getEventCode() + "\n" +
                               "Amount: " + ct.getTicketAmount().toString() + "\n" +
@@ -1106,6 +1107,7 @@ public class TicketController {
     
     
 }
+
 
 
 
