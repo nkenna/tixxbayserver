@@ -889,6 +889,8 @@ public class TicketController {
                                 sb.toString() + "\n" +
                                 "Save this data and your QR code. It meant be handy on the event day.");
             mail.setFrom(from);
+            mail.addContent(content);
+            
             
            
             
@@ -1102,6 +1104,7 @@ public class TicketController {
     
     
 }
+
 
 
 
