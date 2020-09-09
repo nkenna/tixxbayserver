@@ -20,6 +20,7 @@ import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
 import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
+import com.steinacoz.tixx.tixxbayserver.model.EventKey;
 import com.steinacoz.tixx.tixxbayserver.model.IssuedTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.ParentTicketSellData;
@@ -31,6 +32,7 @@ import com.steinacoz.tixx.tixxbayserver.model.UserPoint;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
 import com.steinacoz.tixx.tixxbayserver.model.WalletTransaction;
 import com.steinacoz.tixx.tixxbayserver.repo.ChildTicketRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.EventKeyRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.IssuedTicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketRepo;
@@ -47,7 +49,9 @@ import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.response.InitializeVerifyResponse;
 import com.steinacoz.tixx.tixxbayserver.response.TicketResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -58,6 +62,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import kong.unirest.ContentType;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
@@ -108,6 +113,9 @@ public class TicketController {
     
     @Autowired
     UserPointRepo upRepo;
+    
+    @Autowired
+    EventKeyRepo eventkeyRepo;
     
     @Autowired
     WalletTransactionRepo walletTransRepo;
@@ -458,6 +466,8 @@ public class TicketController {
             tr.setMessage("event code is required");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
         }
+        
+        Event event = eventRepo.findByEventCode(str.getEventCode());
         boolean badCode = false;
         boolean badQty = false;
         
@@ -532,7 +542,7 @@ public class TicketController {
                     
                     
                 // credit event manager wallet
-                Event event = eventRepo.findByEventCode(str.getEventCode());
+                
                 if(event != null){
                     int avt = event.getAvailableTicket() - ptsd.getQuantity();
                     event.setAvailableTicket(avt);
@@ -592,6 +602,7 @@ public class TicketController {
             tr.setMessage("event code is required");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
         }
+        Event event = eventRepo.findByEventCode(str.getEventCode());
         boolean badCode = false;
         boolean badQty = false;
         
@@ -739,7 +750,7 @@ public class TicketController {
                     
                     
                     // credit event manager wallet
-                    Event event = eventRepo.findByEventCode(str.getEventCode());
+                    //Event event = eventRepo.findByEventCode(str.getEventCode());
                     if(event != null){
                         int avt = event.getAvailableTicket() - ptsd.getQuantity();
                         event.setAvailableTicket(avt);
@@ -821,7 +832,16 @@ public class TicketController {
                trans.setQuantity(allParentTicketQty); 
                 
           
-        try{            
+        try{      
+            Attachments attachments3 = new Attachments();
+            //Mail mail = new Mail();
+            Email from = new Email("support@tixxbay.com");
+            String subject = "Ticket Data";
+            Email to = new Email(user.getEmail());
+            Mail mail = new Mail(null, subject, to, null);
+            EventKey evtKey = eventkeyRepo.findByEventId(event.getId());
+            Content content = new Content();
+            
             List<ChildTicket> newCTs = ctRepo.insert(cts);
             ttRepo.save(trans); 
             //send out email to user
@@ -833,14 +853,42 @@ public class TicketController {
                               "Amount: " + ct.getTicketAmount().toString() + "\n" +
                               "Currency: " + "NGN" + "\n";
                 sb.append(data);
+                
+                String qrData = ct.getEventCode() + ":::" + ct.getTicketCode() + ":::" + ct.getTicketAmount().toString() +
+                                ":::" + "NGN" + ":::" + "" + ":::" + "" + ":::" + "ACCESS";
+                
+                
+                
+                BufferedImage bi = Utils.generateQRCodeImage(qrData);
+                //BufferedImage originalImage = ImageIO.read(new File("c:\\image\\mypic.jpg"));
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write( bi, "png", baos );
+                baos.flush();
+                byte[] imageInByte = baos.toByteArray();
+                baos.close();
+                
+                Base64 x = new Base64();
+                String imageDataString = x.encodeAsString(imageInByte);
+                attachments3.setContent(imageDataString);
+                attachments3.setType("image/png");//"application/pdf"
+                attachments3.setFilename("x.png");
+                attachments3.setDisposition("attachment");
+                attachments3.setContentId("Banner");
+                mail.addAttachments(attachments3);
             }
-            Email from = new Email("support@tixxbay.com");
-                        String subject = "Ticket Data";
-                        Email to = new Email(user.getEmail());
-                        Content content = new Content("text/plain", "You recently bought some tickets from tixxbay for an event. Below are the details for the ticket(s): " + "\n" + 
+            
+            
+            //Mail mail = new Mail(from, subject, to, content);
+            content.setType("text/plain");
+            content.setValue("You recently bought some tickets from tixxbay for an event. Below are the details for the ticket(s): " + "\n" + 
                                 sb.toString() + "\n" +
                                 "Save this data and your QR code. It meant be handy on the event day.");
-                        Mail mail = new Mail(from, subject, to, content);
+            mail.setFrom(from);
+            
+           
+            
+            
+                        
                         System.out.println(mail.from.getEmail());
                         SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
                         Request request = new Request();
@@ -1048,6 +1096,10 @@ public class TicketController {
     
     
 }
+
+
+
+
 
 
 

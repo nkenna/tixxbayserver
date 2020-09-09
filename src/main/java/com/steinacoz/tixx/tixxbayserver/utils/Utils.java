@@ -5,6 +5,10 @@
  */
 package com.steinacoz.tixx.tixxbayserver.utils;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -15,8 +19,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
-import java.util.Base64;
+import java.util.Arrays;
+
 import java.util.Iterator;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -29,6 +37,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 /**
@@ -73,6 +82,9 @@ public class Utils {
     private final static String NUMERIC_STRING = "0123456789abcdefghijklmnoprstuvwxyz";
 	private final String NUMERIC = "0123456789";
 	private final String STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        
+       // private static SecretKeySpec secretKey;
+    private static byte[] key;
     
     public static String randomNS(int num) {
         StringBuilder builder = new StringBuilder();
@@ -86,50 +98,17 @@ public class Utils {
         return builder.toString();
     }
     
+    public static BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
+        QRCodeWriter barcodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = 
+        barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 300, 300);
+ 
+        return MatrixToImageWriter.toBufferedImage(bitMatrix);
+}
     
-    public static String decrypt(String strToDecrypt, String secret) {
-        try
-        {
-            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            IvParameterSpec ivspec = new IvParameterSpec(iv);
-             
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-            KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), salt.getBytes(), 65536, 256);
-            SecretKey tmp = factory.generateSecret(spec);
-            SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
-             
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
-            return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
-        } 
-        catch (Exception e) {
-            System.out.println("Error while decrypting: " + e.toString());
-        }
-        return null;
-    }
     
-    public static String encrypt(String strToEncrypt, String secret) 
-    {
-        try
-        {
-            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            IvParameterSpec ivspec = new IvParameterSpec(iv);
-             
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-            KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), salt.getBytes(), 65536, 256);
-            SecretKey tmp = factory.generateSecret(spec);
-            SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
-             
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
-            return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
-        } 
-        catch (Exception e) 
-        {
-            System.out.println("Error while encrypting: " + e.toString());
-        }
-        return null;
-    }
+ 
+   
     
     public static void addImageWatermark(File watermark, String type, File source, File destination) throws IOException {
         BufferedImage image = ImageIO.read(source);
@@ -195,6 +174,9 @@ public class Utils {
  
 
 }
+
+
+
 
 
 
