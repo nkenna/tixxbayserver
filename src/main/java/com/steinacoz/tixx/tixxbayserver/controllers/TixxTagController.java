@@ -62,7 +62,7 @@ public class TixxTagController {
 		TixxTagResponse tbr = new TixxTagResponse();
 		
 		//check if uuid is empty
-		if(tband.getTagUuid() == null || tband.getTagUuid().isEmpty()) {
+		if(tband.getTaguuid() == null || tband.getTaguuid().isEmpty()) {
 			tbr.setStatus("failed");
 			tbr.setMessage(" tag uuid is required to add band");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tbr);
@@ -76,7 +76,7 @@ public class TixxTagController {
 		}
 		
 		//check if tag have been added before
-		TixxTag tixxBand = tixxRepo.findByTaguuid(tband.getTagUuid());
+		TixxTag tixxBand = tixxRepo.findByTaguuid(tband.getTaguuid());
 		if(tixxBand != null) {
 			tbr.setMessage("this band already exist");
 			tbr.setStatus("failed");
@@ -687,6 +687,7 @@ public class TixxTagController {
 	
     
 }
+
 
 
 
