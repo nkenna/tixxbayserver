@@ -1109,28 +1109,16 @@ public class TicketController {
     @RequestMapping(value = "/user-bought-tickets", method = RequestMethod.PUT)
     public ResponseEntity<TicketResponse> getChildTicketBoughtByUser(@RequestBody ChildTicket ticket){
         TicketResponse tr = new TicketResponse();
-        List<ChildTicketDao> ticksReal = new ArrayList<ChildTicketDao>();
+        
         List<ChildTicketDao> ticks = ctRepo.getChildTicketsByUsername(ticket.getBoughtByUsername());
-        ticks.stream().map((cto) -> {
-            cto.getEvent().setImage1(null);
-            return cto;
-        }).map((cto) -> {
-            cto.getEvent().setImage2(null);
-            return cto;
-        }).map((cto) -> {
-            cto.getEvent().setImage3(null);
-            return cto;
-        }).forEachOrdered((cto) -> {
-            ticksReal.add(cto);
-        });
+        
         tr.setStatus("success");
         tr.setMessage("tickets found: " + String.valueOf(ticks.size()));
-        tr.setChildTicketsData(ticksReal);
+        tr.setChildTicketsData(ticks);
         return ResponseEntity.ok().body(tr);
     }
     
 }
-
 
 
 
