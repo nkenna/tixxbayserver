@@ -29,6 +29,7 @@ import com.steinacoz.tixx.tixxbayserver.response.VendorSalePackageResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,7 +74,7 @@ public class VendorSellController {
     
     @CrossOrigin
     @RequestMapping(value = "/add-vendor-sell", method = RequestMethod.POST)
-    public ResponseEntity<VendorSalePackageResponse> createVendorSellItem(@RequestBody VendorSalePackage vsp){
+    public ResponseEntity<VendorSalePackageResponse> createVendorSellPackage(@RequestBody VendorSalePackage vsp){
         VendorSalePackageResponse vspr = new VendorSalePackageResponse();
         
         //generate ref and check for it exist before
@@ -250,7 +251,22 @@ public class VendorSellController {
                 return ResponseEntity.ok().body(vspr);
                 
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/get-vendor-sell-item", method = RequestMethod.POST)
+    public ResponseEntity<VendorSalePackageResponse> getVendorSellItem(@RequestBody VendorSalePackage vsp){
+        VendorSalePackageResponse vspr = new VendorSalePackageResponse();
+        List<VendorSellItem> vss = vsiRepo.findByVendorUsername(vsp.getVendorUsername());
+        
+        vspr.setStatus("success");
+        vspr.setMessage("data retrieved: " + String.valueOf(vss.size()));
+        vspr.setItems(vss);
+        return ResponseEntity.ok().body(vspr);
+    }
+    
+    
 }
+
 
 
 

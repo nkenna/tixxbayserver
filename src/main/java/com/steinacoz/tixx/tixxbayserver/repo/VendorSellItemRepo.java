@@ -7,6 +7,7 @@ package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.model.VendorSalePackage;
 import com.steinacoz.tixx.tixxbayserver.model.VendorSellItem;
+import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -16,7 +17,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  */
 @RepositoryRestResource(collectionResourceRel = "vendorsellitem", path = "vendorsellitem")
 public interface VendorSellItemRepo extends MongoRepository<VendorSellItem, String>  {
-    
+    List<VendorSellItem> findByVendorUsername(String vendorUsername);
 }
+
 
 
