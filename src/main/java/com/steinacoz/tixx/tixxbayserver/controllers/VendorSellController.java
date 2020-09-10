@@ -164,7 +164,8 @@ public class VendorSellController {
                 Wallet nWallet = walletRepo.save(wallet);
                 
                 // update user points for tag owner
-                UserPoint upTagOwner = upRepo.findByTaguuid(updatedTag.getTaguuid());
+                User tagUser = userRepo.findByTaguuid(updatedTag.getTaguuid());
+                UserPoint upTagOwner = upRepo.findByTaguuid(tagUser.getTaguuid());
                     if(upTagOwner != null){
                         if(totalAmt < 5000.0){
                             upTagOwner.setPoints(upTagOwner.getPoints() + 0.3);
@@ -179,7 +180,7 @@ public class VendorSellController {
                     }
                     
                 // update user points for vendor
-                UserPoint upVenOwner = upRepo.findByTaguuid(vendor.getTaguuid());
+                UserPoint upVenOwner = upRepo.findByUsername(vendor.getUsername());
                     if(upVenOwner != null){
                         if(totalAmt < 5000.0){
                             upVenOwner.setPoints(upVenOwner.getPoints() + 0.3);
@@ -244,6 +245,7 @@ public class VendorSellController {
                 
     }
 }
+
 
 
 
