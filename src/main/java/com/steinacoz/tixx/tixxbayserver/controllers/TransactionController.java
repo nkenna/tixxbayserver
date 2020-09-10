@@ -131,6 +131,17 @@ public class TransactionController {
     }
     
     @CrossOrigin
+    @RequestMapping(value = "/all-ticket-sales", method = RequestMethod.GET)
+    public ResponseEntity<TicketSalesByMonthResponse> allTicketSales(){
+        TicketSalesByMonthResponse er = new TicketSalesByMonthResponse();
+        List<TicketSaleTransactionDao> sales = ttRepo.getAllTicketSaleTrans();
+        er.setTicketSales(sales);
+        er.setMessage("sales found: " + String.valueOf(sales.size()));
+        er.setStatus("success");
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
     @RequestMapping(value = "/get-ticket-sales-by-eventcode", method = RequestMethod.PUT)
     public ResponseEntity<TicketSalesByMonthResponse> allTicketSalesByEventCode(@RequestBody TicketSaleByMonthRequest tsbm){
         TicketSalesByMonthResponse er = new TicketSalesByMonthResponse();
@@ -217,6 +228,7 @@ public class TransactionController {
     
     
 }
+
 
 
 
