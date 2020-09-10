@@ -165,7 +165,7 @@ public class VendorSellController {
                 
                 // update user points for tag owner
                 User tagUser = userRepo.findByTaguuid(updatedTag.getTaguuid());
-                UserPoint upTagOwner = upRepo.findByTaguuid(tagUser.getTaguuid());
+                UserPoint upTagOwner = upRepo.findByUsername(tagUser.getTaguuid());
                     if(upTagOwner != null){
                         if(totalAmt < 5000.0){
                             upTagOwner.setPoints(upTagOwner.getPoints() + 0.3);
@@ -245,6 +245,7 @@ public class VendorSellController {
                 
     }
 }
+
 
 
 
