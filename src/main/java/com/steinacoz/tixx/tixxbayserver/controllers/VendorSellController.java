@@ -212,7 +212,10 @@ public class VendorSellController {
                 st.setTotalAmount(new BigDecimal(totalAmt));
                 User payee = userRepo.findByTaguuid(tag.getTaguuid());
                 UserDao daoPayee = new UserDao();
-                BeanUtils.copyProperties(payee, daoPayee);
+                if(payee != null){
+                   BeanUtils.copyProperties(payee, daoPayee); 
+                }
+                
                 st.setBoughtBy(daoPayee);
                 
                 UserDao daoVendor = new UserDao();
@@ -248,6 +251,7 @@ public class VendorSellController {
                 
     }
 }
+
 
 
 
