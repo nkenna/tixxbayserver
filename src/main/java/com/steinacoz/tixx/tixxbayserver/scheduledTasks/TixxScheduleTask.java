@@ -14,12 +14,15 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.steinacoz.tixx.tixxbayserver.config.jwtservice.JwtTokenUtil;
+import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
+import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.model.UserPoint;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
 import com.steinacoz.tixx.tixxbayserver.model.WalletTransaction;
 import com.steinacoz.tixx.tixxbayserver.repo.BankDetailRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.RoleRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.TicketRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserPointRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.VerifyCodeRepo;
@@ -60,12 +63,15 @@ public class TixxScheduleTask {
     RoleRepo roleRepo;
     
     @Autowired
+    TicketRepo ticketRepo;
+    
+    @Autowired
     UserPointRepo upRepo;
     
     @Autowired
     WalletTransactionRepo walletTransRepo;
     
-    @Scheduled(fixedRate = 21600000)
+    @Scheduled(fixedRate = 21600000) // 6 hours
     public void checkUserPoints(){
         
         //get all user points
@@ -132,7 +138,57 @@ public class TixxScheduleTask {
             }
         }
     }
+    
+    
+    /**
+     * This scheduled event checks for events that have NFC tickets.
+     * If the NFC ticket sale start date is approaching like 2 days away
+     * An email will be sent to the event creator to start order for NFC Tags.
+     */
+    @Scheduled(fixedRate = 86400000) // 24 hours
+    public void checkForApproachingTagEvents(){
+        List<TicketDao> tickets = ticketRepo.findAllTicketsABoutToStart();
+        
+        tickets.forEach((dao) -> {
+            User user = userRepo.findByUsername(dao.getEvent().getCreatorUsername());
+            if (user != null) {
+                Utils.sendOutEmailText("Your upcoming Event needs attention",
+                        user.getEmail(),
+                        "text/plain",
+                        "Your event\'s (" + dao.getEvent().getTitle() + ") contains some NFC ticket." +
+                                "According to Tixxbay \'s terms of use, you are required to explicitly make an order for the NFC tickets inorder to start its processing." +
+                                "It should also be noted that processing these tickets will not incurr any cost to you except you wish to make additional update to Tixxbay standard ticket content." +
+                                "So far, " + String.valueOf(dao.getChildTickets().size()) + " tickets have been sold."        );
+            }
+        });
+    }
+    
+    /**
+     * This scheduled task will get all tickets that the sale end date have elapsed
+     * if the ticket status is true, the ticket will be expired
+     */
+    @Scheduled(fixedRate = 21600000) // 6 hours
+    public void expiryAllPastSalesTicket(){
+        List<Ticket> tickets = ticketRepo.findAllExpiredTickets();
+        tickets.stream().filter((ticket) -> (ticket.isStatus())).map((ticket) -> {
+            ticket.setStatus(false);
+            return ticket;
+        }).forEachOrdered((ticket) -> {
+            ticketRepo.save(ticket);
+        });
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

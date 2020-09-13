@@ -9,11 +9,14 @@ import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.Ticket;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 
@@ -72,7 +75,37 @@ public class TicketRepoCustomImpl implements TicketRepoCustom{
 	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
 	return mongoTemplate.aggregate(agg, Ticket.class, TicketDao.class).getUniqueMappedResult();
     }
+
+    @Override
+    public List<TicketDao> findAllTicketsABoutToStart() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime futureDate = now.plusDays(5);
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
+        MatchOperation match = Aggregation.match(Criteria.where("saleStartDay").lt(futureDate).andOperator(Criteria.where("saleStartDay").gte(now), Criteria.where("haveOrdered").gte(false) ,Criteria.where("status").is(true)));
+        list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(Aggregation.lookup("childTicket", "ticketCode", "parentTicketCode", "childTickets"));
+        list.add(match);       
+	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
+	return mongoTemplate.aggregate(agg, Ticket.class, TicketDao.class).getMappedResults(); 
+    }
+
+    @Override
+    public List<Ticket> findAllExpiredTickets() {
+        LocalDateTime now = LocalDateTime.now();
+        //LocalDateTime futureDate = now.plusDays(5);
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
+        MatchOperation match = Aggregation.match(Criteria.where("saleEndDay").gt(now));
+        //list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        //list.add(Aggregation.lookup("childTicket", "ticketCode", "parentTicketCode", "childTickets"));
+        list.add(match);       
+	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
+	return mongoTemplate.aggregate(agg, Ticket.class).getMappedResults(); 
+    }
 }
+
+
+
+
 
 
 

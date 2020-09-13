@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
+import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import java.util.List;
 
 /**
@@ -17,7 +18,11 @@ public interface TicketRepoCustom {
     List<TicketDao> aggregateAllTicketCategoriesByEvent(String ticketCode);
     TicketDao getTicketCategory(String ticketCode);
     TicketDao getTicketCategoryByChildTicket(String ticketCode);
+    List<TicketDao> findAllTicketsABoutToStart();
+    List<Ticket> findAllExpiredTickets();
 }
+
+
 
 
 

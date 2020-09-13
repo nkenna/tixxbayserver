@@ -9,6 +9,14 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
+import com.steinacoz.tixx.tixxbayserver.scheduledTasks.TixxScheduleTask;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -42,6 +50,8 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -50,6 +60,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Utils {
+    private static final Logger utillog = LoggerFactory.getLogger(Utils.class);
     final public static String newcreditTag = "TRANS_NEW_CREDIT_TAG";
 	final public static String creditTag = "TRANS_CREDIT_TAG";
 	final public static String debitTag = "TRANS_DEBIT_TAG";
@@ -205,9 +216,37 @@ public class Utils {
         return output;
 
     }
+    
+    public static void sendOutEmailText(String _subject, 
+                                    String _to, 
+                                    String _type,
+                                    String _content){
+        //send out email to notify user
+                    Email from = new Email("support@tixxbay.com");
+                    String subject = _subject;
+                    Email to = new Email(_to);
+                    Content content = new Content(_type, _content);
+                    Mail mail = new Mail(from, subject, to, content);
+                    System.out.println(mail.from.getEmail());
+                    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
+                    Request request = new Request();
+                    try {
+                        request.setMethod(Method.POST);
+                        request.setEndpoint("mail/send");
+                        request.setBody(mail.build());
+                        Response response = sg.api(request);
+                        System.out.println(response.getStatusCode());
+                        System.out.println(response.getBody());
+                        System.out.println(response.getHeaders());
+                          
+                    } catch (IOException ex) {
+                         utillog.error("error occured sending email: {}", ex.getMessage()); 
+                    }
+    }
  
 
 }
+
 
 
 

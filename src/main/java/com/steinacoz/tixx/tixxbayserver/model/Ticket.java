@@ -31,6 +31,28 @@ public class Ticket {
     private LocalDateTime saleEndDay;
     private LocalDateTime created;
     private LocalDateTime updated;
+    private boolean haveOrdered;
+    private boolean status; //true = ticket can be sold, false = ticket cannot be sold
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    
+    
+
+    public boolean isHaveOrdered() {
+        return haveOrdered;
+    }
+
+    public void setHaveOrdered(boolean haveOrdered) {
+        this.haveOrdered = haveOrdered;
+    }
+    
+    
 
     public int getAvailableTickets() {
         return availableTickets;
@@ -176,6 +198,9 @@ public class Ticket {
     
     
 }
+
+
+
 
 
 
