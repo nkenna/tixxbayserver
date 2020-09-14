@@ -1118,7 +1118,22 @@ public class TicketController {
         return ResponseEntity.ok().body(tr);
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/user-created-nfc-tickets", method = RequestMethod.POST)
+    public ResponseEntity<TicketResponse> getUserNFCTicke(@RequestBody ChildTicket ticket){
+        TicketResponse tr = new TicketResponse();        
+        List<TicketDao> ticks = ticketRepo.getTicketsByEventCreatorNFC(ticket.getEventCode());
+        
+        tr.setStatus("success");
+        tr.setMessage("tickets found: " + String.valueOf(ticks.size()));
+        tr.setTickets(ticks);
+        return ResponseEntity.ok().body(tr);
+    }
+    
 }
+
+
+
 
 
 

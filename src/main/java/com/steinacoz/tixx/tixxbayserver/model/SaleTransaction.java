@@ -27,6 +27,17 @@ public class SaleTransaction {
     private Location location;
     private String taguuid;
     private String transType;
+    private int quantity;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    
+    
 
     public String getTransType() {
         return transType;
@@ -128,6 +139,7 @@ public class SaleTransaction {
     
     
 }
+
 
 
 

@@ -211,6 +211,7 @@ public class VendorSellController {
                 st.setTransRef(gen_ref);
                 st.setTransDate(LocalDateTime.now());
                 //set transaction type
+                st.setTransType(Utils.vendorSell);
                 st.setTotalAmount(new BigDecimal(totalAmt));
                 User payee = userRepo.findByTaguuid(tag.getTaguuid());
                 UserDao daoPayee = new UserDao();
@@ -228,6 +229,7 @@ public class VendorSellController {
                 st.setNarration("Vendor sold item and Wallet was credit");
                 st.setLocation(vsp.getLocation());
                 st.setTaguuid(tag.getTaguuid());
+                st.setQuantity(vsp.getTotalQuantity());
                 stRepo.save(st);
                 
                 //build wallet transaction record
@@ -267,6 +269,9 @@ public class VendorSellController {
     
     
 }
+
+
+
 
 
 

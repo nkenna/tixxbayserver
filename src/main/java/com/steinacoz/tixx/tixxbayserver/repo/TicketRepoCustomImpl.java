@@ -101,7 +101,20 @@ public class TicketRepoCustomImpl implements TicketRepoCustom{
 	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
 	return mongoTemplate.aggregate(agg, Ticket.class).getMappedResults(); 
     }
+
+    @Override
+    public List<TicketDao> getTicketsByEventCreatorNFC(String eventCode) {
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
+        MatchOperation match = Aggregation.match(Criteria.where("eventCode").is(eventCode).andOperator(Criteria.where("ticketType").is("NFC")));
+        //list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(Aggregation.lookup("childTicket", "ticketCode", "parentTicketCode", "childTickets"));
+        list.add(match);       
+	TypedAggregation<Ticket> agg = Aggregation.newAggregation(Ticket.class, list);
+	return mongoTemplate.aggregate(agg, Ticket.class, TicketDao.class).getMappedResults(); 
+    }
 }
+
+
 
 
 

@@ -20,7 +20,10 @@ public interface TicketRepoCustom {
     TicketDao getTicketCategoryByChildTicket(String ticketCode);
     List<TicketDao> findAllTicketsABoutToStart();
     List<Ticket> findAllExpiredTickets();
+    List<TicketDao> getTicketsByEventCreatorNFC(String eventCode);
 }
+
+
 
 
 
