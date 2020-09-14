@@ -183,7 +183,11 @@ public class EventController {
                 roles.add(eventmanagerRole);  
                 Set<Role> rr = user.getRoles();
                 rr.addAll(roles);
-                user.setRoles(rr);
+                if(user.getRoles().contains(eventmanagerRole) == false){
+                    user.setRoles(rr);
+                    user.setUpdated(LocalDateTime.now());
+                }
+                
                 userRepo.save(user);
                 Email from = new Email("support@tixxbay.com");
                         String subject = "New Event created at TixxBay";
@@ -759,6 +763,7 @@ public class EventController {
     
     
 }
+
 
 
 

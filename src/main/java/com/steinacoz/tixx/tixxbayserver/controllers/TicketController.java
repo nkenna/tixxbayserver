@@ -1120,7 +1120,7 @@ public class TicketController {
     
     @CrossOrigin
     @RequestMapping(value = "/user-created-nfc-tickets", method = RequestMethod.POST)
-    public ResponseEntity<TicketResponse> getUserNFCTicke(@RequestBody ChildTicket ticket){
+    public ResponseEntity<TicketResponse> getUserNFCTicke(@RequestBody Ticket ticket){
         TicketResponse tr = new TicketResponse();        
         List<TicketDao> ticks = ticketRepo.getTicketsByEventCreatorNFC(ticket.getEventCode());
         
@@ -1131,6 +1131,7 @@ public class TicketController {
     }
     
 }
+
 
 
 
