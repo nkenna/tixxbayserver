@@ -45,7 +45,7 @@ public class TransactionController {
    SaleTransactionRepo stRepo;
    
    
-   @CrossOrigin
+    @CrossOrigin
     @RequestMapping(value = "/all-ticket-sales-month", method = RequestMethod.POST)
     public ResponseEntity<TicketSalesByMonthResponse> allTicketsSalesByMonth(@RequestBody TicketSaleByMonthRequest tsbm){
         TicketSalesByMonthResponse er = new TicketSalesByMonthResponse();
@@ -153,7 +153,7 @@ public class TransactionController {
     }
     
     @CrossOrigin
-    @RequestMapping(value = "/all-sales-month", method = RequestMethod.POST)
+    @RequestMapping(value = "/all-vendor-sales-month", method = RequestMethod.POST)
     public ResponseEntity<SalesByMonthResponse> allSalesByMonth(@RequestBody SaleByMonthRequest tsbm){
         SalesByMonthResponse er = new SalesByMonthResponse();
         List<SaleTransactionDao> week1 = new ArrayList<>();
@@ -226,8 +226,12 @@ public class TransactionController {
         return ResponseEntity.ok().body(er);
     }
     
+   
     
 }
+
+
+
 
 
 

@@ -43,10 +43,26 @@ public class SaleTransactionRepoCustomImpl implements SaleTransactionRepoCustom{
     @Override
     public List<SaleTransactionDao> getAllSaleTransByMonth(LocalDate date, String eventCode) {
         YearMonth month = YearMonth.from(date);
+        System.out.println(month);
+        LocalDate end = month.atEndOfMonth();
+        LocalDate start = month.atDay(1);
+        
+        System.out.println(start);        
+        System.out.println(end);
+        
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        MatchOperation match1 = Aggregation.match(Criteria.where("eventCode").is(eventCode));
-        MatchOperation match2 = Aggregation.match(Criteria.where("transDate").lt(month.atEndOfMonth()).andOperator(Criteria.where("transDate").gt(month.atDay(1))));
+        //MatchOperation match1 = Aggregation.match();
+        MatchOperation match2 = Aggregation.match(
+                Criteria.where("eventCode").is(eventCode)
+                .andOperator(
+                        Criteria.where("transDate").lt(end),
+                        Criteria.where("transDate").gt(start)
+                )
+            );
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(Aggregation.lookup("tixxTag", "taguuid", "taguuid", "tag"));
+        list.add(match2);
+        //list.add(Aggregation.lookup("user", "eventCode", "eventCode", "event"));
         TypedAggregation<SaleTransaction> agg = Aggregation.newAggregation(SaleTransaction.class, list);
 	return mongoTemplate.aggregate(agg, SaleTransaction.class, SaleTransactionDao.class).getMappedResults();
     }
@@ -61,6 +77,8 @@ public class SaleTransactionRepoCustomImpl implements SaleTransactionRepoCustom{
     }
     
 }
+
+
 
 
 

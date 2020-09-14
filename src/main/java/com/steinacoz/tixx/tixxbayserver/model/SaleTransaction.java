@@ -26,6 +26,17 @@ public class SaleTransaction {
     private String narration;
     private Location location;
     private String taguuid;
+    private String transType;
+
+    public String getTransType() {
+        return transType;
+    }
+
+    public void setTransType(String transType) {
+        this.transType = transType;
+    }
+    
+    
 
     
 
@@ -117,6 +128,7 @@ public class SaleTransaction {
     
     
 }
+
 
 
 
