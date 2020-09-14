@@ -69,9 +69,10 @@ public class Utils {
 	final public static String debitWallet = "TRANS_DEBIT_WALLET";
 	
 	final public static String creditAgent = "TRANS_CREDIT_AGENT";
-	final public static String creditVendor = "TRANS_CREDIT_Vendor";
+	final public static String creditVendor = "TRANS_CREDIT_VENDOR";
 	final public static String creditEventManager = "TRANS_CREDIT_EVENT_MANAGER";
         final public static String buyTicket = "TRANS_BUY_TICKET";
+        final public static String vendorSell = "TRANS_VENDOR_SELL";
 	
 	final public static String typeAdmin = "ADMIN";
 	final public static String typeAgent = "AGENT";
@@ -246,6 +247,7 @@ public class Utils {
  
 
 }
+
 
 
 

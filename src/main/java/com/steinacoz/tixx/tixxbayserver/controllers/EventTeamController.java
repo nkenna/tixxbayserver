@@ -279,7 +279,11 @@ public class EventTeamController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(etr); 
         }
     }
+    
+    
 }
+
+
 
 
 
