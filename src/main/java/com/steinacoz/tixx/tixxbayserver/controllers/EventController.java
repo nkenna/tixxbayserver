@@ -13,6 +13,7 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
+import com.steinacoz.tixx.tixxbayserver.PushNotificationService;
 import com.steinacoz.tixx.tixxbayserver.dao.CityDao;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.dao.StateDao;
@@ -21,6 +22,7 @@ import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventKey;
 import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
+import com.steinacoz.tixx.tixxbayserver.model.PushNotificationRequest;
 import com.steinacoz.tixx.tixxbayserver.model.Role;
 import com.steinacoz.tixx.tixxbayserver.model.State;
 import com.steinacoz.tixx.tixxbayserver.model.User;
@@ -51,8 +53,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -104,6 +108,9 @@ public class EventController {
     
     @Autowired
     RoleRepo roleRepo;
+    
+    @Autowired
+    PushNotificationService pnService;
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
     
@@ -189,12 +196,20 @@ public class EventController {
                 }
                 
                 userRepo.save(user);
+                
+                PushNotificationRequest req = new PushNotificationRequest();
+                req.setTopic("new_event");
+                req.setMessage("New event was created on TixxBay");
+                
+                Map<String, String> data = new HashMap<>();
+                
+                pnService.sendPushNotification(req, data);
                 Email from = new Email("support@tixxbay.com");
-                        String subject = "New Event created at TixxBay";
-                        Email to = new Email(user.getEmail());
-                        Content content = new Content("text/plain", "Your new Event have been successfully created. The event details is available on your dashboard.");
-                        Mail mail = new Mail(from, subject, to, content);
-                        System.out.println(mail.from.getEmail());
+                String subject = "New Event created at TixxBay";
+                Email to = new Email(user.getEmail());
+                Content content = new Content("text/plain", "Your new Event have been successfully created. The event details is available on your dashboard.");
+                Mail mail = new Mail(from, subject, to, content);
+                System.out.println(mail.from.getEmail());
                         SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
                         Request request = new Request();
                         try {
@@ -763,6 +778,10 @@ public class EventController {
     
     
 }
+
+
+
+
 
 
 
