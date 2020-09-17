@@ -203,7 +203,7 @@ public class EventController {
                 
                 Map<String, String> data = new HashMap<>();
                 
-                pnService.sendPushNotification(req, data);
+                pnService.sendPushNotificationWithoutData(req);
                 Email from = new Email("support@tixxbay.com");
                 String subject = "New Event created at TixxBay";
                 Email to = new Email(user.getEmail());
@@ -778,6 +778,7 @@ public class EventController {
     
     
 }
+
 
 
 
