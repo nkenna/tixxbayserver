@@ -74,6 +74,8 @@ public class TixxScheduleTask {
     @Scheduled(fixedRate = 21600000) // 6 hours
     public void checkUserPoints(){
         
+        expiryAllPastSalesTicket();
+        
         //get all user points
         List<UserPoint> ups = upRepo.findByPointsGreaterThanQuery(20.0);
         System.out.println("length of resolved data" +  String.valueOf(ups.size()));
@@ -167,7 +169,7 @@ public class TixxScheduleTask {
      * This scheduled task will get all tickets that the sale end date have elapsed
      * if the ticket status is true, the ticket will be expired
      */
-    @Scheduled(fixedRate = 21600000) // 6 hours
+    //@Scheduled(fixedRate = 21600000) // 6 hours
     public void expiryAllPastSalesTicket(){
         List<Ticket> tickets = ticketRepo.findAllExpiredTickets();
         tickets.stream().filter((ticket) -> (ticket.isStatus())).map((ticket) -> {
@@ -178,6 +180,7 @@ public class TixxScheduleTask {
         });
     }
 }
+
 
 
 
