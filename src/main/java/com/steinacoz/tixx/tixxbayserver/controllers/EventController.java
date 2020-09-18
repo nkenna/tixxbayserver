@@ -201,9 +201,8 @@ public class EventController {
                 req.setTopic("new_event");
                 req.setMessage("New event was created on TixxBay");
                 
-                Map<String, String> data = new HashMap<>();
-                
                 pnService.sendPushNotificationWithoutData(req);
+                
                 Email from = new Email("support@tixxbay.com");
                 String subject = "New Event created at TixxBay";
                 Email to = new Email(user.getEmail());
@@ -387,8 +386,7 @@ public class EventController {
     }
     
     
-    
-    
+      
     @CrossOrigin
     @RequestMapping(value = "/remove-event-user", method = RequestMethod.POST)
     public ResponseEntity<EventResponse> removeEventUser(@RequestBody Event event){
@@ -778,6 +776,7 @@ public class EventController {
     
     
 }
+
 
 
 

@@ -20,6 +20,12 @@ import com.google.firebase.messaging.Notification;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.steinacoz.tixx.tixxbayserver.model.PushNotificationRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 /**
  *
@@ -54,10 +60,22 @@ public class FCMService {
         return FirebaseMessaging.getInstance().sendAsync(message).get();
     }
     private AndroidConfig getAndroidConfig(String topic) {
+        Resource resource = new ClassPathResource("loginlogo.png");
+        File file = null;
+
+         try {
+             InputStream input = resource.getInputStream();
+             file = resource.getFile();
+         } catch (IOException ex) {
+             logger.error("error getting icon: " + ex.getMessage());
+         }
+
+	
         return AndroidConfig.builder()
                 .setTtl(Duration.ofMinutes(2).toMillis()).setCollapseKey(topic)
                 .setPriority(AndroidConfig.Priority.HIGH)
-                .setNotification(AndroidNotification.builder().setTag(topic).build()).build();
+                
+                .setNotification(AndroidNotification.builder().setIcon(file.getPath()).setTag(topic).build()).build();
                 //.setNotification(AndroidNotification.builder().setSound(NotificationParameter.SOUND.getValue())
                   //      .setColor(NotificationParameter.COLOR.getValue())
                 //.setTag(topic).build()).build();
@@ -87,6 +105,9 @@ public class FCMService {
                         new Notification(request.getTitle(), request.getMessage()));
     }
 }
+
+
+
 
 
 
