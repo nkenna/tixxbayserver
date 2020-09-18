@@ -353,10 +353,11 @@ public class EventController {
             Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
         } **/
         
-        
-        
-
-        
+        if(image.getSize() > 300){
+            er.setStatus("failed");
+            er.setMessage("Image size cannot be greater than 300kb");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
+        } 
         
         if(foundEvent != null){
             try{
@@ -784,6 +785,8 @@ public class EventController {
     
     
 }
+
+
 
 
 
