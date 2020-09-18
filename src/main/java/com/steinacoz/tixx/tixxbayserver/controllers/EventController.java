@@ -215,7 +215,7 @@ public class EventController {
                 String subject = "New Event created at TixxBay";
                 Email to = new Email(user.getEmail());
                 Content content = new Content("text/plain", "Your new Event have been successfully created. The event details is available on your dashboard.");
-                Mail mail = new Mail(from, subject, to, null);
+                Mail mail = new Mail(from, subject, to, content);
                 mail.personalization.get(0).addSubstitution("content", content.getValue());
                 mail.setTemplateId("d-3645665f028347c286f2ff2f40438c7a");
                 System.out.println(mail.from.getEmail());
@@ -787,6 +787,7 @@ public class EventController {
     
     
 }
+
 
 
 
