@@ -65,15 +65,7 @@ public class FCMService {
         return FirebaseMessaging.getInstance().sendAsync(message).get();
     }
     private AndroidConfig getAndroidConfig(String topic) {
-        Resource resource = resourceLoader.getResource("classpath:loginlogo.png");
-        File file = null;
-        
-        try {
-            InputStream input = resource.getInputStream();
-            file = resource.getFile();
-        } catch (IOException ex) {
-            logger.error("error occurred getting file: " + ex.getMessage());
-        }
+      
 
 	
 
@@ -112,6 +104,7 @@ public class FCMService {
                         new Notification(request.getTitle(), request.getMessage()));
     }
 }
+
 
 
 
