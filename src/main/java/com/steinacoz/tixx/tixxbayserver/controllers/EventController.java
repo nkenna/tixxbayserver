@@ -190,12 +190,20 @@ public class EventController {
                 roles.add(eventmanagerRole);  
                 Set<Role> rr = user.getRoles();
                 rr.addAll(roles);
-                if(user.getRoles().contains(eventmanagerRole) == false){
+                boolean contained = false;
+                for(Role role : user.getRoles()){
+                    if(role.getName().equalsIgnoreCase("ROLE_EVENTMANAGER")){
+                        contained = true;
+                        break;
+                    }
+                }
+                if(contained == false){
                     user.setRoles(rr);
                     user.setUpdated(LocalDateTime.now());
+                    userRepo.save(user);
                 }
                 
-                userRepo.save(user);
+                
                 
                 PushNotificationRequest req = new PushNotificationRequest();
                 req.setTopic("new_event");
@@ -776,6 +784,7 @@ public class EventController {
     
     
 }
+
 
 
 
