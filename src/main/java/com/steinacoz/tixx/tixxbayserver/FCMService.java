@@ -24,8 +24,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 /**
  *
@@ -33,6 +35,9 @@ import org.springframework.core.io.Resource;
  */
 @Service
 public class FCMService {
+    @Autowired
+    ResourceLoader resourceLoader;
+    
      private Logger logger = LoggerFactory.getLogger(FCMService.class);
     public void sendMessage(Map<String, String> data, PushNotificationRequest request)
             throws InterruptedException, ExecutionException {
@@ -60,15 +65,17 @@ public class FCMService {
         return FirebaseMessaging.getInstance().sendAsync(message).get();
     }
     private AndroidConfig getAndroidConfig(String topic) {
-        Resource resource = new ClassPathResource("loginlogo.png");
+        Resource resource = resourceLoader.getResource("classpath:loginlogo.png");
         File file = null;
+        
+        try {
+            InputStream input = resource.getInputStream();
+            file = resource.getFile();
+        } catch (IOException ex) {
+            logger.error("error occurred getting file: " + ex.getMessage());
+        }
 
-         try {
-             InputStream input = resource.getInputStream();
-             file = resource.getFile();
-         } catch (IOException ex) {
-             logger.error("error getting icon: " + ex.getMessage());
-         }
+	
 
 	
         return AndroidConfig.builder()
@@ -105,6 +112,7 @@ public class FCMService {
                         new Notification(request.getTitle(), request.getMessage()));
     }
 }
+
 
 
 
