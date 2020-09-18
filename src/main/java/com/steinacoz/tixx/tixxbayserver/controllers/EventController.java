@@ -353,7 +353,7 @@ public class EventController {
             Logger.getLogger(EventController.class.getName()).log(Level.SEVERE, null, ex);
         } **/
         
-        if(image.getSize() > 300){
+        if(image.getSize() > 300000){
             er.setStatus("failed");
             er.setMessage("Image size cannot be greater than 300kb");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(er);
@@ -378,7 +378,7 @@ public class EventController {
                 }
             }catch(IOException e){
                 er.setStatus("failed");
-                er.setMessage("Image position not specified.");
+                er.setMessage("Error uploading event image");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er);
             }
         }else{
@@ -785,6 +785,8 @@ public class EventController {
     
     
 }
+
+
 
 
 
