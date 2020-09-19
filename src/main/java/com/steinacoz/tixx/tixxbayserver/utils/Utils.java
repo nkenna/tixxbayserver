@@ -246,57 +246,256 @@ public class Utils {
     }
     
     
-    private static String sendHtmlEmailNewEvent(){
+    public static String sendHtmlEmailNewEvent(String content){
         StringBuilder sb = new StringBuilder();
-        sb.append("<table bgcolor=\"#fd0a5d\" cellpadding=\"0\" cellspacing=\"0\" class=\"nl-container\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; min-width: 320px; Margin: 0 auto; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #fd0a5d; width: 100%;\" valign=\"top\" width=\"100%\">");
-        sb.append("<tbody>");
-        sb.append("<tr style=\"vertical-align: top;\" valign=\"top\">");
-        sb.append("<td style=\"word-break: break-word; vertical-align: top;\" valign=\"top\">");
-        sb.append("<div style=\"background-color:#002767;\">");
-        sb.append("<div class=\"block-grid\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;\">");
-        sb.append("<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:transparent;\">");
-        sb.append("<div class=\"col num12\" style=\"min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top; width: 650px;\">");
-        sb.append("<div style=\"width:100% !important;\">");
-        sb.append("<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;\">");
-        sb.append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"divider\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;\" valign=\"top\" width=\"100%\">");
-        sb.append("<tbody>");
-        
-        sb.append("<tr style=\"vertical-align: top;\" valign=\"top\">");
-        sb.append("<td class=\"divider_inner\" style=\"word-break: break-word; vertical-align: top; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;\" valign=\"top\">");
-        
-        sb.append("<table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"divider_content\" height=\"0\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-top: 0px solid transparent; height: 0px; width: 100%;\" valign=\"top\" width=\"100%\">");
-        sb.append("<tbody>");
-        
-        sb.append("<tr style=\"vertical-align: top;\" valign=\"top\">");
-        sb.append("<td height=\"0\" style=\"word-break: break-word; vertical-align: top; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;\" valign=\"top\"><span></span></td>");
-        
-        sb.append("</tr>");
-        sb.append("</tbody>");
-        sb.append("</table>");
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("</tbody>");
-        sb.append("</table>");
-        sb.append("</div>");
-        sb.append("</div>");
-        sb.append("</div>");
-        sb.append("</div>");
-        sb.append("</div>");
-        sb.append("</div>");
-        
-        sb.append("<div style=\"background-color:#002767;\">");
-        sb.append("<div class=\"block-grid mixed-two-up\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;\">");
-        sb.append("<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:transparent;\">");
-        sb.append("<div class=\"col num3\" style=\"display: table-cell; vertical-align: top; max-width: 320px; min-width: 162px; width: 162px;\">");
-        sb.append("<div style=\"width:100% !important;\">");
-        sb.append("<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:0px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;\">");
-        sb.append("<div align=\"center\" class=\"img-container center autowidth\" style=\"padding-right: 0px;padding-left: 0px;\">");
-        sb.append("<a href=\"http://www.example.com/\" style=\"outline:none\" tabindex=\"-1\" target=\"_blank\"> <img align=\"center\" alt=\"Logo\" border=\"0\" class=\"center autowidth\" src=\"https://firebasestorage.googleapis.com/v0/b/tixxbay-app.appspot.com/o/EMAIL_Logo4x.png?alt=media&token=bc1cdffa-8e0f-425b-a8ee-54e6ef451ad1\" style=\"text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 162px; display: block;\" title=\"Logo\" width=\"162\"/></a>");
+        sb.append("<table bgcolor=\"#fd0a5d\" cellpadding=\"0\" cellspacing=\"0\" class=\"nl-container\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; min-width: 320px; Margin: 0 auto; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #fd0a5d; width: 100%;\" valign=\"top\" width=\"100%\">\n" +
+"<tbody>\n" +
+"<tr style=\"vertical-align: top;\" valign=\"top\">\n" +
+"<td style=\"word-break: break-word; vertical-align: top;\" valign=\"top\">\n" +
+"\n" +
+"<div style=\"background-color:#002767;\">\n" +
+"<div class=\"block-grid\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;\">\n" +
+"<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:transparent;\">\n" +
+"\n" +
+"<div class=\"col num12\" style=\"min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top; width: 650px;\">\n" +
+"<div style=\"width:100% !important;\">\n" +
+"\n" +
+"<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;\">\n" +
+"\n" +
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"divider\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;\" valign=\"top\" width=\"100%\">\n" +
+"<tbody>\n" +
+"<tr style=\"vertical-align: top;\" valign=\"top\">\n" +
+"<td class=\"divider_inner\" style=\"word-break: break-word; vertical-align: top; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;\" valign=\"top\">\n" +
+"<table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"divider_content\" height=\"0\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-top: 0px solid transparent; height: 0px; width: 100%;\" valign=\"top\" width=\"100%\">\n" +
+"<tbody>\n" +
+"<tr style=\"vertical-align: top;\" valign=\"top\">\n" +
+"<td height=\"0\" style=\"word-break: break-word; vertical-align: top; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;\" valign=\"top\"><span></span></td>\n" +
+"</tr>\n" +
+"</tbody>\n" +
+"</table>\n" +
+"</td>\n" +
+"</tr>\n" +
+"</tbody>\n" +
+"</table>\n" +
+"\n" +
+"</div>\n" +
+"\n" +
+"</div>\n" +
+"</div>\n" +
+"\n" +
+"</div>\n" +
+"</div>\n" +
+"</div>\n" +
+"<div style=\"background-color:#002767;\">\n" +
+"<div class=\"block-grid mixed-two-up\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;\">\n" +
+"<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:transparent;\">\n" +
+"\n" +
+"<div class=\"col num3\" style=\"display: table-cell; vertical-align: top; max-width: 320px; min-width: 162px; width: 162px;\">\n" +
+"<div style=\"width:100% !important;\">\n" +
+"\n" +
+"<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:0px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;\">\n" +
+"\n" +
+"<div align=\"center\" class=\"img-container center autowidth\" style=\"padding-right: 0px;padding-left: 0px;\">\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr style=\"line-height:0px\"><td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\"><![endif]--><a href=\"http://www.example.com/\" style=\"outline:none\" tabindex=\"-1\" target=\"_blank\"> <img align=\"center\" alt=\"Logo\" border=\"0\" class=\"center autowidth\" src=\"https://firebasestorage.googleapis.com/v0/b/tixxbay-app.appspot.com/o/EMAIL_Logo4x.png?alt=media&token=bc1cdffa-8e0f-425b-a8ee-54e6ef451ad1\" style=\"text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 162px; display: block;\" title=\"Logo\" width=\"162\"/></a>\n" +
+"<!--[if mso]></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"</div>\n" +
+"<!--<![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n" +
+"<!--[if (mso)|(IE)]></td><td align=\"center\" width=\"487\" style=\"background-color:transparent;width:487px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;\" valign=\"top\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 0px; padding-left: 0px; padding-top:15px; padding-bottom:10px;\"><![endif]-->\n" +
+"<div class=\"col num9\" style=\"display: table-cell; vertical-align: top; min-width: 320px; max-width: 486px; width: 487px;\">\n" +
+"<div style=\"width:100% !important;\">\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:15px; padding-bottom:10px; padding-right: 0px; padding-left: 0px;\">\n" +
+"<!--<![endif]-->\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Arial, sans-serif\"><![endif]-->\n" +
+"<div style=\"color:#ffffff;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;\">\n" +
+"<div style=\"line-height: 1.2; font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #ffffff; mso-line-height-alt: 14px;\">\n" +
+"<p style=\"font-size: 16px; line-height: 1.2; word-break: break-word; text-align: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; mso-line-height-alt: 19px; margin: 0;\"><span style=\"font-size: 12px;\"><a href=\"http://www.example.com/\" rel=\"noopener\" style=\"text-decoration: none; color: #ffffff;\" target=\"_blank\">BUY TICKETS</a>    <a href=\"http://www.example.com/\" rel=\"noopener\" style=\"text-decoration: none; color: #ffffff;\" target=\"_blank\">SUPPORT</a></span></p>\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if mso]></td></tr></table><![endif]-->\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"</div>\n" +
+"<!--<![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n" +
+"<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"</div>\n" +
+"<div style=\"background-color:#002767;\">\n" +
+"<div class=\"block-grid\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;\">\n" +
+"<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:transparent;\">\n" +
+"<!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:#002767;\"><tr><td align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:650px\"><tr class=\"layout-full-width\" style=\"background-color:transparent\"><![endif]-->\n" +
+"<!--[if (mso)|(IE)]><td align=\"center\" width=\"650\" style=\"background-color:transparent;width:650px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;\" valign=\"top\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 0px; padding-left: 0px; padding-top:5px; padding-bottom:5px;\"><![endif]-->\n" +
+"<div class=\"col num12\" style=\"min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top; width: 650px;\">\n" +
+"<div style=\"width:100% !important;\">\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;\">\n" +
+"<!--<![endif]-->\n" +
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"divider\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;\" valign=\"top\" width=\"100%\">\n" +
+"<tbody>\n" +
+"<tr style=\"vertical-align: top;\" valign=\"top\">\n" +
+"<td class=\"divider_inner\" style=\"word-break: break-word; vertical-align: top; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;\" valign=\"top\">\n" +
+"<table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"divider_content\" height=\"0\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-top: 0px solid transparent; height: 0px; width: 100%;\" valign=\"top\" width=\"100%\">\n" +
+"<tbody>\n" +
+"<tr style=\"vertical-align: top;\" valign=\"top\">\n" +
+"<td height=\"0\" style=\"word-break: break-word; vertical-align: top; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;\" valign=\"top\"><span></span></td>\n" +
+"</tr>\n" +
+"</tbody>\n" +
+"</table>\n" +
+"</td>\n" +
+"</tr>\n" +
+"</tbody>\n" +
+"</table>\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"</div>\n" +
+"<!--<![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n" +
+"<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"</div>\n" +
+"<div style=\"background-color:transparent;\">\n" +
+"<div class=\"block-grid\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;\">\n" +
+"<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:transparent;\">\n" +
+"<!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:transparent;\"><tr><td align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:650px\"><tr class=\"layout-full-width\" style=\"background-color:transparent\"><![endif]-->\n" +
+"<!--[if (mso)|(IE)]><td align=\"center\" width=\"650\" style=\"background-color:transparent;width:650px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;\" valign=\"top\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 0px; padding-left: 0px; padding-top:35px; padding-bottom:0px;\"><![endif]-->\n" +
+"<div class=\"col num12\" style=\"min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top; width: 650px;\">\n" +
+"<div style=\"width:100% !important;\">\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:35px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;\">\n" +
+"<!--<![endif]-->\n" +
+"<div align=\"center\" class=\"img-container center autowidth\" style=\"padding-right: 0px;padding-left: 0px;\">\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr style=\"line-height:0px\"><td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\"><![endif]--><img align=\"center\" border=\"0\" class=\"center autowidth\" src=\"https://firebasestorage.googleapis.com/v0/b/tixxbay-app.appspot.com/o/hello_tixxs4x-100.jpg?alt=media&token=0918ffa3-028d-443c-bdce-7768ce2095b3\" style=\"text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 650px; display: block;\" width=\"650\"/>\n" +
+"<!--[if mso]></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"</div>\n" +
+"<!--<![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n" +
+"<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"</div>\n" +
+"<div style=\"background-color:transparent;\">\n" +
+"<div class=\"block-grid\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;\">\n" +
+"<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:transparent;\">\n" +
+"<!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:transparent;\"><tr><td align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:650px\"><tr class=\"layout-full-width\" style=\"background-color:transparent\"><![endif]-->\n" +
+"<!--[if (mso)|(IE)]><td align=\"center\" width=\"650\" style=\"background-color:transparent;width:650px; border-top: 0px solid transparent; border-left: 4px solid #57366E; border-bottom: 0px solid transparent; border-right: 4px solid #57366E;\" valign=\"top\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 0px; padding-left: 0px; padding-top:55px; padding-bottom:60px;\"><![endif]-->\n" +
+"<div class=\"col num12\" style=\"min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top; width: 642px;\">\n" +
+"<div style=\"width:100% !important;\">\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"<div style=\"border-top:0px solid transparent; border-left:4px solid #57366E; border-bottom:0px solid transparent; border-right:4px solid #57366E; padding-top:55px; padding-bottom:60px; padding-right: 0px; padding-left: 0px; color: #FFFFFF\">\n" +
+"\n" +
+"<!--<![endif]-->\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 10px; padding-left: 10px; padding-top: 60px; padding-bottom: 60px; font-family: Arial, sans-serif\"><![endif]-->\n" +
+"<!--[if mso]></td></tr></table><![endif]-->\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 50px; padding-left: 50px; padding-top: 10px; padding-bottom: 10px; font-family: Arial, sans-serif\"><![endif]-->\n" +
+"<!--[if mso]></td></tr></table><![endif]-->\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 30px; padding-left: 30px; padding-top: 60px; padding-bottom: 60px; font-family: Arial, sans-serif\"><![endif]-->\n" +
+"<!--[if mso]></td></tr></table><![endif]-->\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"<p>" + content  + "</p>\n" +
+"</div>\n" +
+"<!--<![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n" +
+"<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"</div>\n" +
+"<div style=\"background-color:transparent;\">\n" +
+"<div class=\"block-grid\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #002767;\">\n" +
+"<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:#002767;\">\n" +
+"<!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:transparent;\"><tr><td align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:650px\"><tr class=\"layout-full-width\" style=\"background-color:#002767\"><![endif]-->\n" +
+"<!--[if (mso)|(IE)]><td align=\"center\" width=\"650\" style=\"background-color:#002767;width:650px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;\" valign=\"top\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 30px; padding-left: 30px; padding-top:55px; padding-bottom:55px;\"><![endif]-->\n" +
+"<div class=\"col num12\" style=\"min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top; width: 650px;\">\n" +
+"<div style=\"width:100% !important;\">\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:55px; padding-bottom:55px; padding-right: 30px; padding-left: 30px;\">\n" +
+"<!--<![endif]-->\n" +
+"<div align=\"center\" class=\"button-container\" style=\"padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;\">\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;\"><tr><td style=\"padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px\" align=\"center\"><v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"http://www.example.com/\" style=\"height:45.75pt; width:267pt; v-text-anchor:middle;\" arcsize=\"50%\" strokeweight=\"1.5pt\" strokecolor=\"#4C76BB\" fillcolor=\"#011b47\"><w:anchorlock/><v:textbox inset=\"0,0,0,0\"><center style=\"color:#ffffff; font-family:Arial, sans-serif; font-size:18px\"><![endif]--><a href=\"http://www.example.com/\" style=\"-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #011b47; border-radius: 30px; -webkit-border-radius: 30px; -moz-border-radius: 30px; width: auto; width: auto; border-top: 2px solid #4C76BB; border-right: 2px solid #4C76BB; border-bottom: 2px solid #4C76BB; border-left: 2px solid #4C76BB; padding-top: 18px; padding-bottom: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;\" target=\"_blank\"><span style=\"padding-left:60px;padding-right:60px;font-size:18px;display:inline-block;\"><span style=\"font-size: 16px; line-height: 1.2; word-break: break-word; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; mso-line-height-alt: 19px;\"><span data-mce-style=\"font-size: 18px; line-height: 21px;\" style=\"font-size: 18px; line-height: 21px;\">Privacy Policy</span></span></span></a>\n" +
+"<!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"<div align=\"center\" class=\"button-container\" style=\"padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;\">\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;\"><tr><td style=\"padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px\" align=\"center\"><v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"http://www.example.com/\" style=\"height:45.75pt; width:225pt; v-text-anchor:middle;\" arcsize=\"50%\" strokeweight=\"1.5pt\" strokecolor=\"#4C76BB\" fillcolor=\"#011b47\"><w:anchorlock/><v:textbox inset=\"0,0,0,0\"><center style=\"color:#ffffff; font-family:Arial, sans-serif; font-size:18px\"><![endif]--><a href=\"http://www.example.com/\" style=\"-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #011b47; border-radius: 30px; -webkit-border-radius: 30px; -moz-border-radius: 30px; width: auto; width: auto; border-top: 2px solid #4C76BB; border-right: 2px solid #4C76BB; border-bottom: 2px solid #4C76BB; border-left: 2px solid #4C76BB; padding-top: 18px; padding-bottom: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;\" target=\"_blank\"><span style=\"padding-left:35px;padding-right:35px;font-size:18px;display:inline-block;\"><span style=\"font-size: 16px; line-height: 1.2; word-break: break-word; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; mso-line-height-alt: 19px;\"><span data-mce-style=\"font-size: 18px; line-height: 21px;\" style=\"font-size: 18px; line-height: 21px;\">Terms &amp; Conditions</span></span></span></a>\n" +
+"<!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"<div align=\"center\" class=\"button-container\" style=\"padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;\">\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;\"><tr><td style=\"padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px\" align=\"center\"><v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"http://www.example.com/\" style=\"height:45.75pt; width:265.5pt; v-text-anchor:middle;\" arcsize=\"50%\" strokeweight=\"1.5pt\" strokecolor=\"#4C76BB\" fillcolor=\"#011b47\"><w:anchorlock/><v:textbox inset=\"0,0,0,0\"><center style=\"color:#ffffff; font-family:Arial, sans-serif; font-size:18px\"><![endif]--><a href=\"http://www.example.com/\" style=\"-webkit-text-size-adjust: none; text-decoration: none; display: inline-block; color: #ffffff; background-color: #011b47; border-radius: 30px; -webkit-border-radius: 30px; -moz-border-radius: 30px; width: auto; width: auto; border-top: 2px solid #4C76BB; border-right: 2px solid #4C76BB; border-bottom: 2px solid #4C76BB; border-left: 2px solid #4C76BB; padding-top: 18px; padding-bottom: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center; mso-border-alt: none; word-break: keep-all;\" target=\"_blank\"><span style=\"padding-left:60px;padding-right:60px;font-size:18px;display:inline-block;\"><span style=\"font-size: 16px; line-height: 1.2; word-break: break-word; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; mso-line-height-alt: 19px;\"><span data-mce-style=\"font-size: 18px; line-height: 21px;\" style=\"font-size: 18px; line-height: 21px;\">Cookie Policy</span></span></span></a>\n" +
+"<!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 25px; padding-left: 25px; padding-top: 20px; padding-bottom: 10px; font-family: Arial, sans-serif\"><![endif]-->\n" +
+"<div style=\"color:#ffffff;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;line-height:1.5;padding-top:20px;padding-right:25px;padding-bottom:10px;padding-left:25px;\">\n" +
+"<div style=\"line-height: 1.5; font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #ffffff; mso-line-height-alt: 18px;\">\n" +
+"<p style=\"font-size: 16px; line-height: 1.5; word-break: break-word; text-align: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; mso-line-height-alt: 24px; margin: 0;\"><span style=\"font-size: 16px;\">If you have any questions do not hesitate to <a href=\"support@tixxbay.com\" style=\"text-decoration: underline; color: #ffffff;\" title=\"reach\">reach out to us</a></span></p>\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if mso]></td></tr></table><![endif]-->\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"</div>\n" +
+"<!--<![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n" +
+"<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"</div>\n" +
+"<div style=\"background-color:transparent;\">\n" +
+"<div class=\"block-grid\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;\">\n" +
+"<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:transparent;\">\n" +
+"<!--[if (mso)|(IE)]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:transparent;\"><tr><td align=\"center\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:650px\"><tr class=\"layout-full-width\" style=\"background-color:transparent\"><![endif]-->\n" +
+"<!--[if (mso)|(IE)]><td align=\"center\" width=\"650\" style=\"background-color:transparent;width:650px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;\" valign=\"top\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 0px; padding-left: 0px; padding-top:0px; padding-bottom:0px;\"><![endif]-->\n" +
+"<div class=\"col num12\" style=\"min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top; width: 650px;\">\n" +
+"<div style=\"width:100% !important;\">\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:0px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;\">\n" +
+"<!--<![endif]-->\n" +
+"<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 10px; padding-left: 10px; padding-top: 15px; padding-bottom: 20px; font-family: Arial, sans-serif\"><![endif]-->\n" +
+"<div style=\"color:#ffffff;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;line-height:1.5;padding-top:15px;padding-right:10px;padding-bottom:20px;padding-left:10px;\">\n" +
+"<div style=\"line-height: 1.5; font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #ffffff; mso-line-height-alt: 18px;\">\n" +
+"<p style=\"font-size: 12px; line-height: 1.5; word-break: break-word; text-align: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; mso-line-height-alt: 18px; margin: 0;\"><span style=\"font-size: 12px;\">Lifecamp FCT Abuja, 900001, Nigeria</span></p>\n" +
+"<p style=\"font-size: 12px; line-height: 1.5; word-break: break-word; text-align: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; mso-line-height-alt: 18px; margin: 0;\"><span style=\"font-size: 12px;\">© Copyright 2020 tixxbay.com</span></p>\n" +
+"<p style=\"font-size: 12px; line-height: 1.5; word-break: break-word; text-align: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; mso-line-height-alt: 18px; margin: 0;\"><span style=\"font-size: 12px;\"><a href=\"http://www.example.com/\" rel=\"noopener\" style=\"text-decoration: none; color: #ffffff;\" target=\"_blank\">Manage Preferences</a> | <a href=\"http://www.example.com/\" rel=\"noopener\" style=\"text-decoration: none; color: #ffffff;\" target=\"_blank\">Unsubscribe</a></span></p>\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if mso]></td></tr></table><![endif]-->\n" +
+"<!--[if (!mso)&(!IE)]><!-->\n" +
+"</div>\n" +
+"<!--<![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n" +
+"<!--[if (mso)|(IE)]></td></tr></table></td></tr></table><![endif]-->\n" +
+"</div>\n" +
+"</div>\n" +
+"</div>\n" +
+"<!--[if (mso)|(IE)]></td></tr></table><![endif]-->\n" +
+"</td>\n" +
+"</tr>\n" +
+"</tbody>\n" +
+"</table>");
         return sb.toString();
     }
  
 
 }
+
+
+
 
 
 
