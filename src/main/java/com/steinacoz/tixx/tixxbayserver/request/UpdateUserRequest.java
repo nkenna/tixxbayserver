@@ -18,6 +18,7 @@ public class UpdateUserRequest {
     private String middleName;
     private String lastName;
     private String mobileNumber;
+    
   
     private String dob;
     private String state;
@@ -26,7 +27,18 @@ public class UpdateUserRequest {
     private String country;
     private Location location;
     private String userType;
+    private String taguuid;
 
+    public String getTaguuid() {
+        return taguuid;
+    }
+
+    public void setTaguuid(String taguuid) {
+        this.taguuid = taguuid;
+    }
+    
+    
+    
     public String getId() {
         return id;
     }
@@ -127,6 +139,7 @@ public class UpdateUserRequest {
     
     
 }
+
 
 
 

@@ -563,6 +563,7 @@ public class UserController {
                     user.setDob(uur.getDob());
                     user.setState(uur.getState());
                     user.setLga(uur.getLga());
+                    user.setTaguuid(uur.getTaguuid());
                     user.setAddress(uur.getAddress());
                     user.setCountry(uur.getCountry());
                     user.setLocation(uur.getLocation());
@@ -1072,6 +1073,7 @@ public class UserController {
     
    
 }
+
 
 
 
