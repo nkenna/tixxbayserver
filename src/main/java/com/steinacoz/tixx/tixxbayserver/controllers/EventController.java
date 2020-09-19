@@ -214,9 +214,10 @@ public class EventController {
                 Email from = new Email("support@tixxbay.com");
                 String subject = "New Event created at TixxBay";
                 Email to = new Email(user.getEmail());
-                Content content = new Content("text/plain", "Your new Event have been successfully created. The event details is available on your dashboard.");
+                Content content = new Content("text/html", "Your new Event have been successfully created. The event details is available on your dashboard.");
                 Mail mail = new Mail(from, subject, to, content);
                 mail.addCustomArg("content", "Your new Event have been successfully created. The event details is available on your dashboard."); //personalization.get(0).addSubstitution("content", content.getValue());
+                
                 mail.setTemplateId("d-3645665f028347c286f2ff2f40438c7a");
                 System.out.println(mail.from.getEmail());
                         SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
@@ -787,6 +788,7 @@ public class EventController {
     
     
 }
+
 
 
 

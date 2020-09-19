@@ -244,9 +244,60 @@ public class Utils {
                          utillog.error("error occured sending email: {}", ex.getMessage()); 
                     }
     }
+    
+    
+    private static String sendHtmlEmailNewEvent(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("<table bgcolor=\"#fd0a5d\" cellpadding=\"0\" cellspacing=\"0\" class=\"nl-container\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; min-width: 320px; Margin: 0 auto; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #fd0a5d; width: 100%;\" valign=\"top\" width=\"100%\">");
+        sb.append("<tbody>");
+        sb.append("<tr style=\"vertical-align: top;\" valign=\"top\">");
+        sb.append("<td style=\"word-break: break-word; vertical-align: top;\" valign=\"top\">");
+        sb.append("<div style=\"background-color:#002767;\">");
+        sb.append("<div class=\"block-grid\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;\">");
+        sb.append("<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:transparent;\">");
+        sb.append("<div class=\"col num12\" style=\"min-width: 320px; max-width: 650px; display: table-cell; vertical-align: top; width: 650px;\">");
+        sb.append("<div style=\"width:100% !important;\">");
+        sb.append("<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:5px; padding-bottom:5px; padding-right: 0px; padding-left: 0px;\">");
+        sb.append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"divider\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;\" valign=\"top\" width=\"100%\">");
+        sb.append("<tbody>");
+        
+        sb.append("<tr style=\"vertical-align: top;\" valign=\"top\">");
+        sb.append("<td class=\"divider_inner\" style=\"word-break: break-word; vertical-align: top; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;\" valign=\"top\">");
+        
+        sb.append("<table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"divider_content\" height=\"0\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-top: 0px solid transparent; height: 0px; width: 100%;\" valign=\"top\" width=\"100%\">");
+        sb.append("<tbody>");
+        
+        sb.append("<tr style=\"vertical-align: top;\" valign=\"top\">");
+        sb.append("<td height=\"0\" style=\"word-break: break-word; vertical-align: top; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;\" valign=\"top\"><span></span></td>");
+        
+        sb.append("</tr>");
+        sb.append("</tbody>");
+        sb.append("</table>");
+        sb.append("</td>");
+        sb.append("</tr>");
+        sb.append("</tbody>");
+        sb.append("</table>");
+        sb.append("</div>");
+        sb.append("</div>");
+        sb.append("</div>");
+        sb.append("</div>");
+        sb.append("</div>");
+        sb.append("</div>");
+        
+        sb.append("<div style=\"background-color:#002767;\">");
+        sb.append("<div class=\"block-grid mixed-two-up\" style=\"Margin: 0 auto; min-width: 320px; max-width: 650px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: transparent;\">");
+        sb.append("<div style=\"border-collapse: collapse;display: table;width: 100%;background-color:transparent;\">");
+        sb.append("<div class=\"col num3\" style=\"display: table-cell; vertical-align: top; max-width: 320px; min-width: 162px; width: 162px;\">");
+        sb.append("<div style=\"width:100% !important;\">");
+        sb.append("<div style=\"border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:0px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;\">");
+        sb.append("<div align=\"center\" class=\"img-container center autowidth\" style=\"padding-right: 0px;padding-left: 0px;\">");
+        sb.append("<a href=\"http://www.example.com/\" style=\"outline:none\" tabindex=\"-1\" target=\"_blank\"> <img align=\"center\" alt=\"Logo\" border=\"0\" class=\"center autowidth\" src=\"https://firebasestorage.googleapis.com/v0/b/tixxbay-app.appspot.com/o/EMAIL_Logo4x.png?alt=media&token=bc1cdffa-8e0f-425b-a8ee-54e6ef451ad1\" style=\"text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 162px; display: block;\" title=\"Logo\" width=\"162\"/></a>");
+        return sb.toString();
+    }
  
 
 }
+
 
 
 
