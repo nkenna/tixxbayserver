@@ -71,10 +71,12 @@ public class TixxScheduleTask {
     @Autowired
     WalletTransactionRepo walletTransRepo;
     
-    @Scheduled(fixedRate = 21600000) // 6 hours
+    @Scheduled(fixedRate = 43200000) // 12 hours
     public void checkUserPoints(){
         
         expiryAllPastSalesTicket();
+        
+        checkForApproachingTagEvents();
         
         //get all user points
         List<UserPoint> ups = upRepo.findByPointsGreaterThanQuery(20.0);
@@ -147,7 +149,7 @@ public class TixxScheduleTask {
      * If the NFC ticket sale start date is approaching like 2 days away
      * An email will be sent to the event creator to start order for NFC Tags.
      */
-    @Scheduled(fixedRate = 86400000) // 24 hours
+    //@Scheduled(fixedRate = 86400000) // 24 hours
     public void checkForApproachingTagEvents(){
         List<TicketDao> tickets = ticketRepo.findAllTicketsABoutToStart();
         
@@ -160,7 +162,7 @@ public class TixxScheduleTask {
                         "Your event\'s (" + dao.getEvent().getTitle() + ") contains some NFC ticket." +
                                 "According to Tixxbay \'s terms of use, you are required to explicitly make an order for the NFC tickets inorder to start its processing." +
                                 "It should also be noted that processing these tickets will not incurr any cost to you except you wish to make additional update to Tixxbay standard ticket content." +
-                                "So far, " + String.valueOf(dao.getChildTickets().size()) + " tickets have been sold."        );
+                                "So far, " + String.valueOf(dao.getChildTickets().size()) + " tickets have been sold. Ignore this email if you have perform this operation already.");
             }
         });
     }
@@ -180,6 +182,7 @@ public class TixxScheduleTask {
         });
     }
 }
+
 
 
 

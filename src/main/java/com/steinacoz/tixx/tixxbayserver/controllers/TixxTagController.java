@@ -6,16 +6,25 @@
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
 import com.steinacoz.tixx.tixxbayserver.dao.TixxTagDao;
+import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
+import com.steinacoz.tixx.tixxbayserver.model.TagTransaction;
 import com.steinacoz.tixx.tixxbayserver.model.TixxTag;
 import com.steinacoz.tixx.tixxbayserver.model.Transaction;
+import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.model.VendorSalePackage;
+import com.steinacoz.tixx.tixxbayserver.model.Wallet;
+import com.steinacoz.tixx.tixxbayserver.model.WalletTransaction;
+import com.steinacoz.tixx.tixxbayserver.repo.TagTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TixxTagRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.VendorSalePackageRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.WalletTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.request.TixxTagSearchRequest;
+import com.steinacoz.tixx.tixxbayserver.request.WalletfundtagRequest;
 import com.steinacoz.tixx.tixxbayserver.response.TixxTagResponse;
+import com.steinacoz.tixx.tixxbayserver.response.WalletfundtagResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -53,6 +62,12 @@ public class TixxTagController {
     
     @Autowired
     VendorSalePackageRepo vspRepo;
+    
+    @Autowired
+    WalletTransactionRepo walletTransRepo;
+    
+    @Autowired
+    TagTransactionRepo ttRepo;
 	
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
@@ -109,18 +124,17 @@ public class TixxTagController {
     
     
     @CrossOrigin
-	@RequestMapping(value = "/all-bands", method = RequestMethod.GET)
-	public ResponseEntity<TixxTagResponse> allBands(){
+    @RequestMapping(value = "/all-bands", method = RequestMethod.GET)
+    public ResponseEntity<TixxTagResponse> allBands(){
             
-            
-		TixxTagResponse tbr = new TixxTagResponse();
-		List<TixxTagDao> tixxs = tixxRepo.aggregateAlltags();
-		tbr.setMessage("bands found: " + String.valueOf(tixxs.size()));
-		tbr.setStatus("success");
-		tbr.setTbsdao(tixxs);
-		return ResponseEntity.ok().body(tbr);
+        TixxTagResponse tbr = new TixxTagResponse();
+        List<TixxTagDao> tixxs = tixxRepo.aggregateAlltags();
+        tbr.setMessage("bands found: " + String.valueOf(tixxs.size()));
+        tbr.setStatus("success");
+        tbr.setTbsdao(tixxs);
+        return ResponseEntity.ok().body(tbr);
 		
-	}
+    }
         
         
         @RequestMapping(value = "/band-by-uuid", method = RequestMethod.POST)
@@ -681,12 +695,167 @@ public class TixxTagController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tbr);
 		}
 	}
+        
+        @RequestMapping(value = "/wallet-fund-tag", method = RequestMethod.POST)
+	public ResponseEntity<WalletfundtagResponse> walletfundtag(@RequestBody WalletfundtagRequest tbsr){
+		WalletfundtagResponse tbr = new WalletfundtagResponse();
+		
+		if(tbsr.getUsername() == null || tbsr.getUsername().isEmpty()) {
+			tbr.setStatus("failed");
+			tbr.setMessage("username is required");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tbr);
+		}
+                
+                if(tbsr.getTaguuid() == null || tbsr.getTaguuid().isEmpty()) {
+			tbr.setStatus("failed");
+			tbr.setMessage("Tag uuid is required");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tbr);
+		}
+                
+                if(tbsr.getAmount() == null || tbsr.getAmount().doubleValue() == 0) {
+			tbr.setStatus("failed");
+			tbr.setMessage("amount cannot be zero or empty");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tbr);
+		}
+		
+                // find user
+                User user = userRepo.findByUsername(tbsr.getUsername());
+                if(user == null) {
+			tbr.setStatus("failed");
+			tbr.setMessage("user not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tbr);
+		}
+                
+                //find wallet
+                Wallet wallet = walletRepo.findByWalletid(user.getWalletId());
+                if(wallet == null) {
+			tbr.setStatus("failed");
+			tbr.setMessage("wallet not found");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tbr);
+		}
+                
+                //find Tag
+                TixxTag tixx = tixxRepo.findByTaguuid(tbsr.getTaguuid());
+                
+                //if tag was not found, use tag associated with the user
+                if(tixx == null){
+                    tixx = tixxRepo.findByTaguuid(user.getTaguuid());
+                }
+                
+                // if no tag is associated to user. send a not found response
+                if(tixx == null){
+                    tbr.setStatus("failed");
+                    tbr.setMessage("tag with the UUIS was not found and no tag is associated with this user.");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tbr);
+                }
+                
+                // check if tag is flagged
+                if(tixx.isFlag()){
+                    tbr.setStatus("failed");
+                    tbr.setMessage("There is a flag on this tag. Provide a new tag or contact support to rectify it");
+                    return ResponseEntity.status(HttpStatus.LOCKED).body(tbr);
+                }
+                
+                if(tixx.isActive() == false){
+                    tbr.setStatus("failed");
+                    tbr.setMessage("This tag is inactive. Provide a new tag or contact support to rectify it");
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body(tbr);
+                }
+                
+                // check wallet balance
+                if(wallet.getBalance().compareTo(tbsr.getAmount()) == -1){
+                   tbr.setStatus("failed");
+                   tbr.setMessage("Wallet insufficient balance");
+                   return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tbr); 
+                }
+                
+                // debit wallet
+                BigDecimal resultWallet = wallet.getBalance().subtract(tbsr.getAmount());
+                wallet.setBalance(resultWallet);
+                wallet.setUpdateddate(LocalDateTime.now());
+                
+                // credit wallet
+                // we are taking 0.2% for charges
+                double charges = 0.005 * tbsr.getAmount().doubleValue();
+                BigDecimal creditAmt = new BigDecimal(tbsr.getAmount().doubleValue() - charges);
+                BigDecimal resultTag = tixx.getAvailableAmount().add(creditAmt); // keep reference to new amount
+                tixx.setDefaultAmount(tixx.getPreviousAmount()); // credit trans, set new default amount
+                tixx.setPreviousAmount(tixx.getAvailableAmount());
+                
+                //update available balance
+                tixx.setAvailableAmount(resultTag);
+                tixx.setUpdated(LocalDateTime.now());
+                
+                //create wallet transaction
+                UserDao dao = new UserDao();
+                 BeanUtils.copyProperties(user, dao);
+                
+                WalletTransaction wt = new WalletTransaction();
+                wt.setTransRef("TIXX" + Utils.randomNS(12));
+                wt.setTransDate(LocalDateTime.now());
+                wt.setTotalAmount(tbr.getAmount());
+                wt.setTransType(Utils.debitWallet);
+                wt.setBoughtBy(dao);
+                wt.setWalletId(wallet.getWalletid());
+                wt.setWalletOwnerUsername(wallet.getOwnerUsername());
+                wt.setNarration("Tag credited by wallet");
+                
+                TagTransaction tt = new TagTransaction();
+                wt.setTransRef("TIXX" + Utils.randomNS(12));
+                wt.setTransDate(LocalDateTime.now());
+                wt.setTotalAmount(resultTag);
+                wt.setTransType(Utils.creditTag);
+                wt.setBoughtBy(dao);
+                wt.setWalletId(wallet.getWalletid());
+                wt.setWalletOwnerUsername(wallet.getOwnerUsername());
+                wt.setNarration("Tag credited by wallet");
+                
+                
+                //update data
+                try{
+                   Wallet updatedWallet = walletRepo.save(wallet);
+                   TixxTag updatedTixx = tixxRepo.save(tixx); 
+                   walletTransRepo.save(wt);
+                   ttRepo.save(tt);
+                   tbr.setStatus("success");
+                   tbr.setMessage("Tag credited successfully from wallet");
+                   tbr.setAmount(resultTag);
+                   tbr.setTag(updatedTixx);
+                   tbr.setWallet(updatedWallet);
+                   
+                   tbr.setUser(dao);
+                   return ResponseEntity.ok().body(tbr);
+                }catch(Exception e){
+                    tbr.setStatus("failed");
+                    tbr.setMessage("unknown error occurred crediting tag from wallet");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(tbr);
+                }
+                
+                
+		
+	}
+        
 	
 	
 	
 	
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

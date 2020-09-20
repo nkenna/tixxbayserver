@@ -943,6 +943,7 @@ public class UserController {
     
     @CrossOrigin
     @RequestMapping(value = "/flag-unflag-bank-details", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BankDetailResponse> flagBankDetails(@RequestBody BankDetail bd){
         BankDetailResponse bdr = new BankDetailResponse();
         BankDetail newBankDetail =  bankDetailsRepo.findByAccountNumber(bd.getId());
@@ -993,6 +994,7 @@ public class UserController {
     }
     
     @RequestMapping(value = "/all-bank-details", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BankDetailResponse> allBankDetails(){
             
 		BankDetailResponse br = new BankDetailResponse();
@@ -1054,6 +1056,7 @@ public class UserController {
     }
     
     @RequestMapping(value = "/create-role", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity createRole(@RequestBody RoleRequest rr){
         if(rr.getName() != null){
             Role role = roleRepo.findByName(rr.getName());
@@ -1073,6 +1076,7 @@ public class UserController {
     
    
 }
+
 
 
 
