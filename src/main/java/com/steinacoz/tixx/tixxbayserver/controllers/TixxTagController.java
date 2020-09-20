@@ -801,14 +801,14 @@ public class TixxTagController {
                 wt.setNarration("Tag credited by wallet");
                 
                 TagTransaction tt = new TagTransaction();
-                wt.setTransRef("TIXX" + Utils.randomNS(12));
-                wt.setTransDate(LocalDateTime.now());
-                wt.setTotalAmount(resultTag);
-                wt.setTransType(Utils.creditTag);
-                wt.setBoughtBy(dao);
-                wt.setWalletId(wallet.getWalletid());
-                wt.setWalletOwnerUsername(wallet.getOwnerUsername());
-                wt.setNarration("Tag credited by wallet");
+                tt.setTransRef("TIXX" + Utils.randomNS(12));
+                tt.setTransDate(LocalDateTime.now());
+                tt.setTotalAmount(resultTag);
+                tt.setTransType(Utils.creditTag);
+                tt.setBoughtBy(dao);
+                tt.setWalletId(wallet.getWalletid());
+                tt.setWalletOwnerUsername(wallet.getOwnerUsername());
+                tt.setNarration("Tag credited by wallet");
                 
                 
                 //update data
@@ -841,6 +841,7 @@ public class TixxTagController {
 	
     
 }
+
 
 
 
