@@ -803,7 +803,7 @@ public class TixxTagController {
                 TagTransaction tt = new TagTransaction();
                 tt.setTransRef("TIXX" + Utils.randomNS(12));
                 tt.setTransDate(LocalDateTime.now());
-                tt.setTotalAmount(resultTag);
+                tt.setTotalAmount(creditAmt);
                 tt.setTransType(Utils.creditTag);
                 tt.setBoughtBy(dao);
                 tt.setWalletId(wallet.getWalletid());
@@ -841,6 +841,7 @@ public class TixxTagController {
 	
     
 }
+
 
 
 
