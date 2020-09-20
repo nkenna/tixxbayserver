@@ -763,7 +763,7 @@ public class TixxTagController {
                 }
                 
                 // check wallet balance
-                if(wallet.getBalance().compareTo(tbsr.getAmount()) == -1){
+                if(wallet.getBalance().doubleValue() < tbsr.getAmount().doubleValue()){
                    tbr.setStatus("failed");
                    tbr.setMessage("Wallet insufficient balance");
                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tbr); 
@@ -774,7 +774,7 @@ public class TixxTagController {
                 wallet.setBalance(resultWallet);
                 wallet.setUpdateddate(LocalDateTime.now());
                 
-                // credit wallet
+                // credit tag
                 // we are taking 0.2% for charges
                 double charges = 0.005 * tbsr.getAmount().doubleValue();
                 BigDecimal creditAmt = new BigDecimal(tbsr.getAmount().doubleValue() - charges);
@@ -841,6 +841,8 @@ public class TixxTagController {
 	
     
 }
+
+
 
 
 
