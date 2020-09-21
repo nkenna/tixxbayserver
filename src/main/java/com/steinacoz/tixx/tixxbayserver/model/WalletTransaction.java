@@ -29,6 +29,8 @@ public class WalletTransaction {
     private Location location;
     private double ticketDiscount;
     private List<String> ticketCodes;
+    
+    
 
     public double getTicketDiscount() {
         return ticketDiscount;
@@ -136,6 +138,7 @@ public class WalletTransaction {
     
     
 }
+
 
 
 

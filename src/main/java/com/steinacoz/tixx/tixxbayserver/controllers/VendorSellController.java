@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
+import com.steinacoz.tixx.tixxbayserver.dao.TixxTagDao;
 import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
@@ -251,6 +252,9 @@ public class VendorSellController {
                 VendorSalePackage newVS = vsprRepo.save(vsp);
                 vspr.setMessage("item(s) sales was successful");
                 vspr.setStatus("success");
+                TixxTagDao dtao = new TixxTagDao();
+                BeanUtils.copyProperties(updatedTag, dtao);
+                vspr.setTag(dtao);
                 return ResponseEntity.ok().body(vspr);
                 
     }
@@ -269,6 +273,8 @@ public class VendorSellController {
     
     
 }
+
+
 
 
 

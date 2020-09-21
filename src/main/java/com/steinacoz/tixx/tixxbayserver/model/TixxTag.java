@@ -33,6 +33,7 @@ public class TixxTag {
 	private String role;
 	private String eventCode; //event management
 	private String eventId;
+        
 
     public String getId() {
         return id;
@@ -188,6 +189,7 @@ public class TixxTag {
         
         
 }
+
 
 
 

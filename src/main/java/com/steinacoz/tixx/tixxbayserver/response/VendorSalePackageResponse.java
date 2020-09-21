@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.response;
 
+import com.steinacoz.tixx.tixxbayserver.dao.TixxTagDao;
 import com.steinacoz.tixx.tixxbayserver.dao.VendorSalePackageDao;
 import com.steinacoz.tixx.tixxbayserver.model.VendorSalePackage;
 import com.steinacoz.tixx.tixxbayserver.model.VendorSellItem;
@@ -21,6 +22,17 @@ public class VendorSalePackageResponse {
     private VendorSalePackageDao sale;
     private VendorSellItem item;
     private List<VendorSellItem> items;
+    private TixxTagDao tag;
+
+    public TixxTagDao getTag() {
+        return tag;
+    }
+
+    public void setTag(TixxTagDao tag) {
+        this.tag = tag;
+    }
+    
+    
 
     public String getStatus() {
         return status;
@@ -72,6 +84,7 @@ public class VendorSalePackageResponse {
     
     
 }
+
 
 
 
