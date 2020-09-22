@@ -92,7 +92,7 @@ public class CouponController {
             coupon.setEventCode(cou.getEventCode());
             coupon.setTicketCode(cou.getTicketCode());
             coupon.setUsed(false);
-            coupon.setMode(cou.getMode());
+            coupon.setMode(cou.getMode() == null || cou.getMode().isEmpty() ? "private" : cou.getMode());
             coupon.setDiscount(cou.getDiscount());
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime future = now.plusDays(7);
@@ -111,7 +111,8 @@ public class CouponController {
         try{
             couRepo.insert(coupons);
             List<User> users = userRepo.findAll();
-            try{
+            if(cou.getMode().equalsIgnoreCase("public")){
+                try{
                 Collections.shuffle(users);
                 for(int i = 0; i < cou.getQuantity(); i++){
                     if(users.get(i) != null){
@@ -125,6 +126,7 @@ public class CouponController {
             }catch(Exception e){
                 
             }
+            }
             cr.setStatus("success");
             cr.setMessage("coupons created: " + coupons.size());
             cr.setCoupons(coupons);
@@ -137,6 +139,7 @@ public class CouponController {
         
     }
 }
+
 
 
 
