@@ -120,7 +120,7 @@ public class CouponController {
                         String content = "You can get a discount of " + String.valueOf(coupons.get(i).getDiscount()) +  "% using this coupon " + coupons.get(i).getCode() + " to purchase " +
                                 ticket.getTitle() + " ticket." +
                                 " This coupon will expiry in " + els.format(DateTimeFormatter.ISO_LOCAL_DATE);
-                        Utils.sendOutEmailHtml("TixxBay Event" + event.getTitle() +  "Ticket Coupon", users.get(i).getEmail(), content);
+                        Utils.sendOutEmailHtml("TixxBay Event(" + event.getTitle() +  ") Ticket Coupon", users.get(i).getEmail(), content);
                     }
                 }
             }catch(Exception e){
@@ -139,6 +139,7 @@ public class CouponController {
         
     }
 }
+
 
 
 

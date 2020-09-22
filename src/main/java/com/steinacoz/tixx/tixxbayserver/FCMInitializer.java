@@ -18,11 +18,14 @@ import com.google.firebase.messaging.Notification;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.steinacoz.tixx.tixxbayserver.model.PushNotificationRequest;
+import java.io.ByteArrayInputStream;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import javax.annotation.PostConstruct;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,16 +37,24 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FCMInitializer {
-    @Value("${app.firebase-configuration-file}")
-    private String firebaseConfigPath;
+    //@Value("${app.firebase-configuration-file}")
+    //private String firebaseConfigPath;
+    
+    @Value("${GOOGLE_CREDENTIALS}")
+   private String gservicesConfig;
 
     Logger logger = LoggerFactory.getLogger(FCMInitializer.class);
 
     @PostConstruct
     public void initialize() {
         try {
+            JSONObject jsonObject = new JSONObject(gservicesConfig.toString());
+            InputStream is = new ByteArrayInputStream(jsonObject.toString().getBytes());
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())).build();
+                    .setCredentials(GoogleCredentials.fromStream(is)).build();
+    
+            //FirebaseOptions options = new FirebaseOptions.Builder()
+              //      .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())).build();
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
                 logger.info("Firebase application has been initialized");
@@ -55,6 +66,7 @@ public class FCMInitializer {
     
     
 }
+
 
 
 
