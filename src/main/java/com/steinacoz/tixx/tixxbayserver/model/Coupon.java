@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.model;
 
+import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -17,15 +18,40 @@ public class Coupon {
     private String ticketCode;
     private String eventCode;
     private boolean used;
+    private String mode; //public and private
     private double discount;
-    private int expirationTime;
+    private long expirationTime;
+    private LocalDateTime created;
+    private LocalDateTime updated;
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(LocalDateTime updated) {
+        this.updated = updated;
+    }
+    
+    
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getCode() {
@@ -68,16 +94,23 @@ public class Coupon {
         this.discount = discount;
     }
 
-    public int getExpirationTime() {
+    public long getExpirationTime() {
         return expirationTime;
     }
 
-    public void setExpirationTime(int expirationTime) {
+    public void setExpirationTime(long expirationTime) {
         this.expirationTime = expirationTime;
     }
 
+    
+
    
 }
+
+
+
+
+
 
 
 

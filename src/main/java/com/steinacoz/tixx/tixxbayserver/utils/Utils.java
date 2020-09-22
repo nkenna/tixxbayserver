@@ -246,6 +246,33 @@ public class Utils {
     }
     
     
+    public static void sendOutEmailHtml(String _subject, 
+                                    String _to, 
+                                    String _content){
+        //send out email to notify user
+                    Email from = new Email("support@tixxbay.com");
+                    String subject = _subject;
+                    Email to = new Email(_to);
+                    Content content = new Content("text/html", Utils.sendHtmlEmailNewEvent(_content));
+                    Mail mail = new Mail(from, subject, to, content);
+                    System.out.println(mail.from.getEmail());
+                    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
+                    Request request = new Request();
+                    try {
+                        request.setMethod(Method.POST);
+                        request.setEndpoint("mail/send");
+                        request.setBody(mail.build());
+                        Response response = sg.api(request);
+                        System.out.println(response.getStatusCode());
+                        System.out.println(response.getBody());
+                        System.out.println(response.getHeaders());
+                          
+                    } catch (IOException ex) {
+                         utillog.error("error occured sending email: {}", ex.getMessage()); 
+                    }
+    }
+    
+    
     public static String sendHtmlEmailNewEvent(String content){
         StringBuilder sb = new StringBuilder();
         sb.append("<table bgcolor=\"#fd0a5d\" cellpadding=\"0\" cellspacing=\"0\" class=\"nl-container\" role=\"presentation\" style=\"table-layout: fixed; vertical-align: top; min-width: 320px; Margin: 0 auto; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #fd0a5d; width: 100%;\" valign=\"top\" width=\"100%\">\n" +
@@ -493,6 +520,7 @@ public class Utils {
  
 
 }
+
 
 
 

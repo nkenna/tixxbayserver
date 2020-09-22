@@ -112,8 +112,7 @@ public class EventController {
     @Autowired
     PushNotificationService pnService;
     
-    private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");
-    
+    private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");   
    
 
     @CrossOrigin
@@ -232,7 +231,7 @@ public class EventController {
                           System.out.println(response.getHeaders());
                           
                         } catch (IOException ex) {
-                          
+                          System.out.println(ex.getMessage());
                         }
             }            
             er.setStatus("success");
@@ -490,7 +489,7 @@ public class EventController {
     public ResponseEntity<EventResponse> allEventsByCountry(@RequestBody Event event){
         EventResponse er = new EventResponse();
         List<EventDao> events = eventRepo.aggregateAllEventsByCountry(event.getCountry());
-       er.setMessage("events found: " + String.valueOf(events.size()));
+        er.setMessage("events found: " + String.valueOf(events.size()));
         er.setStatus("success");
         er.setEvents(events);
         return ResponseEntity.ok().body(er);
@@ -582,6 +581,11 @@ public class EventController {
         
     }
     
+    /**
+     * 
+     * @param event
+     * @return 
+     */
     @CrossOrigin
     @RequestMapping(value = "/all-events-by-gps", method = RequestMethod.PUT)
     public ResponseEntity<EventResponse> allEventsByGPS(@RequestBody Event event){
@@ -595,6 +599,12 @@ public class EventController {
         return ResponseEntity.ok().body(er);
     }
     
+    /**
+     * POST request to get event key
+     * An event key is used to encrypt and decrypt ticket data. It is unique to each event.
+     * @param EventKeyReq key
+     * @return 
+     */
     @CrossOrigin
     @RequestMapping(value = "/get-key-data-by-event", method = RequestMethod.POST)
     public ResponseEntity<EventKeyResponse> getEventKey(@RequestBody EventKeyReq key){
@@ -614,20 +624,34 @@ public class EventController {
        
     }
     
+    /**
+     * POST request to change the mode of an event
+     * @param Event ev
+     * @return 
+     */
     @CrossOrigin
     @RequestMapping(value = "/change-event-mode", method = RequestMethod.POST)
     public ResponseEntity<EventResponse> changeEventMode(@RequestBody Event ev){
         EventResponse er = new EventResponse();
+        // find the event
         Event event = eventRepo.findById(ev.getId()).orElseGet(null);
         
-        if(event != null){
+        
+        if(event != null){ //make the event is not empty
+            User user = userRepo.findByUsername(event.getCreatorUsername());
             if(ev.isStatus()){
                 event.setStatus(true);
+                eventRepo.save(event);
+                String content = "Your event (" + event.getTitle() + ") have been set to public. It is now public and searchable.";
+                Utils.sendOutEmailHtml("Event have been set to public", user.getEmail(), content);
                 er.setStatus("success");
                 er.setMessage("event status is public");
                 return ResponseEntity.ok().body(er);
             }else{
                 event.setStatus(false);
+                eventRepo.save(event);
+                String content = "Your event (" + event.getTitle() + ") have been set to private. It is now private and will not be searchable.";
+                Utils.sendOutEmailHtml("Event have been set to private", user.getEmail(), content);
                 er.setStatus("success");
                 er.setMessage("event status is private");
                 return ResponseEntity.ok().body(er);
@@ -639,23 +663,30 @@ public class EventController {
         }
     }
     
+    /**
+     * POST request to get all events linked with a vendor
+     * @param PayoutRequest pr
+     * @return 
+     */
     @CrossOrigin
     @RequestMapping(value = "/event-by-vendor", method = RequestMethod.POST)
     public ResponseEntity<EventResponseVendor> eventByVendor(@RequestBody PayoutRequest pr){
         EventResponseVendor er = new EventResponseVendor();
         List<Event> finalEvents = new ArrayList<Event>();
+        
+        // find the vendor first
         User user = userRepo.findByUsername(pr.getUsername());
         
-        if(user != null){
-            if(user.getLinkedEvents() != null){
+        if(user != null){ // make sure the vendor was found
+            if(user.getLinkedEvents() != null){ // make sure vendor is linked to events
                 for(String linkedEvents : user.getLinkedEvents()){
                     System.out.println(linkedEvents);
-                    if(linkedEvents != null && !linkedEvents.isEmpty() ){
-                        Event event = eventRepo.findByEventCode(linkedEvents);;
+                    if(linkedEvents != null && !linkedEvents.isEmpty() ){ // make sure vendor is linked to events
+                        Event event = eventRepo.findByEventCode(linkedEvents); // retrieve each event data he is linked to
                         if(event != null){
                             //EventDao evd = new EventDao();
                             //BeanUtils.copyProperties(event, evd);
-                            finalEvents.add(event);
+                            finalEvents.add(event); // add the found event to a list
                         }
                     }
                 }
@@ -673,15 +704,20 @@ public class EventController {
         
     }
     
+    /**
+     * POST request to add new state
+     * @param stateReq
+     * @return 
+     */
     @CrossOrigin
     @RequestMapping(value = "/add-state", method = RequestMethod.POST)
     public ResponseEntity<StateResponse> addState(@RequestBody StateRequest stateReq){
         StateResponse sr = new StateResponse();        
         
         try{
-           for(State state: stateReq.getState()){
-               stateRepo.save(state);
-           }
+            stateReq.getState().forEach((state) -> {
+                stateRepo.save(state);
+            });
           //List<State> states = stateRepo.insert(stateReq.getState());
           sr.setStatus("success");
           sr.setMessage("states added: ");
@@ -695,19 +731,24 @@ public class EventController {
         
     }
     
+    /**
+     * POST request to new city
+     * @param stateReq
+     * @return 
+     */
     @CrossOrigin
     @RequestMapping(value = "/add-city", method = RequestMethod.POST)
     public ResponseEntity<StateResponse> addCity(@RequestBody StateRequest stateReq){
         StateResponse sr = new StateResponse();        
         
         try{
-           for(City city: stateReq.getCity()){
-               City ci = new City();
-               ci.setName(city.getName());
-               ci.setState(city.getState());
-               System.out.println(city.toString());
-               cityRepo.save(ci);
-           }
+            stateReq.getCity().forEach((city) -> {
+                City ci = new City();
+                ci.setName(city.getName());
+                ci.setState(city.getState());
+                System.out.println(city.toString());
+                cityRepo.save(ci);
+            });
           //List<State> states = stateRepo.insert(stateReq.getState());
           sr.setStatus("success");
           sr.setMessage("cities added: ");
@@ -722,6 +763,10 @@ public class EventController {
         
     }
     
+    /**
+     * GET request to get all states
+     * @return states
+     */
     @CrossOrigin
     @RequestMapping(value = "/all-states", method = RequestMethod.GET)
     public ResponseEntity<StateResponse> allStates(){
@@ -733,6 +778,11 @@ public class EventController {
        return ResponseEntity.ok().body(sr);
     }
     
+    /**
+     * POST request to get a state by name
+     * @param stateReq
+     * @return state
+     */
     @CrossOrigin
     @RequestMapping(value = "/state-by-name", method = RequestMethod.POST)
     public ResponseEntity<StateResponse> getStateByname(@RequestBody StateRequest stateReq){
@@ -753,7 +803,10 @@ public class EventController {
        
     }
     
-    
+    /**
+     * GET request to get all the cities
+     * @return cities
+     */
     @CrossOrigin
     @RequestMapping(value = "/all-cities", method = RequestMethod.GET)
     public ResponseEntity<StateResponse> allCities(){
@@ -765,6 +818,11 @@ public class EventController {
        return ResponseEntity.ok().body(sr);
     }
     
+    /**
+     * POST request to get a city using the name
+     * @param stateReq
+     * @return CityDao
+     */
     @CrossOrigin
     @RequestMapping(value = "/city-by-name", method = RequestMethod.POST)
     public ResponseEntity<StateResponse> getCityByname(@RequestBody StateRequest stateReq){
@@ -788,6 +846,15 @@ public class EventController {
     
     
 }
+
+
+
+
+
+
+
+
+
 
 
 

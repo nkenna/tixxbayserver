@@ -176,15 +176,14 @@ public class TicketController {
           ticket.setTicketCode(event.getEventCode() + Utils.randomNS(4));  
         }else{
            tr.setStatus("failed");
-            tr.setMessage("parent event not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr); 
+           tr.setMessage("parent event not found");
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(tr); 
         }
         
         try{
-            
             Ticket newTicket = ticketRepo.save(ticket);
             TicketDao td = new TicketDao();
-                BeanUtils.copyProperties(newTicket, td);
+            BeanUtils.copyProperties(newTicket, td);
             tr.setStatus("success");
             tr.setTicket(td);
             tr.setMessage("Ticket created successful");
@@ -246,8 +245,7 @@ public class TicketController {
         List<ChildTicket> cts = new ArrayList<>();
         IssuedTicket it = new IssuedTicket();
       
-        List<String> codes = new ArrayList<>();
-        
+        List<String> codes = new ArrayList<>();        
               
        Ticket parentTicket = ticketRepo.findByTicketCode(itr.getTicketCode());
        Event event = eventRepo.findById(itr.getEventId()).orElseThrow(null);
@@ -279,11 +277,9 @@ public class TicketController {
         } 
           
           User issuer = userRepo.findByUsername(itr.getIssuerUsername());
-          User issuedTo = userRepo.findByUsername(itr.getIssuedToUsername());
-      
+          User issuedTo = userRepo.findByUsername(itr.getIssuedToUsername()); 
           
-          
-          
+               
           it.setTicketTitle(parentTicket.getTitle());
           it.setTicketCode(codes);
           it.setEventCode(itr.getEventCode());
@@ -1131,6 +1127,9 @@ public class TicketController {
     }
     
 }
+
+
+
 
 
 
