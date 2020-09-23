@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.response;
 
 import com.steinacoz.tixx.tixxbayserver.dao.WalletDao;
+import com.steinacoz.tixx.tixxbayserver.model.Wallet;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class WalletResponse {
     private String message;
     private BigDecimal balance;
     private WalletDao wallet;
-    private List<WalletDao> wallets;
+    private List<Wallet> wallets;
 
     public String getStatus() {
         return status;
@@ -52,15 +53,19 @@ public class WalletResponse {
         this.wallet = wallet;
     }
 
-    public List<WalletDao> getWallets() {
+    public List<Wallet> getWallets() {
         return wallets;
     }
 
-    public void setWallets(List<WalletDao> wallets) {
+    public void setWallets(List<Wallet> wallets) {
         this.wallets = wallets;
     }
+
+    
     
     
 }
+
+
 
 

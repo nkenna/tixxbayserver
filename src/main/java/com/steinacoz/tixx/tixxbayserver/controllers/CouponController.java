@@ -138,7 +138,74 @@ public class CouponController {
         }
         
     }
+    
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-coupons", method = RequestMethod.POST)
+    public ResponseEntity<CouponResponse> getAllCoupon(){
+        CouponResponse cr = new CouponResponse();
+        List<Coupon> coupons = couRepo.findAll();
+        cr.setStatus("success");
+            cr.setMessage("coupons found: " + coupons.size());
+            cr.setCoupons(coupons);
+            return ResponseEntity.ok().body(cr);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/coupon-by-ticket-code", method = RequestMethod.POST)
+    public ResponseEntity<CouponResponse> getCouponTicketCode(@RequestBody CouponRequest cou){
+        CouponResponse cr = new CouponResponse();
+        List<Coupon> coupons = couRepo.findByTicketCode(cou.getTicketCode());
+        cr.setStatus("success");
+        cr.setMessage("coupons found: " + coupons.size());
+        cr.setCoupons(coupons);
+        return ResponseEntity.ok().body(cr);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/coupon-by-event-code", method = RequestMethod.POST)
+    public ResponseEntity<CouponResponse> getCouponEventCode(@RequestBody CouponRequest cou){
+        CouponResponse cr = new CouponResponse();
+        List<Coupon> coupons = couRepo.findByEventCode(cou.getTicketCode());
+        cr.setStatus("success");
+        cr.setMessage("coupons found: " + coupons.size());
+        cr.setCoupons(coupons);
+        return ResponseEntity.ok().body(cr);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/coupon-by-code", method = RequestMethod.POST)
+    public ResponseEntity<CouponResponse> getCouponCode(@RequestBody CouponRequest cou){
+        CouponResponse cr = new CouponResponse();
+        Coupon coupon = couRepo.findByCode(cou.getCode());
+        if(coupon != null){
+          cr.setStatus("success");
+            cr.setMessage("coupon found");
+            cr.setCoupon(coupon);
+            return ResponseEntity.ok().body(cr);  
+        }else{
+            cr.setStatus("failed");
+            cr.setMessage("coupon not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(cr);  
+        }
+        
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/coupon-by-status", method = RequestMethod.POST)
+    public ResponseEntity<CouponResponse> getCouponStatus(@RequestBody CouponRequest cou){
+        CouponResponse cr = new CouponResponse();
+        List<Coupon> coupons = couRepo.findByUsed(cou.isUsed());
+        cr.setStatus("success");
+        cr.setMessage("coupons found: " + coupons.size());
+        cr.setCoupons(coupons);
+        return ResponseEntity.ok().body(cr);
+    }
 }
+
+
+
+
 
 
 

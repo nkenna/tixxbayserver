@@ -37,8 +37,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FCMInitializer {
-    //@Value("${app.firebase-configuration-file}")
-    //private String firebaseConfigPath;
+   
     
     @Value("${GOOGLE_CREDENTIALS}")
    private String gservicesConfig;
@@ -66,6 +65,7 @@ public class FCMInitializer {
     
     
 }
+
 
 
 

@@ -24,6 +24,17 @@ public class SellTicketReqest {
     //private int quantity;
     private String reference;
     private String boughtByEmail;
+    private String couponCode;
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
+    
+    
 
     public BigDecimal getTotalAmount() {
         return totalAmount;
@@ -91,6 +102,7 @@ public class SellTicketReqest {
     
     
 }
+
 
 
 

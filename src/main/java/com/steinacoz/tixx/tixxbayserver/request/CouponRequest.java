@@ -13,11 +13,33 @@ import java.time.LocalDateTime;
  */
 public class CouponRequest {
     private int quantity;
+    private String code;
     private LocalDateTime elapseTime;
     private String ticketCode;
     private String eventCode;
     private String mode; //public and private
     private double discount;
+    private boolean used;
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+    
+    
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+    
+    
 
     public int getQuantity() {
         return quantity;
@@ -70,6 +92,8 @@ public class CouponRequest {
     
     
 }
+
+
 
 
 

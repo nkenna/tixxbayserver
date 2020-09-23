@@ -17,6 +17,7 @@ import com.steinacoz.tixx.tixxbayserver.response.WalletResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -112,7 +113,20 @@ public class WalletController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(wr);  
         }
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/get-all-wallet", method = RequestMethod.GET)
+    public ResponseEntity<WalletResponse> getAllWallet(){
+        WalletResponse wr = new WalletResponse();
+        List<Wallet> wallets = walletRepo.findAll();
+        wr.setStatus("success");
+        wr.setMessage("wallets found: " + String.valueOf(wallets.size()));
+        wr.setWallets(wallets);
+        return ResponseEntity.ok().body(wr);
+    }
 }
+
+
 
 
 
