@@ -1016,6 +1016,7 @@ public class UserController {
 		
     }
     
+    @CrossOrigin
     @RequestMapping(value = "/all-bank-details-by-ownerid", method = RequestMethod.PUT)
     public ResponseEntity<BankDetailResponse> allBankDetailsByOwnerId(@RequestBody BankDetail bd){
             
@@ -1028,6 +1029,7 @@ public class UserController {
 		
     }
     
+    @CrossOrigin
     @RequestMapping(value = "/all-bank-details-by-username", method = RequestMethod.PUT)
     public ResponseEntity<BankDetailResponse> allBankDetailsByOwnerUsername(@RequestBody BankDetail bd){
             
@@ -1142,6 +1144,7 @@ public class UserController {
     
    
 }
+
 
 
 
