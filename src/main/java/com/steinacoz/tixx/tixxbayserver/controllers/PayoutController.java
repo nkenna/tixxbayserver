@@ -174,7 +174,7 @@ public class PayoutController {
     @RequestMapping(value = "/update-payout-status", method = RequestMethod.POST)
     public ResponseEntity<PayoutResponse> updatePayout(@RequestBody PayoutRequest payReq){
         PayoutResponse pr = new PayoutResponse();
-        if(!payReq.getStatus().equalsIgnoreCase(Utils.payPaid) || !payReq.getStatus().equalsIgnoreCase(Utils.payPending) || !payReq.getStatus().equalsIgnoreCase(Utils.payDeclined)){
+        if(!payReq.getStatus().equalsIgnoreCase(Utils.payPaid) && !payReq.getStatus().equalsIgnoreCase(Utils.payPending) && !payReq.getStatus().equalsIgnoreCase(Utils.payDeclined)){
             pr.setStatus("failed");
             pr.setMessage("invalid pay status.");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(pr);
@@ -254,6 +254,7 @@ public class PayoutController {
         return ResponseEntity.ok().body(pr);
     }
 }
+
 
 
 
