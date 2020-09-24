@@ -602,6 +602,13 @@ public class TicketController {
             tr.setMessage("event code is required");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
         }
+        
+        if(str.getParentTicketData() == null || str.getParentTicketData().isEmpty()){
+            tr.setStatus("failed");
+            tr.setMessage("tickets cannot be empty.");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }
+        
         Event event = eventRepo.findByEventCode(str.getEventCode());
         boolean badCode = false;
         boolean badQty = false;
@@ -1130,6 +1137,8 @@ public class TicketController {
     }
     
 }
+
+
 
 
 
