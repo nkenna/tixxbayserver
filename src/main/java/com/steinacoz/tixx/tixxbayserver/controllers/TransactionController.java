@@ -226,9 +226,19 @@ public class TransactionController {
         return ResponseEntity.ok().body(er);
     }
     
-   
+   @CrossOrigin
+    @RequestMapping(value = "/get-vendor-sales-by-eventcode", method = RequestMethod.PUT)
+    public ResponseEntity<SalesByMonthResponse> allVendorSalesByEventCode(@RequestBody SaleByMonthRequest tsbm){
+        SalesByMonthResponse er = new SalesByMonthResponse();;
+        List<SaleTransactionDao> sales = stRepo.getAllTicketSaleByEventCode(tsbm.getEventCode());
+        er.setSales(sales);
+        er.setMessage("sales found: " + String.valueOf(sales.size()));
+        er.setStatus("success");
+        return ResponseEntity.ok().body(er);
+    }
     
 }
+
 
 
 

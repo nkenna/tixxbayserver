@@ -75,8 +75,20 @@ public class SaleTransactionRepoCustomImpl implements SaleTransactionRepoCustom{
         TypedAggregation<SaleTransaction> agg = Aggregation.newAggregation(SaleTransaction.class, list);
 	return mongoTemplate.aggregate(agg, SaleTransaction.class, SaleTransactionDao.class).getUniqueMappedResult();
     }
+
+    @Override
+    public List<SaleTransactionDao> getAllTicketSaleByEventCode(String eventCode) {
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        MatchOperation match1 = Aggregation.match(Criteria.where("eventCode").is(eventCode));
+        list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(match1);
+        TypedAggregation<SaleTransaction> agg = Aggregation.newAggregation(SaleTransaction.class, list);
+	return mongoTemplate.aggregate(agg, SaleTransaction.class, SaleTransactionDao.class).getMappedResults();
+    }
     
 }
+
+
 
 
 

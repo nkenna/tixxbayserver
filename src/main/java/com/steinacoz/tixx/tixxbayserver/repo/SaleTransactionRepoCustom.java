@@ -18,6 +18,8 @@ public interface SaleTransactionRepoCustom {
     List<SaleTransactionDao> getAllSaleTrans();
     List<SaleTransactionDao> getAllSaleTransByMonth(LocalDate date, String eventCode);
     SaleTransactionDao getSaleTrans(String transRef);
+    List<SaleTransactionDao> getAllTicketSaleByEventCode(String eventCode);
 }
+
 
 
