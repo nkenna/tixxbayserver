@@ -25,6 +25,7 @@ import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.response.PayoutResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -125,7 +126,7 @@ public class PayoutController {
             Email from = new Email("support@tixxbay.com");
             String subject = "TixxBay payout request";
             Email to = new Email(user.getEmail());
-            Content content = new Content("text/plain", "You requested a payout. Your payout is being processed");
+            Content content = new Content("text/html", Utils.sendHtmlEmailNewEvent("You requested a payout. Your payout is being processed"));
             Mail mail = new Mail(from, subject, to, content);
             System.out.println(mail.from.getEmail());
             SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
@@ -143,7 +144,7 @@ public class PayoutController {
             from = new Email("support@tixxbay.com");
             subject = "TixxBay payout request";
             to = new Email("support@tixxbay.com");
-            content = new Content("text/plain", "A payout have been requested. Open dashboard to fulfil it");
+            content = new Content("text/html", Utils.sendHtmlEmailNewEvent("A payout have been requested. Open dashboard to fulfil it"));
             mail = new Mail(from, subject, to, content);
             System.out.println(mail.from.getEmail());
             sg = new SendGrid(System.getenv("SENDGRID_API")); 
@@ -171,7 +172,7 @@ public class PayoutController {
     
     @CrossOrigin
     @RequestMapping(value = "/update-payout-status", method = RequestMethod.POST)
-    public ResponseEntity<PayoutResponse> createEvent(@RequestBody PayoutRequest payReq){
+    public ResponseEntity<PayoutResponse> updatePayout(@RequestBody PayoutRequest payReq){
         PayoutResponse pr = new PayoutResponse();
         if(!payReq.getStatus().equalsIgnoreCase(Utils.payPaid) || !payReq.getStatus().equalsIgnoreCase(Utils.payPending) || !payReq.getStatus().equalsIgnoreCase(Utils.payDeclined)){
             pr.setStatus("failed");
@@ -201,14 +202,14 @@ public class PayoutController {
                 Email to = new Email(user.getEmail());
                 Content content = new Content();
                 if(payReq.getStatus().equalsIgnoreCase(Utils.payPaid)){
-                    content.setType("text/plain");
-                    content.setValue("Your requested payout have been processed and posted. Expect your funds soon.");
+                    content.setType("text/html");
+                    content.setValue(Utils.sendHtmlEmailNewEvent("Your requested payout have been processed and posted. Expect your funds soon."));
                 }else if(payReq.getStatus().equalsIgnoreCase(Utils.payDeclined)){
-                    content.setType("text/plain");
-                    content.setValue("Your requested payout have been declined. Please contact support for rectification.");
+                    content.setType("text/html");
+                    content.setValue(Utils.sendHtmlEmailNewEvent("Your requested payout have been declined. Please contact support for rectification."));
                 }else if(payReq.getStatus().equalsIgnoreCase(Utils.payDeclined)){
-                    content.setType("text/plain");
-                    content.setValue("Your requested payout is been processed");
+                    content.setType("text/html");
+                    content.setValue(Utils.sendHtmlEmailNewEvent("Your requested payout is been processed"));
                 }
                 //Content content = new Content("text/plain", "You requested a payout. Your payout is being processed");
                 Mail mail = new Mail(from, subject, to, content);
@@ -240,7 +241,22 @@ public class PayoutController {
         }
         
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-payouts", method = RequestMethod.GET)
+    public ResponseEntity<PayoutResponse> allPayouts(){
+        PayoutResponse pr = new PayoutResponse();
+        List<Payout> payouts = payoutRepo.findAll();
+        
+        pr.setStatus("success");
+        pr.setMessage("data found: " + String.valueOf(payouts.size()));
+        pr.setPayouts(payouts);
+        return ResponseEntity.ok().body(pr);
+    }
 }
+
+
+
 
 
 
