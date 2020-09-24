@@ -17,6 +17,7 @@ import com.steinacoz.tixx.tixxbayserver.PushNotificationService;
 import com.steinacoz.tixx.tixxbayserver.dao.CityDao;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.dao.StateDao;
+import com.steinacoz.tixx.tixxbayserver.dao.VendorEventSaleDao;
 import com.steinacoz.tixx.tixxbayserver.model.City;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventKey;
@@ -24,6 +25,7 @@ import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
 import com.steinacoz.tixx.tixxbayserver.model.PushNotificationRequest;
 import com.steinacoz.tixx.tixxbayserver.model.Role;
+import com.steinacoz.tixx.tixxbayserver.model.SaleTransaction;
 import com.steinacoz.tixx.tixxbayserver.model.State;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.CityRepo;
@@ -31,6 +33,7 @@ import com.steinacoz.tixx.tixxbayserver.repo.EventKeyRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventTeamRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.RoleRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.SaleTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.StateRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.request.EventKeyReq;
@@ -111,6 +114,9 @@ public class EventController {
     
     @Autowired
     PushNotificationService pnService;
+    
+    @Autowired
+   SaleTransactionRepo stRepo;
     
     private DateFormat datetime = new SimpleDateFormat("YY-MM-dd HH:mm:ss");   
    
@@ -673,6 +679,7 @@ public class EventController {
     public ResponseEntity<EventResponseVendor> eventByVendor(@RequestBody PayoutRequest pr){
         EventResponseVendor er = new EventResponseVendor();
         List<Event> finalEvents = new ArrayList<Event>();
+        List<VendorEventSaleDao> eventSales = new ArrayList<VendorEventSaleDao>();
         
         // find the vendor first
         User user = userRepo.findByUsername(pr.getUsername());
@@ -693,12 +700,60 @@ public class EventController {
             }
         }
         
+        
+        
+        
+        
           
         
         
         er.setMessage("events found: " + String.valueOf(finalEvents.size()));
         er.setStatus("success");
         er.setEvents(finalEvents);
+        
+        return ResponseEntity.ok().body(er);
+        
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/event-vendor-sales-count", method = RequestMethod.POST)
+    public ResponseEntity<EventResponseVendor> eventByVendorSales(@RequestBody PayoutRequest pr){
+        EventResponseVendor er = new EventResponseVendor();
+        List<Event> finalEvents = new ArrayList<Event>();
+        List<VendorEventSaleDao> eventSales = new ArrayList<VendorEventSaleDao>();
+        
+        // find the vendor first
+        User user = userRepo.findByUsername(pr.getUsername());
+        
+        if(user != null){ // make sure the vendor was found
+            if(user.getLinkedEvents() != null){ // make sure vendor is linked to events
+                for(String linkedEvents : user.getLinkedEvents()){
+                    System.out.println(linkedEvents);
+                    if(linkedEvents != null && !linkedEvents.isEmpty() ){ // make sure vendor is linked to events
+                        Event event = eventRepo.findByEventCode(linkedEvents); // retrieve each event data he is linked to
+                        if(event != null){
+                            //EventDao evd = new EventDao();
+                            //BeanUtils.copyProperties(event, evd);
+                            finalEvents.add(event); // add the found event to a list
+                        }
+                    }
+                }
+            }
+        }
+        
+        finalEvents.forEach((ev) -> {
+            List<SaleTransaction> sts = stRepo.findByEventCode(ev.getEventCode());
+            if (sts != null) {
+                VendorEventSaleDao ved = new VendorEventSaleDao();
+                ved.setEvent(ev);
+                ved.setTotalSales(sts.size());
+                eventSales.add(ved);
+            }
+        });    
+        
+        er.setMessage("data found: " + String.valueOf(eventSales.size()));
+        er.setStatus("success");
+        er.setEventSales(eventSales);
         
         return ResponseEntity.ok().body(er);
         
@@ -846,6 +901,10 @@ public class EventController {
     
     
 }
+
+
+
+
 
 
 

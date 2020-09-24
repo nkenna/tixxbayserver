@@ -5,6 +5,7 @@
  */
 package com.steinacoz.tixx.tixxbayserver.response;
 
+import com.steinacoz.tixx.tixxbayserver.dao.VendorEventSaleDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import java.util.List;
 
@@ -17,6 +18,17 @@ public class EventResponseVendor {
     private String message;
     private Event event;
     private List<Event> events;
+    List<VendorEventSaleDao> eventSales;
+
+    public List<VendorEventSaleDao> getEventSales() {
+        return eventSales;
+    }
+
+    public void setEventSales(List<VendorEventSaleDao> eventSales) {
+        this.eventSales = eventSales;
+    }
+    
+    
 
     public String getStatus() {
         return status;
@@ -54,5 +66,6 @@ public class EventResponseVendor {
     
     
 }
+
 
 

@@ -7,6 +7,7 @@ package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.model.SaleTransaction;
 import com.steinacoz.tixx.tixxbayserver.model.TicketSaleTransaction;
+import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -16,8 +17,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  */
 @RepositoryRestResource(collectionResourceRel = "saletrans", path = "saletrans")
 public interface SaleTransactionRepo extends MongoRepository<SaleTransaction, String>, SaleTransactionRepoCustom {
-    
+    List<SaleTransaction> findByEventCode(String eventCode);
 }
+
+
 
 
 
