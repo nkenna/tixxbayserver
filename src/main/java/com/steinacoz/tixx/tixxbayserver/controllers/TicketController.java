@@ -617,8 +617,7 @@ public class TicketController {
         if(ptsd.getQuantity() == 0){
             badQty = true;
             break;
-            
-            }  
+               }  
         }
         
         if(badCode){
@@ -1131,6 +1130,8 @@ public class TicketController {
     }
     
 }
+
+
 
 
 

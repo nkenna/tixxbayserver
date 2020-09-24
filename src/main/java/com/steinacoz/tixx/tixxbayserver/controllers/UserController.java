@@ -5,6 +5,8 @@
  */
 package com.steinacoz.tixx.tixxbayserver.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
@@ -31,15 +33,20 @@ import com.steinacoz.tixx.tixxbayserver.repo.VerifyCodeRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
 import com.steinacoz.tixx.tixxbayserver.request.ChangeUserPasswordRequest;
 import com.steinacoz.tixx.tixxbayserver.request.CreateUserRequest;
+import com.steinacoz.tixx.tixxbayserver.request.ResolveBankRequest;
 import com.steinacoz.tixx.tixxbayserver.request.RestUserPasswordRequest;
 import com.steinacoz.tixx.tixxbayserver.request.RoleRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UpdateUserRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UserFlagRequest;
 import com.steinacoz.tixx.tixxbayserver.request.UserLoginRequest;
 import com.steinacoz.tixx.tixxbayserver.response.BankDetailResponse;
+import com.steinacoz.tixx.tixxbayserver.response.InitializeVerifyResponse;
+import com.steinacoz.tixx.tixxbayserver.response.ResolveBankResponse;
 import com.steinacoz.tixx.tixxbayserver.response.UserResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -52,6 +59,9 @@ import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -1074,8 +1084,66 @@ public class UserController {
         }
     }
     
+    
+    @RequestMapping(value = "/resolve-bank", method = RequestMethod.POST)
+    public ResponseEntity<ResolveBankResponse> resolveBank(@RequestBody ResolveBankRequest rr){
+        ResolveBankResponse rbb = new ResolveBankResponse();
+        ResolveBankResponse rbbp = new ResolveBankResponse();
+        int statusCode = 0;
+        StringBuilder result = new StringBuilder();
+        
+        try {
+	            // convert transaction to json then use it as a body to post json
+	            Gson gson = new Gson();
+	            // add paystack chrges to the amount
+	            //StringEntity postingString = new StringEntity(gson.toJson(request));
+	            HttpClient client = HttpClientBuilder.create().build();
+                    //https://api.paystack.co/bank/resolve?account_number=0044815978&bank_code=044
+	            HttpGet getReq = new HttpGet("https://api.paystack.co/bank/resolve?account_number="+ rr.getAccount_number() + "&bank_code=" + rr.getBank_code() );
+	            //HttpPost post = new HttpPost("https://api.paystack.co/transaction/initialize");
+	            //post.setEntity(postingString);
+	            getReq.addHeader("Content-type", "text/plain");
+	            getReq.addHeader("Authorization", "Bearer sk_test_36c529556d2463dac5aa8258522be46456013ee2");
+	           
+	            org.apache.http.HttpResponse response = client.execute(getReq);
+                    statusCode = response.getStatusLine().getStatusCode();
+	            if (response.getStatusLine().getStatusCode() == 200) {
+	                BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+	                String line;
+	                while ((line = rd.readLine()) != null) {
+	                    result.append(line);
+	                }
+
+	            } else if (response.getStatusLine().getStatusCode() == 500) {
+	            	 rbbp.setMessage("error");
+                         rbbp.setStatus(false);
+	            }
+	            else {
+                        rbbp.setStatus(false);
+                        rbbp.setMessage("error resolving bank details");
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rbbp);
+	                
+	            }
+	            ObjectMapper mapper = new ObjectMapper();
+
+	            rbb = mapper.readValue(result.toString(), ResolveBankResponse.class);
+                    rbbp = mapper.readValue(result.toString(), ResolveBankResponse.class);
+                    
+                    
+                    return ResponseEntity.ok().body(rbbp);
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	            rbbp.setStatus(false);
+                        rbbp.setMessage("error resolving bank details");
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rbbp);
+	        }
+    }
+    
    
 }
+
+
 
 
 

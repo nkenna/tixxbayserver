@@ -13,6 +13,7 @@ import com.steinacoz.tixx.tixxbayserver.repo.EventCategoryRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.response.EventCategoryResponse;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,13 +64,26 @@ public class EventCategoryController {
     @RequestMapping(value = "/all-events-category", method = RequestMethod.GET)
     public ResponseEntity<EventCategoryResponse> allEventsCategory(){
         EventCategoryResponse ecr = new EventCategoryResponse();
+        List<EventCategoryDao> ecData = new ArrayList<EventCategoryDao>(); 
         List<EventCategoryDao> ec = eventCategoryRepo.getAllCategories();
+        
+        for(EventCategoryDao dao: ec){
+            for(Event event: dao.getEvents()){
+                event.setImage1(null);
+                event.setImage2(null);
+                event.setImage3(null);
+            }
+            
+        }
+        
+        
         ecr.setMessage("event categories found: " + String.valueOf(ec.size()));
         ecr.setStatus("success");
         ecr.setEventCategories(ec);
         return ResponseEntity.ok().body(ecr);
     }
 }
+
 
 
 
