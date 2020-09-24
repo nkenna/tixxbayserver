@@ -7,6 +7,7 @@ package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.model.WalletTransaction;
+import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -16,7 +17,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  */
 @RepositoryRestResource(collectionResourceRel = "wallettrans", path = "wallettrans")
 public interface WalletTransactionRepo extends MongoRepository<WalletTransaction, String> {
-    
+    List<WalletTransaction> findByEventCode(String eventCode);
+    List<WalletTransaction> findByWalletId(String walletId);
 }
+
 
 

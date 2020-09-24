@@ -191,6 +191,7 @@ public class PayoutController {
             }
             payout.setStatus(payReq.getStatus());
             payout.setUpdated(LocalDateTime.now());
+            payout.setPayDate(LocalDateTime.now());
             
             try{
                 Payout updatedPayout = payoutRepo.save(payout);
@@ -254,6 +255,7 @@ public class PayoutController {
         return ResponseEntity.ok().body(pr);
     }
 }
+
 
 
 

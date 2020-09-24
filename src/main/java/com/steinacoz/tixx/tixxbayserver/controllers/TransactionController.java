@@ -8,14 +8,18 @@ package com.steinacoz.tixx.tixxbayserver.controllers;
 import com.steinacoz.tixx.tixxbayserver.dao.SaleTransactionDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketSaleTransactionDao;
+import com.steinacoz.tixx.tixxbayserver.model.Wallet;
+import com.steinacoz.tixx.tixxbayserver.model.WalletTransaction;
 import com.steinacoz.tixx.tixxbayserver.repo.SaleTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TicketSaleTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.TransactionRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.WalletTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.request.SaleByMonthRequest;
 import com.steinacoz.tixx.tixxbayserver.request.TicketSaleByMonthRequest;
 import com.steinacoz.tixx.tixxbayserver.response.SalesByMonthResponse;
 import com.steinacoz.tixx.tixxbayserver.response.TicketResponse;
 import com.steinacoz.tixx.tixxbayserver.response.TicketSalesByMonthResponse;
+import com.steinacoz.tixx.tixxbayserver.response.WalletTransResponse;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +47,9 @@ public class TransactionController {
    
    @Autowired
    SaleTransactionRepo stRepo;
+   
+   @Autowired
+   WalletTransactionRepo wtRepo;
    
    
     @CrossOrigin
@@ -237,7 +244,44 @@ public class TransactionController {
         return ResponseEntity.ok().body(er);
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/all-wallet-trans", method = RequestMethod.GET)
+    public ResponseEntity<WalletTransResponse> allWalletTransSales(){
+        WalletTransResponse er = new WalletTransResponse();
+        List<WalletTransaction> sales = wtRepo.findAll();
+        er.setTrans(sales);
+        er.setMessage("data found: " + String.valueOf(sales.size()));
+        er.setStatus("success");
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-wallet-by-event", method = RequestMethod.POST)
+    public ResponseEntity<WalletTransResponse> allWalletByEvent(@RequestBody SaleByMonthRequest tsbm){
+        WalletTransResponse er = new WalletTransResponse();
+        
+        List<WalletTransaction> sales = wtRepo.findByEventCode(tsbm.getEventCode());
+        er.setTrans(sales);
+        er.setMessage("data found: " + String.valueOf(sales.size()));
+        er.setStatus("success");
+        return ResponseEntity.ok().body(er);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/all-wallet-by-id", method = RequestMethod.POST)
+    public ResponseEntity<WalletTransResponse> allWalletByID(@RequestBody Wallet wallet){
+        WalletTransResponse er = new WalletTransResponse();
+        
+        List<WalletTransaction> sales = wtRepo.findByWalletId(wallet.getWalletid());
+        er.setTrans(sales);
+        er.setMessage("data found: " + String.valueOf(sales.size()));
+        er.setStatus("success");
+        return ResponseEntity.ok().body(er);
+    }
 }
+
+
+
 
 
 
