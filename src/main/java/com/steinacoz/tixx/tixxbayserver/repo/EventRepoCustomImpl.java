@@ -206,7 +206,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         LocalDateTime now = LocalDateTime.now();        
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
         MatchOperation match = Aggregation.match(Criteria.where("endDate").gt(now).andOperator(Criteria.where("status").is(true)));
-        SampleOperation matchStage = Aggregation.sample(5);
+        SampleOperation matchStage = Aggregation.sample(50);
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
@@ -250,6 +250,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     
     
 }
+
 
 
 
