@@ -742,6 +742,9 @@ public class EventController {
         }
         
         finalEvents.forEach((ev) -> {
+            ev.setImage1(null);
+            ev.setImage2(null);
+            ev.setImage3(null);
             List<SaleTransaction> sts = stRepo.findByEventCode(ev.getEventCode());
             if (sts != null) {
                 VendorEventSaleDao ved = new VendorEventSaleDao();
@@ -901,6 +904,7 @@ public class EventController {
     
     
 }
+
 
 
 
