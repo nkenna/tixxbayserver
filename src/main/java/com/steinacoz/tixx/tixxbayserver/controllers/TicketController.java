@@ -135,6 +135,10 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
         }
         
+        if(ticket.getTicketAmount().doubleValue() == 0.0){
+            ticket.setPaidTicket(false);
+        }
+        
         if(ticket.isPaidTicket() == false && ticket.getTicketType().equalsIgnoreCase("NFC")){
            tr.setStatus("failed");
             tr.setMessage("NFC tickets cannot be free");
@@ -1127,6 +1131,7 @@ public class TicketController {
     }
     
 }
+
 
 
 
