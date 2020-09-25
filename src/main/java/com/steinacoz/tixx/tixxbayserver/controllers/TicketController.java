@@ -881,7 +881,8 @@ public class TicketController {
                 System.out.println(qrData);
                 
                 System.out.println("key to be used");
-                System.out.println(evtKey);
+                System.out.println(evtKey.getKey());
+                System.out.println(evtKey.getEventId());
                 
                 String encData = Utils.encrypt(qrData, evtKey.getKey());
                 
@@ -1157,6 +1158,7 @@ public class TicketController {
     }
     
 }
+
 
 
 
