@@ -505,6 +505,7 @@ public class EventController {
     @RequestMapping(value = "/all-events-by-state", method = RequestMethod.PUT)
     public ResponseEntity<EventResponse> allEventsByState(@RequestBody Event event){
         EventResponse er = new EventResponse();
+        System.out.println(event.getState());
         List<EventDao> events = eventRepo.aggregateAllEventsByState(event.getState());
        er.setMessage("events found: " + String.valueOf(events.size()));
         er.setStatus("success");
@@ -904,6 +905,7 @@ public class EventController {
     
     
 }
+
 
 
 
