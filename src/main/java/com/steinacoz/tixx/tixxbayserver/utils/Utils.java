@@ -36,6 +36,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
+//import java.util.Base64;
 
 import java.util.Iterator;
 import javax.crypto.Cipher;
@@ -100,7 +101,65 @@ public class Utils {
 	private final String STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         
        // private static SecretKeySpec secretKey;
+   // private static byte[] key;
+    
+    //private static SecretKeySpec secretKey;
     private static byte[] key;
+ 
+    public static void setKey(String myKey) 
+    {
+        MessageDigest sha = null;
+        try {
+            key = myKey.getBytes("UTF-8");
+            sha = MessageDigest.getInstance("AES");
+            key = sha.digest(key);
+            key = Arrays.copyOf(key, 16); 
+            secretKey =  Base64.encodeBase64String(new SecretKeySpec(key, "AES").getEncoded());
+        } 
+        catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } 
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static String encrypt(String strToEncrypt, String secret) 
+    {
+        try
+        {
+            setKey(secret);
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            byte[] decodedKey = Base64.decodeBase64(secretKey);
+            SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES"); 
+            cipher.init(Cipher.ENCRYPT_MODE, originalKey);
+            return Base64.encodeBase64String(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+        } 
+        catch (Exception e) 
+        {
+            System.out.println("Error while encrypting: " + e.toString());
+        }
+        return null;
+    }
+    
+    public static String decrypt(String strToDecrypt, String secret) 
+    {
+        try
+        {
+            setKey(secret);
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+            byte[] decodedKey = Base64.decodeBase64(secretKey);
+            SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES"); 
+            cipher.init(Cipher.DECRYPT_MODE, originalKey);
+            //cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            return new String(cipher.doFinal(Base64.decodeBase64(strToDecrypt)));
+        } 
+        catch (Exception e) 
+        {
+            System.out.println("Error while decrypting: " + e.toString());
+        }
+        return null;
+    }
     
     public static String randomNS(int num) {
         StringBuilder builder = new StringBuilder();
@@ -520,6 +579,8 @@ public class Utils {
  
 
 }
+
+
 
 
 

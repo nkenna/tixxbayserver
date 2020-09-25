@@ -58,6 +58,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -644,6 +645,8 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
         }
         
+       
+        
         try {
 	            // convert transaction to json then use it as a body to post json
 	            Gson gson = new Gson();
@@ -838,6 +841,7 @@ public class TicketController {
                }
                trans.setQuantity(allParentTicketQty); 
                 
+               EventKey evtKey = eventkeyRepo.findByEventId(event.getId());
           
         try{      
             System.out.println("Is the error here");
@@ -847,13 +851,20 @@ public class TicketController {
             String subject = "Ticket Data";
             Email to = new Email(user.getEmail());
             
-            EventKey evtKey = eventkeyRepo.findByEventId(event.getId());
+            
             
             
             List<ChildTicket> newCTs = ctRepo.insert(cts);
             ttRepo.save(trans); 
             //send out email to user
             StringBuilder sb = new StringBuilder();
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter fyear = DateTimeFormatter.ofPattern("yyyy");
+            DateTimeFormatter fmonth = DateTimeFormatter.ofPattern("MM");
+            DateTimeFormatter fdate = DateTimeFormatter.ofPattern("dd");
+            
+            DateTimeFormatter fhour = DateTimeFormatter.ofPattern("HH");
+            DateTimeFormatter fmin = DateTimeFormatter.ofPattern("mm");
             for(ChildTicket ct: newCTs){
                 String data = "\n" +
                                "Ticket Name: " + ct.getTitle() + "\n" +
@@ -864,13 +875,22 @@ public class TicketController {
                 sb.append(data);
                 
                 String qrData = ct.getEventCode() + ":::" + ct.getTicketCode() + ":::" + ct.getTicketAmount().toString() +
-                                ":::" + "NGN" + ":::" + "" + ":::" + "" + ":::" + "ACCESS";
+                                ":::" + "NGN" + ":::" + now.format(fyear)+ now.format(fmonth)+ now.format(fdate) + ":::" + now.format(fhour)+ now.format(fmin) + ":::" + "ACCESS";
                 
                 System.out.println("show qr data");
-                System.out.println(qrData);               
+                System.out.println(qrData);
+                
+                System.out.println("key to be used");
+                System.out.println(evtKey);
+                
+                String encData = Utils.encrypt(qrData, evtKey.getKey());
+                
+                System.out.println("show encryted data");
+                System.out.println(encData);
                 
                 
-                BufferedImage bi = Utils.drawTextOnImage(ct.getTitle(), Utils.generateQRCodeImage(qrData), 30);
+                
+                BufferedImage bi = Utils.drawTextOnImage(ct.getTitle(), Utils.generateQRCodeImage(encData), 30);
                 //BufferedImage originalImage = ImageIO.read(new File("c:\\image\\mypic.jpg"));
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write( bi, "png", baos );
@@ -1137,6 +1157,9 @@ public class TicketController {
     }
     
 }
+
+
+
 
 
 
