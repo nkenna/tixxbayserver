@@ -111,7 +111,7 @@ public class Utils {
         MessageDigest sha = null;
         try {
             key = myKey.getBytes("UTF-8");
-            sha = MessageDigest.getInstance("AES");
+            sha = MessageDigest.getInstance("SHA-1");
             key = sha.digest(key);
             key = Arrays.copyOf(key, 16); 
             secretKey =  Base64.encodeBase64String(new SecretKeySpec(key, "AES").getEncoded());
@@ -579,6 +579,7 @@ public class Utils {
  
 
 }
+
 
 
 
