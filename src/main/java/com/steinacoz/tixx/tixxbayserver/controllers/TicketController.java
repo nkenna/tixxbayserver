@@ -913,9 +913,9 @@ public class TicketController {
             
             
             //Mail mail = new Mail(from, subject, to, content);
-            Content content = new Content("text/plain", "You recently bought some tickets from tixxbay for an event. Below are the details for the ticket(s): " + "\n" + 
+            Content content = new Content("text/html", Utils.sendHtmlEmailNewEvent("You recently bought some tickets from tixxbay for an event. Below are the details for the ticket(s): " + "\n" + 
                                 sb.toString() + "\n" +
-                                "Save this data and your QR code. It meant be handy on the event day.");
+                                "Save this data and your QR code. It meant be handy on the event day."));
             Mail mail = new Mail(from, subject, to, content);
            mail.attachments = attas;
             //mail.setFrom(from);
@@ -1158,6 +1158,7 @@ public class TicketController {
     }
     
 }
+
 
 
 
