@@ -18,6 +18,7 @@ import com.steinacoz.tixx.tixxbayserver.dao.CityDao;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.dao.StateDao;
 import com.steinacoz.tixx.tixxbayserver.dao.VendorEventSaleDao;
+import com.steinacoz.tixx.tixxbayserver.errormodels.NotFoundException;
 import com.steinacoz.tixx.tixxbayserver.model.City;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventKey;
@@ -167,6 +168,15 @@ public class EventController {
             event.setEventType("physical");
         }
         
+        User user = userRepo.findByUsername(event.getCreatorUsername());
+        
+        if(user == null || !user.isActive() || user.isFlag()){
+            er.setStatus("failed");
+            er.setMessage("user not found or user is not active");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(er);
+        }
+        
+        
         try{
             event.setAdminStatus(true);
             event.setStatus(true);
@@ -183,32 +193,24 @@ public class EventController {
             
             eventkeyRepo.save(key);
             
-            User user = userRepo.findByUsername(event.getCreatorUsername());
-            
+                       
                         
             if(user != null){
+                
                 Set<Role> roles = new HashSet<>();
                 Role eventmanagerRole = roleRepo.findByName("ROLE_EVENTMANAGER");
                     if(eventmanagerRole  == null){
                         throw( new RuntimeException("Error: event manager Role not found."));
                     }
-                roles.add(eventmanagerRole);  
-                Set<Role> rr = user.getRoles();
-                rr.addAll(roles);
-                boolean contained = false;
-                for(Role role : user.getRoles()){
-                    if(role.getName().equalsIgnoreCase("ROLE_EVENTMANAGER")){
-                        contained = true;
-                        break;
+                if(user.getRoles().contains(eventmanagerRole) == false){
+                    roles.add(eventmanagerRole);
+                    boolean contained = user.getRoles().add(eventmanagerRole);
+                    if(contained){
+                        user.setRoles(user.getRoles());
+                        user.setUpdated(LocalDateTime.now());
+                        userRepo.save(user);
                     }
-                }
-                if(contained == false){
-                    user.setRoles(rr);
-                    user.setUpdated(LocalDateTime.now());
-                    userRepo.save(user);
-                }
-                
-                
+                } 
                 
                 PushNotificationRequest req = new PushNotificationRequest();
                 req.setTopic("new_event");
@@ -257,7 +259,7 @@ public class EventController {
     public ResponseEntity<EventResponse> editEvent(@RequestBody Event event){
         EventResponse er = new EventResponse();
         
-        Event foundEvent = eventRepo.findById(event.getId()).orElseGet(null);
+        Event foundEvent = eventRepo.findById(event.getId()).orElseThrow(() -> new NotFoundException("user with this Id does not exist"));
     
         
         if(foundEvent != null){
@@ -905,6 +907,8 @@ public class EventController {
     
     
 }
+
+
 
 
 
