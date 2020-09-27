@@ -48,7 +48,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ade);
     }
     
-    @ExceptionHandler(NotAuthorizedException.class)
+    @ExceptionHandler//(NotAuthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(
       Exception ex, WebRequest request) {
         ErrorResponse ade = new ErrorResponse();
@@ -67,6 +67,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     
     
 }
+
+
+
+
+
 
 
 

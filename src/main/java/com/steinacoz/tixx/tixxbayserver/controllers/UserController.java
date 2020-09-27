@@ -17,6 +17,7 @@ import com.sendgrid.helpers.mail.objects.Email;
 import com.steinacoz.tixx.tixxbayserver.config.jwtservice.JwtTokenUtil;
 import com.steinacoz.tixx.tixxbayserver.dao.BankDetailDao;
 import com.steinacoz.tixx.tixxbayserver.dao.UserDao;
+import com.steinacoz.tixx.tixxbayserver.errormodels.NotFoundException;
 import com.steinacoz.tixx.tixxbayserver.model.BankDetail;
 import com.steinacoz.tixx.tixxbayserver.model.ERole;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
@@ -563,7 +564,7 @@ public class UserController {
 		UserDao adao = new UserDao();
                 
 		
-		User user = userRepo.findById(uur.getId()).orElseGet(null);
+		User user = userRepo.findById(uur.getId()).orElseThrow(() -> new NotFoundException("user with this Id does not exist"));//.orElseGet(null);
 		if(user != null) {
                     user.setUpdated(LocalDateTime.now());
                     user.setFirstName(uur.getFirstName());
@@ -1144,6 +1145,7 @@ public class UserController {
     
    
 }
+
 
 
 
