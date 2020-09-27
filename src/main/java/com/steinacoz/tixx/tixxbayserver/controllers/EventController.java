@@ -259,7 +259,7 @@ public class EventController {
     public ResponseEntity<EventResponse> editEvent(@RequestBody Event event){
         EventResponse er = new EventResponse();
         
-        Event foundEvent = eventRepo.findById(event.getId()).orElseGet(null);
+        Event foundEvent = eventRepo.findById(event.getId()).orElseThrow(() -> new NotFoundException("event with this Id does not exist"));
     
         
         if(foundEvent != null){
