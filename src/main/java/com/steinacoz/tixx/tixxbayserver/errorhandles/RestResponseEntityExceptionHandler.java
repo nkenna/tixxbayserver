@@ -27,12 +27,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler//(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(
       Exception ex, WebRequest request) {
         ErrorResponse ade = new ErrorResponse();
         ade.setErrorCode(HttpStatus.FORBIDDEN.value());
-        ade.setMessage("You are not allowed to access this route:" + ex.getLocalizedMessage());
+        ade.setMessage("You are not allowed to access this route: " + ex.getLocalizedMessage());
         ade.setStatus("failed");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ade);
     }
@@ -43,7 +43,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
       Exception ex, WebRequest request) {
         ErrorResponse ade = new ErrorResponse();
         ade.setErrorCode(HttpStatus.NOT_FOUND.value());
-        ade.setMessage("This resource was not found:" + ex.getLocalizedMessage());
+        ade.setMessage("This resource was not found: " + ex.getLocalizedMessage());
         ade.setStatus("failed");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ade);
     }
@@ -53,7 +53,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
       Exception ex, WebRequest request) {
         ErrorResponse ade = new ErrorResponse();
         ade.setErrorCode(HttpStatus.UNAUTHORIZED.value());
-        ade.setMessage("You are not authoried:" + ex.getLocalizedMessage());
+        ade.setMessage("You are not authoried: " + ex.getLocalizedMessage());
         ade.setStatus("failed");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ade);
     }
@@ -67,6 +67,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     
     
 }
+
+
+
 
 
 
