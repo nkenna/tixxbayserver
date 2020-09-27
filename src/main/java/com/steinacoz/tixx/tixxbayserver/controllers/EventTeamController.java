@@ -140,7 +140,10 @@ public class EventTeamController {
               etr.setMessage("user already in team");
               return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(etr);  
             }
-            
+            //typeEventManager
+           // if(atmr.getRole().equalsIgnoreCase(Utils.typeAgent)){
+             //   if(user.getRoles().contains(etr))
+           // }
             user.setUserType(atmr.getRole());
             List<String> linkedEvents = new ArrayList<>();
             if(user.getLinkedEvents() != null){
@@ -282,6 +285,7 @@ public class EventTeamController {
     
     
 }
+
 
 
 
