@@ -57,8 +57,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
                     "localField: 'creatorUsername'," +
                     "foreignField: 'username'," +                    
                     "pipeline: [{" +                                       
-                    "{ $project: { password: 0 } }]," +
-                    "as: 'createdBy'}}}";
+                    "{ $project: { password: 0 } }}]," +
+                    "as: 'createdBy'}}";
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
@@ -264,6 +264,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     
     
 }
+
 
 
 
