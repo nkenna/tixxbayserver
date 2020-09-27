@@ -5,6 +5,8 @@
  */
 package com.steinacoz.tixx.tixxbayserver.errormodels;
 
+import org.springframework.http.HttpStatus;
+
 /**
  *
  * @author nkenn
@@ -12,7 +14,7 @@ package com.steinacoz.tixx.tixxbayserver.errormodels;
 public class AccessDeniedException {
     private String status;
     private String message;
-    private int errorCode;
+    private HttpStatus errorCode;
 
     public String getStatus() {
         return status;
@@ -30,15 +32,18 @@ public class AccessDeniedException {
         this.message = message;
     }
 
-    public int getErrorCode() {
+    public HttpStatus getErrorCode() {
         return errorCode;
     }
 
-    public void setErrorCode(int errorCode) {
+    public void setErrorCode(HttpStatus errorCode) {
         this.errorCode = errorCode;
     }
+
+    
     
     
 }
+
 
 

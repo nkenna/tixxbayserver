@@ -26,16 +26,21 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<Object> handleAccessDeniedException(
+    public ResponseEntity<AccessDeniedException> handleAccessDeniedException(
       Exception ex, WebRequest request) {
-        return new ResponseEntity<Object>(
-          "Access denied message here", new HttpHeaders(), HttpStatus.FORBIDDEN);
+        AccessDeniedException ade = new AccessDeniedException();
+        ade.setErrorCode(HttpStatus.FORBIDDEN);
+        ade.setMessage("You are not allowed to access this route");
+        ade.setStatus("failed");
+        
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ade);
     }
     
     
     
     
 }
+
 
 
 
