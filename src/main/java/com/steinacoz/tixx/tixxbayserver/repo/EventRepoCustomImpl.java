@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.repo;
 
 
+import com.steinacoz.tixx.tixxbayserver.CustomProjectAggregationOperation;
 import com.steinacoz.tixx.tixxbayserver.dao.EventDao;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.Location;
@@ -13,6 +14,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
@@ -23,6 +26,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.SampleOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.NearQuery;
@@ -44,12 +48,24 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     public List<EventDao> aggregateAllEvents() {
         LocalDateTime now = LocalDateTime.now();
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        //MatchOperation match = Aggregation.match(Criteria.where("endDate").lt(now).andOperator(Criteria.where("status").is(true)));
+        SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.DESC, "startDate"));
+        //MatchOperation match = Aggregation.match(Criteria.where("endDate").nlt(now).andOperator(Criteria.where("status").is(true)));
 	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
+        String query =
+            "{ $lookup: { " +
+                    "from: 'user'," +
+                    "localField: 'creatorUsername'," +
+                    "foreignField: 'username'," +
+                    
+                    "pipeline: [{" +
+                                       
+                    "{ $project: { password: 0 } }]," +
+                    "as: 'createdBy'}}";
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
-        //list.add(match);
+        list.add(new CustomProjectAggregationOperation(query));
+        list.add(sortByPopDesc);
         TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
         
 	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
@@ -250,6 +266,10 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     
     
 }
+
+
+
+
 
 
 
