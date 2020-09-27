@@ -6,6 +6,8 @@
 package com.steinacoz.tixx.tixxbayserver.errorhandles;
 
 import com.steinacoz.tixx.tixxbayserver.errormodels.AccessDeniedException;
+import com.steinacoz.tixx.tixxbayserver.errormodels.NotAuthorizedException;
+import com.steinacoz.tixx.tixxbayserver.errormodels.NotFoundException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,21 +27,51 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler
-    public ResponseEntity<AccessDeniedException> handleAccessDeniedException(
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(
       Exception ex, WebRequest request) {
-        AccessDeniedException ade = new AccessDeniedException();
-        ade.setErrorCode(HttpStatus.FORBIDDEN);
-        ade.setMessage("You are not allowed to access this route");
+        ErrorResponse ade = new ErrorResponse();
+        ade.setErrorCode(HttpStatus.FORBIDDEN.value());
+        ade.setMessage("You are not allowed to access this route:" + ex.getLocalizedMessage());
         ade.setStatus("failed");
-        
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ade);
     }
+    
+    
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotfoundException(
+      Exception ex, WebRequest request) {
+        ErrorResponse ade = new ErrorResponse();
+        ade.setErrorCode(HttpStatus.NOT_FOUND.value());
+        ade.setMessage("This resource was not found:" + ex.getLocalizedMessage());
+        ade.setStatus("failed");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ade);
+    }
+    
+    @ExceptionHandler(NotAuthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedException(
+      Exception ex, WebRequest request) {
+        ErrorResponse ade = new ErrorResponse();
+        ade.setErrorCode(HttpStatus.UNAUTHORIZED.value());
+        ade.setMessage("You are not authoried:" + ex.getLocalizedMessage());
+        ade.setStatus("failed");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ade);
+    }
+
+    
+    
+    
+    
     
     
     
     
 }
+
+
+
+
+
 
 
 

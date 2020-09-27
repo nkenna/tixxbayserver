@@ -12,16 +12,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  * @author nkenn
  */
-@ResponseStatus(HttpStatus.FORBIDDEN)
-public class AccessDeniedException extends RuntimeException{
-   private static final long serialVersionUID = 1L;
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+public class NotAuthorizedException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
  
-    public AccessDeniedException(String message) {
+    public NotAuthorizedException(String message) {
         super(message);
     }
 }
-
-
 
 
 
