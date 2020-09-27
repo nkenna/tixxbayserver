@@ -18,8 +18,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface VerifyCodeRepo extends MongoRepository<VerifyCode, String> {
     
     VerifyCode findByCode(String code);
+    VerifyCode findByUser(String user);
     
 }
+
 
 
 

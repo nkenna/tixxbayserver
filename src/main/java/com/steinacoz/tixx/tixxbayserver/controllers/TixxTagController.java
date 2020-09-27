@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
 /**
  *
  * @author nkenn
@@ -125,6 +126,7 @@ public class TixxTagController {
     
     @CrossOrigin
     @RequestMapping(value = "/all-bands", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TixxTagResponse> allBands(){
             
         TixxTagResponse tbr = new TixxTagResponse();
@@ -155,6 +157,7 @@ public class TixxTagController {
         
         
         @RequestMapping(value = "/flag-band", method = RequestMethod.POST)
+        @PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<TixxTagResponse> flagBand(@RequestBody TixxTagSearchRequest tbsr){
 		TixxTagResponse tbr = new TixxTagResponse();	
                 System.out.println(tbsr.getTaguuid());
@@ -529,6 +532,7 @@ public class TixxTagController {
 	}
 	
         @RequestMapping(value = "/vendor-sell", method = RequestMethod.POST)
+        @PreAuthorize("hasRole('VENDOR')")
 	public ResponseEntity<TixxTagResponse> vendorSell(@RequestBody VendorSalePackage tbsr){
 		TixxTagResponse tbr = new TixxTagResponse();
                 TixxTagDao tdao = new TixxTagDao();
@@ -841,6 +845,7 @@ public class TixxTagController {
 	
     
 }
+
 
 
 

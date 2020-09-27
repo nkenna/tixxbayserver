@@ -290,9 +290,9 @@ public class UserController {
                         
 			System.out.println(enc_aid);
                         Email from = new Email("support@tixxbay.com");
-                        String subject = "Welcome to Tixxbay. Activate your account.";
+                        String subject = "Welcome to Tixxbay. Verify your account.";
                         Email to = new Email(newUser.getEmail());
-                        Content content = new Content("text/plain", "https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/verify-user/" + enc_aid);
+                        Content content = new Content("text/html", Utils.sendHtmlEmailNewEvent("https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/verify-user/" + enc_aid));
                         Mail mail = new Mail(from, subject, to, content);
                         System.out.println(mail.from.getEmail());
                         SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
@@ -321,6 +321,7 @@ public class UserController {
 	}
     
     @RequestMapping(value = "/create-user-admin", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> createUserAdmin(@RequestBody CreateUserRequest user) {
 		
 		UserResponse ar = new UserResponse();
@@ -558,6 +559,58 @@ public class UserController {
            	
 	}
     
+    @RequestMapping(value = "/resend-email", method = RequestMethod.PUT)
+    public ResponseEntity<UserResponse> resendUser(@RequestBody User uur){
+        UserResponse ur = new UserResponse();
+        
+        User user = userRepo.findByEmail(uur.getEmail());
+        if(user != null){
+            VerifyCode vc = vcRepo.findByUser(user.getId());
+            if(vc != null){
+                if(vc.isUsed() == false){
+                    Email from = new Email("support@tixxbay.com");
+                        String subject = "Welcome to Tixxbay. Verify your account.";
+                        Email to = new Email(user.getEmail());
+                        Content content = new Content("text/html", Utils.sendHtmlEmailNewEvent("https://tixxbayserver.herokuapp.com/tixxbay/api/user/v1/verify-user/" + vc.getCode()));
+                        Mail mail = new Mail(from, subject, to, content);
+                        System.out.println(mail.from.getEmail());
+                        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
+                        Request request = new Request();
+                        try {
+                          request.setMethod(Method.POST);
+                          request.setEndpoint("mail/send");
+                          request.setBody(mail.build());
+                          Response response = sg.api(request);
+                          System.out.println(response.getStatusCode());
+                          System.out.println(response.getBody());
+                          System.out.println(response.getHeaders());
+                          
+                          
+                        } catch (Exception ex) {
+                          //return null;
+                        }
+                        
+                        ur.setStatus("success");
+                            ur.setMessage("user verification code already used");
+                            return ResponseEntity.ok().body(ur);
+                }else{
+                   ur.setStatus("failed");
+                   ur.setMessage("user verification code already used");
+                   return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ur);  
+                }
+            }else{
+               ur.setStatus("failed");
+               ur.setMessage("user verification code not found");
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ur); 
+            }
+            
+        }else{
+            ur.setStatus("failed");
+            ur.setMessage("user not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ur);
+        }
+    }
+    
     @RequestMapping(value = "/update-user", method = RequestMethod.PUT)
     public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest uur){
 		UserResponse ar = new UserResponse();
@@ -596,6 +649,7 @@ public class UserController {
 	}
     
     @RequestMapping(value = "/flag-user", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> flagUser(@RequestBody UserFlagRequest  ufr){
 		UserResponse ar = new UserResponse();
 		UserDao adao = new UserDao();
@@ -1145,6 +1199,13 @@ public class UserController {
     
    
 }
+
+
+
+
+
+
+
 
 
 
