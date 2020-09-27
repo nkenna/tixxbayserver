@@ -7,10 +7,12 @@ package com.steinacoz.tixx.tixxbayserver.controllers;
 
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
+import com.steinacoz.tixx.tixxbayserver.model.Role;
 import com.steinacoz.tixx.tixxbayserver.model.Ticket;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.EventTeamRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.RoleRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.request.AddTeamMemberRequest;
 import com.steinacoz.tixx.tixxbayserver.request.CreateTeamRequest;
@@ -44,6 +46,9 @@ public class EventTeamController {
     
     @Autowired
     EventTeamRepo teamRepo;
+    
+    @Autowired
+    RoleRepo roleRepo;
     
     @CrossOrigin
     @RequestMapping(value = "/create-team", method = RequestMethod.POST)
@@ -141,9 +146,28 @@ public class EventTeamController {
               return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(etr);  
             }
             //typeEventManager
-           // if(atmr.getRole().equalsIgnoreCase(Utils.typeAgent)){
-             //   if(user.getRoles().contains(etr))
-           // }
+            if(atmr.getRole().equalsIgnoreCase(Utils.typeAgent)){
+                
+                
+                    Role userRole = roleRepo.findByName("ROLE_USER");
+                    if(userRole  == null){
+                        throw( new RuntimeException("Error: user role not found."));
+                    }
+                if(user.getRoles().contains(userRole)){
+                    user.getRoles().add(userRole);
+                }
+            }
+            
+            if(atmr.getRole().equalsIgnoreCase(Utils.typeVendor)){
+                Role vendorRole = roleRepo.findByName("ROLE_VENDOR");
+                    if(vendorRole  == null){
+                        throw( new RuntimeException("Error: vendor role not found."));
+                    }
+
+                if(user.getRoles().contains(vendorRole) == false){
+                    user.getRoles().add(vendorRole);
+                }
+            }
             user.setUserType(atmr.getRole());
             List<String> linkedEvents = new ArrayList<>();
             if(user.getLinkedEvents() != null){
@@ -285,6 +309,7 @@ public class EventTeamController {
     
     
 }
+
 
 
 
