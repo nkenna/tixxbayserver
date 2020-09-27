@@ -202,7 +202,7 @@ public class EventController {
                     if(eventmanagerRole  == null){
                         throw( new RuntimeException("Error: event manager Role not found."));
                     }
-               /** if(user.getRoles().contains(eventmanagerRole) == false){
+                if(user.getRoles().contains(eventmanagerRole) == false){
                     roles.add(eventmanagerRole);
                     boolean contained = user.getRoles().add(eventmanagerRole);
                     if(contained){
@@ -210,7 +210,7 @@ public class EventController {
                         user.setUpdated(LocalDateTime.now());
                         userRepo.save(user);
                     }
-                }  **/
+                }  
                 
                 PushNotificationRequest req = new PushNotificationRequest();
                 req.setTopic("new_event");
@@ -259,7 +259,7 @@ public class EventController {
     public ResponseEntity<EventResponse> editEvent(@RequestBody Event event){
         EventResponse er = new EventResponse();
         
-        Event foundEvent = eventRepo.findById(event.getId()).orElseThrow(() -> new NotFoundException("user with this Id does not exist"));
+        Event foundEvent = eventRepo.findById(event.getId()).orElseGet(null);
     
         
         if(foundEvent != null){
