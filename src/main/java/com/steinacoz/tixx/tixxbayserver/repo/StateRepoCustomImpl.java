@@ -11,10 +11,12 @@ import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.State;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 
@@ -34,8 +36,10 @@ public class StateRepoCustomImpl implements StateRepoCustom {
     @Override
     public List<StateDao> getAllStates() {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Sort.Direction.ASC, "name"));
         //MatchOperation match3 = Aggregation.match(Criteria.where("endDate").is(now).andOperator(Criteria.where("status").is(true)));
-	list.add(Aggregation.lookup("city", "name", "state", "cities"));        
+	list.add(Aggregation.lookup("city", "name", "state", "cities"));
+        list.add(sortByPopDesc);        
         TypedAggregation<State> agg = Aggregation.newAggregation(State.class, list);
 	return mongoTemplate.aggregate(agg, State.class, StateDao.class).getMappedResults();
     }
@@ -51,6 +55,8 @@ public class StateRepoCustomImpl implements StateRepoCustom {
     }
     
 }
+
+
 
 
 
