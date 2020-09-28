@@ -16,14 +16,17 @@ import com.steinacoz.tixx.tixxbayserver.model.Event;
 import com.steinacoz.tixx.tixxbayserver.model.Payout;
 import com.steinacoz.tixx.tixxbayserver.model.User;
 import com.steinacoz.tixx.tixxbayserver.model.Wallet;
+import com.steinacoz.tixx.tixxbayserver.model.WalletTransaction;
 import com.steinacoz.tixx.tixxbayserver.repo.EventRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.PayoutRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.WalletRepo;
+import com.steinacoz.tixx.tixxbayserver.repo.WalletTransactionRepo;
 import com.steinacoz.tixx.tixxbayserver.request.PayoutRequest;
 import com.steinacoz.tixx.tixxbayserver.response.EventResponse;
 import com.steinacoz.tixx.tixxbayserver.response.PayoutResponse;
 import com.steinacoz.tixx.tixxbayserver.utils.Utils;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +56,9 @@ public class PayoutController {
     
     @Autowired
     WalletRepo walletRepo;
+    
+    @Autowired
+    WalletTransactionRepo walletTransRepo;
     
     @CrossOrigin
     @RequestMapping(value = "/request-payout", method = RequestMethod.POST)
@@ -193,6 +199,27 @@ public class PayoutController {
             payout.setUpdated(LocalDateTime.now());
             payout.setPayDate(LocalDateTime.now());
             
+            if(payReq.getStatus().equalsIgnoreCase(Utils.payPaid)){
+                
+                Wallet wallet = walletRepo.findByWalletid(user.getWalletId());
+                if(wallet != null){
+                    wallet.setBalance(new BigDecimal(0));
+                    wallet.setUpdateddate(LocalDateTime.now());
+                    wallet = walletRepo.save(wallet);
+                    
+                    //create wallet transaction
+                                  WalletTransaction wt = new WalletTransaction();
+                                wt.setTransRef("TIXX" + Utils.randomNS(12));
+                                wt.setTransDate(LocalDateTime.now());
+                                wt.setTotalAmount(wallet.getBalance());
+                                wt.setTransType(Utils.debitWallet);
+                                wt.setWalletId(wallet.getWalletid());
+                                wt.setWalletOwnerUsername(wallet.getOwnerUsername());
+                                wt.setNarration("wallet debited after payout");
+                                walletTransRepo.save(wt);
+                }
+            }
+            
             try{
                 Payout updatedPayout = payoutRepo.save(payout);
             
@@ -255,6 +282,8 @@ public class PayoutController {
         return ResponseEntity.ok().body(pr);
     }
 }
+
+
 
 
 
