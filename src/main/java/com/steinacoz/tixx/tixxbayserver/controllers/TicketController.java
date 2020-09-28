@@ -403,6 +403,19 @@ public class TicketController {
     }
     
     @CrossOrigin
+    @RequestMapping(value = "/child-ticket-by-parent", method = RequestMethod.PUT)
+    public ResponseEntity<TicketResponse> getChildTicketByParent(@RequestBody Ticket ticket){
+        TicketResponse er = new TicketResponse();
+        List<ChildTicketDao> foundTickets = ctRepo.getChildTicketsByParentCode(ticket.getTicketCode());
+        
+        er.setStatus("success");
+        er.setMessage("data found: " + String.valueOf(foundTickets));
+        er.setChildTicketsData(foundTickets);
+        return ResponseEntity.ok().body(er);
+                
+    }
+    
+    @CrossOrigin
     @RequestMapping(value = "/ticket-category-by-child-ticket", method = RequestMethod.PUT)
     public ResponseEntity<TicketResponse> getTicketCategoryByChildTicket(@RequestBody ChildTicket ticket){
         TicketResponse er = new TicketResponse();
@@ -1158,6 +1171,7 @@ public class TicketController {
     }
     
 }
+
 
 
 

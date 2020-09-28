@@ -16,7 +16,9 @@ public interface ChildTicketRepoCustom {
     ChildTicketDao getChildTicketByTicketCode(String ticketCode);
     ChildTicketDao getChildTicketByEventCode(String eventCode);
     List<ChildTicketDao> getChildTicketsByUsername(String username);
+    List<ChildTicketDao> getChildTicketsByParentCode(String ticketCode);
 }
+
 
 
 

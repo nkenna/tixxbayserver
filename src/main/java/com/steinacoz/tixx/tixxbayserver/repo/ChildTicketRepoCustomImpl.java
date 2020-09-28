@@ -35,6 +35,7 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("ticketCode").is(ticketCode));
         list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(Aggregation.lookup("ticket", "parentTicketCode", "ticketCode", "parentTicketData"));
         list.add(match);
        
 	TypedAggregation<ChildTicket> agg = Aggregation.newAggregation(ChildTicket.class, list);
@@ -46,6 +47,7 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("eventCode").is(eventCode));
         list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(Aggregation.lookup("ticket", "parentTicketCode", "ticketCode", "parentTicketData"));
         list.add(match);
        
 	TypedAggregation<ChildTicket> agg = Aggregation.newAggregation(ChildTicket.class, list);
@@ -66,9 +68,23 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
 	TypedAggregation<ChildTicket> agg = Aggregation.newAggregation(ChildTicket.class, list);
 	return mongoTemplate.aggregate(agg, ChildTicket.class, ChildTicketDao.class).getMappedResults();
     }
+
+    @Override
+    public List<ChildTicketDao> getChildTicketsByParentCode(String ticketCode) {
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+        MatchOperation match = Aggregation.match(Criteria.where("parentTicketCode").is(ticketCode));
+        list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(Aggregation.lookup("ticket", "parentTicketCode", "ticketCode", "parentTicketData"));
+       
+        list.add(match);
+       
+	TypedAggregation<ChildTicket> agg = Aggregation.newAggregation(ChildTicket.class, list);
+	return mongoTemplate.aggregate(agg, ChildTicket.class, ChildTicketDao.class).getMappedResults();
+    }
     
     
 }
+
 
 
 
