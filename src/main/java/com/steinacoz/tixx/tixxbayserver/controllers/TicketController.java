@@ -408,8 +408,18 @@ public class TicketController {
         TicketResponse er = new TicketResponse();
         List<ChildTicketDao> foundTickets = ctRepo.getChildTicketsByParentCode(ticket.getTicketCode());
         
+        foundTickets.stream().map((dao) -> {
+            dao.getEvent().setImage1(null);
+            return dao;
+        }).map((dao) -> {
+            dao.getEvent().setImage2(null);
+            return dao;
+        }).forEachOrdered((dao) -> {
+            dao.getEvent().setImage3(null);
+        });
+        
         er.setStatus("success");
-        er.setMessage("data found: " + String.valueOf(foundTickets));
+        er.setMessage("data found: " + String.valueOf(foundTickets.size()));
         er.setChildTicketsData(foundTickets);
         return ResponseEntity.ok().body(er);
                 
@@ -1171,6 +1181,9 @@ public class TicketController {
     }
     
 }
+
+
+
 
 
 
