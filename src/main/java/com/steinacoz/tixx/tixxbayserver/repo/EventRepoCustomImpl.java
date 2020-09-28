@@ -48,7 +48,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     public List<EventDao> aggregateAllEvents() {
         LocalDateTime now = LocalDateTime.now();
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-        SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.DESC, "startDate"));
+        SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.ASC, "startDate"));
         //MatchOperation match = Aggregation.match(Criteria.where("endDate").nlt(now).andOperator(Criteria.where("status").is(true)));
 	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
        
@@ -257,6 +257,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     
     
 }
+
 
 
 
