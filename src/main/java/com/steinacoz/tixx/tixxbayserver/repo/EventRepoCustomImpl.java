@@ -51,7 +51,22 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.DESC, "startDate"));
         //MatchOperation match = Aggregation.match(Criteria.where("endDate").nlt(now).andOperator(Criteria.where("status").is(true)));
 	list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
-        //String query = "{ $lookup: { from: 'user, let: { location_id: '$fulfillmentLocationId' }, pipeline: [ { $project: { _id: 0, zipCode: 1, cutoffTime: 1 } }], as: 'deliveryZipCodeTimings' } }";
+        String query = "{\n" +
+"	\"$lookup\": {\n" +
+"		\"from\": \"user\",\n" +
+"		\"localField\": \"creatorUsername\",\n" +
+"		\"foreignField\": \"username\",\n" +
+"		\"pipeline\": [\n" +
+"			{\"$project\": {\n" +
+"					\"password\": 0\n" +
+"				}\n" +
+"			}\n" +
+"\n" +
+"\n" +
+"		],\n" +
+"		\"as\": \"createdBy\"\n" +
+"	}\n" +
+"}";
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
@@ -257,6 +272,8 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     
     
 }
+
+
 
 
 
