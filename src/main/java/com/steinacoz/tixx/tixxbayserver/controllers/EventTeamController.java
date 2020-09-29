@@ -119,6 +119,12 @@ public class EventTeamController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(etr);
         }
         
+        if(atmr.getRole() == null || atmr.getRole().isEmpty()){
+            etr.setStatus("failed");
+            etr.setMessage("user role in the team is required");
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(etr);
+        }
+        
         EventTeam team = teamRepo.findByTeamRef(atmr.getTeamRef());
         
         if(team == null){
@@ -318,6 +324,7 @@ public class EventTeamController {
     
     
 }
+
 
 
 
