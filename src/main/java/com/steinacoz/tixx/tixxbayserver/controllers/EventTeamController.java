@@ -52,7 +52,7 @@ public class EventTeamController {
     
     @CrossOrigin
     @RequestMapping(value = "/create-team", method = RequestMethod.POST)
-    public ResponseEntity<EventTeamResponse> addTeamMember(@RequestBody CreateTeamRequest ctr){
+    public ResponseEntity<EventTeamResponse> createTeam(@RequestBody CreateTeamRequest ctr){
         EventTeamResponse etr = new EventTeamResponse();
         
         if(ctr.getEventCode() == null || ctr.getEventCode().isEmpty()){
@@ -193,6 +193,10 @@ public class EventTeamController {
             team.setMembers(users);
             team.setUpdated(LocalDateTime.now());
             EventTeam tt = teamRepo.save(team);
+            Utils.sendOutEmailHtml(
+                    "New event team access",
+                    user.getEmail(),
+                    "You have been added to an Event team as a " + atmr.getRole()  + ". Open your dashboard to get more details.");
             etr.setTeam(tt);
             etr.setStatus("success");
             etr.setMessage("team member added successfully");
@@ -260,6 +264,11 @@ public class EventTeamController {
            team.setMembers(users);
             team.setUpdated(LocalDateTime.now());
             EventTeam tt = teamRepo.save(team);
+            Utils.sendOutEmailHtml(
+                    "Event team access revoked",
+                    user.getEmail(),
+                    "You have been removed from an event team and your access revoked. If you feel that this is a mistake. Please contact the event manager."
+                    );
             etr.setTeam(tt);
             etr.setStatus("success");
             etr.setMessage("team member remove successfully");
@@ -309,6 +318,8 @@ public class EventTeamController {
     
     
 }
+
+
 
 
 

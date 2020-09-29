@@ -208,15 +208,15 @@ public class PayoutController {
                     wallet = walletRepo.save(wallet);
                     
                     //create wallet transaction
-                                  WalletTransaction wt = new WalletTransaction();
-                                wt.setTransRef("TIXX" + Utils.randomNS(12));
-                                wt.setTransDate(LocalDateTime.now());
-                                wt.setTotalAmount(wallet.getBalance());
-                                wt.setTransType(Utils.debitWallet);
-                                wt.setWalletId(wallet.getWalletid());
-                                wt.setWalletOwnerUsername(wallet.getOwnerUsername());
-                                wt.setNarration("wallet debited after payout");
-                                walletTransRepo.save(wt);
+                        WalletTransaction wt = new WalletTransaction();
+                        wt.setTransRef("TIXX" + Utils.randomNS(12));
+                        wt.setTransDate(LocalDateTime.now());
+                        wt.setTotalAmount(wallet.getBalance());
+                        wt.setTransType(Utils.debitWallet);
+                        wt.setWalletId(wallet.getWalletid());
+                        wt.setWalletOwnerUsername(wallet.getOwnerUsername());
+                        wt.setNarration("wallet debited after payout");
+                        walletTransRepo.save(wt);
                 }
             }
             
@@ -282,6 +282,7 @@ public class PayoutController {
         return ResponseEntity.ok().body(pr);
     }
 }
+
 
 
 

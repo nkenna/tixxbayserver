@@ -927,7 +927,7 @@ public class TicketController {
                 String imageDataString = x.encodeAsString(imageInByte);
                 attachments3.setContent(imageDataString);
                 attachments3.setType("image/png");//"application/pdf"
-                attachments3.setFilename("x.png");
+                attachments3.setFilename(ct.getTicketCode() != null ? ct.getTicketCode() + ".png" : Utils.randomNS(6) +".png");
                 attachments3.setDisposition("attachment");
                 attachments3.setContentId("Banner");
                 attas.add(attachments3);
@@ -1181,6 +1181,7 @@ public class TicketController {
     }
     
 }
+
 
 
 
