@@ -322,8 +322,20 @@ public class EventTeamController {
         }
     }
     
-    
+    @CrossOrigin
+    @RequestMapping(value = "/all-teams", method = RequestMethod.GET)
+    public ResponseEntity<EventTeamResponse> getAllTeams(){
+        EventTeamResponse etr = new EventTeamResponse();
+        List<EventTeam> teams = teamRepo.findAll();
+        
+        etr.setStatus("success");
+        etr.setMessage("teams found: " + String.valueOf(teams.size()));
+        etr.setTeams(teams);
+        return ResponseEntity.ok().body(etr);
+    }
 }
+
+
 
 
 
