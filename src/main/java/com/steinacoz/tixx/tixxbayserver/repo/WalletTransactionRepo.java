@@ -16,10 +16,11 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * @author nkenn
  */
 @RepositoryRestResource(collectionResourceRel = "wallettrans", path = "wallettrans")
-public interface WalletTransactionRepo extends MongoRepository<WalletTransaction, String> {
+public interface WalletTransactionRepo extends MongoRepository<WalletTransaction, String>, WalletTransactionRepoCustom {
     List<WalletTransaction> findByEventCode(String eventCode);
     List<WalletTransaction> findByWalletId(String walletId);
 }
+
 
 
 

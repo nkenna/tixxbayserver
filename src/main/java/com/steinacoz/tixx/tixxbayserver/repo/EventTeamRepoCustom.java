@@ -5,19 +5,15 @@
  */
 package com.steinacoz.tixx.tixxbayserver.repo;
 
-import com.steinacoz.tixx.tixxbayserver.model.TicketSaleTransaction;
-import com.steinacoz.tixx.tixxbayserver.model.WalletTransaction;
+import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
 import java.util.List;
 
 /**
  *
  * @author nkenn
  */
-public interface WalletTransactionRepoCustom {
-    List<WalletTransaction> getWTCreatedBy3wks();    
+public interface EventTeamRepoCustom {
+    List<EventTeam> getTeamsBy3wks();
 }
-
-
-
 
 

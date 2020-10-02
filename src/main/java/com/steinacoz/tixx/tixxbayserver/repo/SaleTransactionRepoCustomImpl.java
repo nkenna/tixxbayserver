@@ -7,6 +7,7 @@ package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.dao.SaleTransactionDao;
 import com.steinacoz.tixx.tixxbayserver.dao.TicketSaleTransactionDao;
+import com.steinacoz.tixx.tixxbayserver.model.EventTeam;
 import com.steinacoz.tixx.tixxbayserver.model.SaleTransaction;
 import com.steinacoz.tixx.tixxbayserver.model.TicketSaleTransaction;
 import java.time.LocalDate;
@@ -85,8 +86,21 @@ public class SaleTransactionRepoCustomImpl implements SaleTransactionRepoCustom{
         TypedAggregation<SaleTransaction> agg = Aggregation.newAggregation(SaleTransaction.class, list);
 	return mongoTemplate.aggregate(agg, SaleTransaction.class, SaleTransactionDao.class).getMappedResults();
     }
+
+    @Override
+    public List<SaleTransaction> getSTCreatedBy3wks() {
+        LocalDate now = LocalDate.now();
+        LocalDate futureDate = now.minusDays(21);
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
+        MatchOperation match = Aggregation.match(Criteria.where("transDate").lt(now).andOperator(Criteria.where("transDate").gte(futureDate)));
+        
+        list.add(match); 
+        TypedAggregation<SaleTransaction> agg = Aggregation.newAggregation(SaleTransaction.class, list);
+	return mongoTemplate.aggregate(agg, SaleTransaction.class).getMappedResults();
+    }
     
 }
+
 
 
 

@@ -16,11 +16,12 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * @author nkenn
  */
 @RepositoryRestResource(collectionResourceRel = "teams", path = "teams")
-public interface EventTeamRepo extends MongoRepository<EventTeam, String> {
+public interface EventTeamRepo extends MongoRepository<EventTeam, String>, EventTeamRepoCustom {
     List<EventTeam> findByEventCode(String eventCode);
     List<EventTeam> findByEventId(String eventId);
     EventTeam findByTeamRef(String teamRef);
 }
+
 
 
 

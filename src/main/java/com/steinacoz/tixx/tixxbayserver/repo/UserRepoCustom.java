@@ -17,8 +17,11 @@ public interface UserRepoCustom {
     List<UserDao> aggregateAllUsers();  
     UserDao getUserByEmail(String email);
     UserDao getUserByPhoneNumber(String phoneNumber);
+    List<User> getUsersLast30days();
     
 }
+
+
 
 
 

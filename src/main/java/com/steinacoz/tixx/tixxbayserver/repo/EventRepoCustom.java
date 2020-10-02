@@ -31,8 +31,10 @@ public interface EventRepoCustom {
     List<EventDao> aggregateAllEventsByUserLocation(String country, String state, String lga);
     List<EventDao> aggregateAllEventsByUserGPSLocation(Point point);    
     EventDao getEventByVendor(String eventCode);
+    List<Event> getEventsCreatedBy3wks();
     
 }
+
 
 
 

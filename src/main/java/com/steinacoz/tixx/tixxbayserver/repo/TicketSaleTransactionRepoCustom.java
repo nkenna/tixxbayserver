@@ -6,6 +6,7 @@
 package com.steinacoz.tixx.tixxbayserver.repo;
 
 import com.steinacoz.tixx.tixxbayserver.dao.TicketSaleTransactionDao;
+import com.steinacoz.tixx.tixxbayserver.model.TicketSaleTransaction;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -19,7 +20,10 @@ public interface TicketSaleTransactionRepoCustom {
     List<TicketSaleTransactionDao> getAllTicketSaleTransByMonth(LocalDate date, String eventCode);
     TicketSaleTransactionDao getTicketSaleTrans(String transRef);
     List<TicketSaleTransactionDao> getAllTicketSaleTransByEventCode(String eventCode);
+    List<TicketSaleTransaction> getTTCreatedBy3wks();
 }
+
+
 
 
 

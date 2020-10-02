@@ -210,6 +210,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
         SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.ASC, "startDate"));
         MatchOperation match = Aggregation.match(Criteria.where("startDate").lt(futureDate).andOperator(Criteria.where("status").is(true)));
+        
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
@@ -269,11 +270,26 @@ public class EventRepoCustomImpl implements EventRepoCustom {
 	return mongoTemplate.aggregate(agg, Event.class, EventDao.class).getMappedResults();
     }
 
+    @Override
+    public List<Event> getEventsCreatedBy3wks() {
+        LocalDate now = LocalDate.now();
+        LocalDate futureDate = now.minusDays(21);
+        List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
+        SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.ASC, "startDate"));
+        MatchOperation match = Aggregation.match(Criteria.where("startDate").lt(now).andOperator(Criteria.where("startDate").gte(futureDate)));
+        
+        list.add(match); 
+        TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
+	return mongoTemplate.aggregate(agg, Event.class).getMappedResults(); 
+    }
+
     
     
     
     
 }
+
+
 
 
 
