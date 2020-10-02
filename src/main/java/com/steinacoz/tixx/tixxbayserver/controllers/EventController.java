@@ -417,14 +417,14 @@ public class EventController {
             if(event.isStatus()){
                 foundEvent.setStatus(true);
                 Event savedEvent = eventRepo.save(foundEvent);
-                er.setEvent(event);
+                er.setEvent(savedEvent);
                 er.setStatus("success");
                 er.setMessage("event active");
                 return ResponseEntity.ok().body(er);
             }else{
                foundEvent.setStatus(false); 
                Event savedEvent = eventRepo.save(foundEvent);
-                er.setEvent(event);
+                er.setEvent(savedEvent);
                 er.setStatus("success");
                 er.setMessage("event inactive");
                 return ResponseEntity.ok().body(er);
@@ -907,6 +907,7 @@ public class EventController {
     
     
 }
+
 
 
 
