@@ -36,7 +36,7 @@ public class EventTeamRepoCustomImpl implements EventTeamRepoCustom  {
         LocalDate now = LocalDate.now();
         LocalDate futureDate = now.minusDays(21);
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
-        MatchOperation match = Aggregation.match(Criteria.where("startDate").lt(now).andOperator(Criteria.where("startDate").gte(futureDate)));
+        MatchOperation match = Aggregation.match(Criteria.where("created").lt(now).andOperator(Criteria.where("created").gte(futureDate)));
         
         list.add(match); 
         TypedAggregation<EventTeam> agg = Aggregation.newAggregation(EventTeam.class, list);
@@ -44,6 +44,7 @@ public class EventTeamRepoCustomImpl implements EventTeamRepoCustom  {
     }
     
 }
+
 
 
 
