@@ -41,7 +41,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
                     
                 List<AggregationOperation> list = new ArrayList<AggregationOperation>();
                 list.add(Aggregation.lookup("userPoint", "username", "username", "userPoint"));
-		list.add(Aggregation.lookup("event", "id", "creatorId", "events"));
+		list.add(Aggregation.lookup("event", "username", "creatorUsername", "events"));
 		list.add(Aggregation.lookup("wallet", "walletId", "walletid", "wallet"));
 		TypedAggregation<User> agg = Aggregation.newAggregation(User.class, list);
 		return mongoTemplate.aggregate(agg, User.class, UserDao.class).getMappedResults();
@@ -88,6 +88,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
 
 
 
