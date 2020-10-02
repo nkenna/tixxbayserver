@@ -53,7 +53,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("email").is(email));
         list.add(Aggregation.lookup("userPoint", "username", "username", "userPoint"));
-	list.add(Aggregation.lookup("event", "id", "creatorId", "events"));
+	list.add(Aggregation.lookup("event", "username", "creatorUsername", "events"));
         list.add(Aggregation.lookup("wallet", "walletId", "walletid", "wallet"));
         //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -67,7 +67,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("mobileNumber").is(phoneNumber));
         list.add(Aggregation.lookup("userPoint", "username", "username", "userPoint"));
-	list.add(Aggregation.lookup("event", "id", "creatorId", "events"));
+	list.add(Aggregation.lookup("event", "username", "creatorUsername", "events"));
         list.add(Aggregation.lookup("wallet", "walletId", "walletid", "wallet"));
         //list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
         list.add(match);
@@ -88,6 +88,7 @@ public class UserRepoCustomImpl implements UserRepoCustom{
     }
     
 }
+
 
 
 

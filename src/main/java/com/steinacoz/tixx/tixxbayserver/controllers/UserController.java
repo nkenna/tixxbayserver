@@ -648,6 +648,7 @@ public class UserController {
 		
 	}
     
+    @CrossOrigin
     @RequestMapping(value = "/flag-user", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> flagUser(@RequestBody UserFlagRequest  ufr){
@@ -1199,6 +1200,7 @@ public class UserController {
     
    
 }
+
 
 
 
