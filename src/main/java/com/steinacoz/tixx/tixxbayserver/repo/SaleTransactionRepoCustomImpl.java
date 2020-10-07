@@ -73,6 +73,7 @@ public class SaleTransactionRepoCustomImpl implements SaleTransactionRepoCustom{
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("transRef").is(transRef));
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(match);
         TypedAggregation<SaleTransaction> agg = Aggregation.newAggregation(SaleTransaction.class, list);
 	return mongoTemplate.aggregate(agg, SaleTransaction.class, SaleTransactionDao.class).getUniqueMappedResult();
     }
@@ -100,6 +101,7 @@ public class SaleTransactionRepoCustomImpl implements SaleTransactionRepoCustom{
     }
     
 }
+
 
 
 
