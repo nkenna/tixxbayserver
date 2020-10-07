@@ -84,6 +84,7 @@ public class TixxTagController {
 		if(tband.getTaguuid() == null || tband.getTaguuid().isEmpty()) {
 			tbr.setStatus("failed");
 			tbr.setMessage(" tag uuid is required to add band");
+                        System.out.println("r1");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tbr);
 		}
 		
@@ -91,6 +92,7 @@ public class TixxTagController {
 		if(tband.getAddedById() == null || tband.getAddedById().isEmpty()) {
 			tbr.setStatus("failed");
 			tbr.setMessage("a ghost cannot added a band. added by Id required");
+                        System.out.println("r2");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tbr);
 		}
 		
@@ -99,6 +101,7 @@ public class TixxTagController {
 		if(tixxBand != null) {
 			tbr.setMessage("this band already exist");
 			tbr.setStatus("failed");
+                        System.out.println("r4");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(tbr);
 		}	
 		
@@ -122,6 +125,7 @@ public class TixxTagController {
 		}catch(Exception e) {
 			tbr.setMessage("error occurred adding band");
 			tbr.setStatus("failed");
+                        System.out.println("r3");
 			return ResponseEntity.status(500).body(tbr);
 		}
 	}
@@ -848,6 +852,7 @@ public class TixxTagController {
 	
     
 }
+
 
 
 
