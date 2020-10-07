@@ -70,6 +70,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match1 = Aggregation.match(Criteria.where("eventCode").is(eventCode));
         list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(match1);
         TypedAggregation<TicketSaleTransaction> agg = Aggregation.newAggregation(TicketSaleTransaction.class, list);
 	return mongoTemplate.aggregate(agg, TicketSaleTransaction.class, TicketSaleTransactionDao.class).getMappedResults();
     }
@@ -79,6 +80,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();
         MatchOperation match = Aggregation.match(Criteria.where("transRef").is(ref));
 	list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
+        list.add(match);
         TypedAggregation<TicketSaleTransaction> agg = Aggregation.newAggregation(TicketSaleTransaction.class, list);
 	return mongoTemplate.aggregate(agg, TicketSaleTransaction.class, TicketSaleTransactionDao.class).getUniqueMappedResult();
     }
@@ -96,6 +98,7 @@ public class TicketSaleTransactionRepoCustomImpl implements TicketSaleTransactio
     }
     
 }
+
 
 
 
