@@ -76,6 +76,9 @@ public class TixxTagController {
     @RequestMapping(value = "/add-band", method = RequestMethod.POST)
     public ResponseEntity<TixxTagResponse> createTixxBand(@RequestBody TixxTag tband){
 		TixxTagResponse tbr = new TixxTagResponse();
+                System.out.println("request data");
+                System.out.println(tband.getAddedById());
+                System.out.println(tband.getTaguuid());
 		
 		//check if uuid is empty
 		if(tband.getTaguuid() == null || tband.getTaguuid().isEmpty()) {
@@ -845,6 +848,7 @@ public class TixxTagController {
 	
     
 }
+
 
 
 
