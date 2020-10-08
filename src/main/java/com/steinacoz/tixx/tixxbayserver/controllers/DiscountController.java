@@ -11,6 +11,7 @@ import com.steinacoz.tixx.tixxbayserver.repo.DiscountRepo;
 import com.steinacoz.tixx.tixxbayserver.repo.UserRepo;
 import com.steinacoz.tixx.tixxbayserver.response.DiscountResponse;
 import com.steinacoz.tixx.tixxbayserver.response.TicketResponse;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,13 @@ public class DiscountController {
             dr.setMessage("discount cannot be zero");
             dr.setStatus("failed");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(dr);
+        }
+        
+        List<Discount> discounts = discountRepo.findAll();
+        if(discounts.size() > 0){
+           dr.setMessage("discount already exist. Edit the existing discount");
+            dr.setStatus("failed");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(dr); 
         }
         
         try {
@@ -81,8 +89,27 @@ public class DiscountController {
         }
     }
     
+    @CrossOrigin
+    @RequestMapping(value = "/get-discounts", method = RequestMethod.GET)
+    public ResponseEntity<DiscountResponse> getDiscount(){
+        DiscountResponse dr = new DiscountResponse();
+        List<Discount> discounts = discountRepo.findAll();
+        if(discounts.size() > 0){
+            dr.setStatus("success");
+            dr.setMessage("discount data found");
+            dr.setDiscount(discounts.get(0));
+            return ResponseEntity.ok().body(dr);
+        }else{
+           dr.setStatus("failed");
+            dr.setMessage("no discount data found"); 
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(dr);
+        }
+    }
+    
     
 }
+
+
 
 
 
