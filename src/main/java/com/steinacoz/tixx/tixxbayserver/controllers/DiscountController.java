@@ -53,6 +53,7 @@ public class DiscountController {
             Discount discount = discountRepo.save(disc);
             dr.setMessage("discount created");
             dr.setStatus("success");
+            dr.setDiscount(discount);
             return ResponseEntity.ok().body(dr);
         }catch(Exception e){
             dr.setMessage("error occurred adding discount: " + e.getMessage());
@@ -81,6 +82,7 @@ public class DiscountController {
             discount = discountRepo.save(discount);
             dr.setMessage("discount updated successfully");
             dr.setStatus("success");
+            dr.setDiscount(discount);
             return ResponseEntity.ok().body(dr);
         }else{
            dr.setMessage("discount data not found");
@@ -108,6 +110,7 @@ public class DiscountController {
     
     
 }
+
 
 
 
