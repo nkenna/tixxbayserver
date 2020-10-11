@@ -491,6 +491,12 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
         }
         
+        if(str.getParentTicketData() == null || str.getParentTicketData().isEmpty()){
+            tr.setStatus("failed");
+            tr.setMessage("tickets cannot be empty.");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(tr);
+        }
+        
         Event event = eventRepo.findByEventCode(str.getEventCode());
         boolean badCode = false;
         boolean badQty = false;
@@ -592,10 +598,106 @@ public class TicketController {
                     // create child ticket ends
                }
               
-                
+                EventKey evtKey = eventkeyRepo.findByEventId(event.getId());
           
-        try{            
+        try{    
+            System.out.println("Is the error here");
+            List<Attachments> attas = new ArrayList<Attachments>();
+            //Mail mail = new Mail();
+            Email from = new Email("support@tixxbay.com");
+            String subject = "Ticket Data";
+            Email to = new Email(user.getEmail());
+            
+            
+            
             List<ChildTicket> newCTs = ctRepo.insert(cts);
+            //send out email to user
+            StringBuilder sb = new StringBuilder();
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter fyear = DateTimeFormatter.ofPattern("yyyy");
+            DateTimeFormatter fmonth = DateTimeFormatter.ofPattern("MM");
+            DateTimeFormatter fdate = DateTimeFormatter.ofPattern("dd");
+            
+            DateTimeFormatter fhour = DateTimeFormatter.ofPattern("HH");
+            DateTimeFormatter fmin = DateTimeFormatter.ofPattern("mm");
+            for(ChildTicket ct: newCTs){
+                String data = "<br>" +
+                               "Ticket Name: " + ct.getTitle() + "\n <br>" +
+                              "Ticket Code: " + ct.getTicketCode() + "\n <br>" +
+                              "Event Code: " + ct.getEventCode() + "\n <br>" +
+                              "Amount: " + ct.getTicketAmount().toString() + "\n <br>" +
+                              "Currency: " + "NGN" + "\n <br>";
+                sb.append(data);
+                
+                String qrData = ct.getEventCode() + ":::" + ct.getTicketCode() + ":::" + ct.getTicketAmount().toString() +
+                                ":::" + "NGN" + ":::" + now.format(fyear)+ now.format(fmonth)+ now.format(fdate) + ":::" + now.format(fhour)+ now.format(fmin) + ":::" + "ACCESS";
+                
+                System.out.println("show qr data");
+                System.out.println(qrData);
+                
+                System.out.println("key to be used");
+                System.out.println(evtKey.getKey());
+                System.out.println(evtKey.getEventId());
+                
+                String encData = Utils.encrypt(qrData, evtKey.getKey());
+                
+                System.out.println("show encryted data");
+                System.out.println(encData);
+                
+                
+                
+                BufferedImage bi = Utils.drawTextOnImage(ct.getTitle(), Utils.generateQRCodeImage(encData), 30);
+                //BufferedImage originalImage = ImageIO.read(new File("c:\\image\\mypic.jpg"));
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write( bi, "png", baos );
+                baos.flush();
+                byte[] imageInByte = baos.toByteArray();
+                baos.close();
+                Attachments attachments3 = new Attachments();
+                
+                Base64 x = new Base64();
+                String imageDataString = x.encodeAsString(imageInByte);
+                attachments3.setContent(imageDataString);
+                attachments3.setType("image/png");//"application/pdf"
+                attachments3.setFilename(ct.getTicketCode() != null ? ct.getTicketCode() + ".png" : Utils.randomNS(6) +".png");
+                attachments3.setDisposition("attachment");
+                attachments3.setContentId("Banner");
+                attas.add(attachments3);
+                //mail.addAttachments(attachments3);
+            }
+            
+            
+            //Mail mail = new Mail(from, subject, to, content);
+            Content content = new Content("text/html", Utils.sendHtmlEmailNewEvent("You recently bought some tickets from tixxbay for an event. Below are the details for the ticket(s): " + "\n <br>" + 
+                                sb.toString() + "\n <br>" +
+                                "Save this data and your QR code. It meant be handy on the event day."));
+            Mail mail = new Mail(from, subject, to, content);
+           mail.attachments = attas;
+            //mail.setFrom(from);
+            //mail.addContent(content);
+            
+            
+           
+            
+            
+                        
+                        System.out.println(mail.from.getEmail());
+                        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API")); 
+                        Request request = new Request();
+                        try {
+                          request.setMethod(Method.POST);
+                          request.setEndpoint("mail/send");
+                          request.setBody(mail.build());
+                          Response response = sg.api(request);
+                          System.out.println(response.getStatusCode());
+                          System.out.println(response.getBody());
+                          System.out.println(response.getHeaders());
+                          
+                        } catch (IOException ex) {
+                          
+                        }
+                        
+                        
             tr.setChildTickets(newCTs);
             tr.setStatus("success");
             tr.setMessage("Child Tickets created successful");
@@ -994,7 +1096,7 @@ public class TicketController {
     
     @CrossOrigin
     @RequestMapping(value = "/checkin-ticket", method = RequestMethod.POST)
-    public ResponseEntity<TicketResponse> sellTicket (@RequestBody CheckinTicketRequest ctr){
+    public ResponseEntity<TicketResponse> checkinTicket (@RequestBody CheckinTicketRequest ctr){
         TicketResponse tr = new TicketResponse();
         ChildTicket ct = ctRepo.findByTicketCode(ctr.getTicketCode());
         
@@ -1181,6 +1283,7 @@ public class TicketController {
     }
     
 }
+
 
 
 
