@@ -89,6 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .antMatchers(HttpMethod.GET, "/tixxbay/api/user/v1/auth/reset-user-password-2/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/tixxbay/api/user/v1/verify-user/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/tixxbay/api/category/v1/all-events-category").permitAll()
+                .antMatchers(HttpMethod.GET, "/tixxbay/api/discount/v1/get-discounts").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
@@ -106,6 +107,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     }
     
 }
+
 
 
 
