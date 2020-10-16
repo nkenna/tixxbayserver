@@ -11,10 +11,12 @@ import com.steinacoz.tixx.tixxbayserver.model.ChildTicket;
 import com.steinacoz.tixx.tixxbayserver.model.Event;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 
@@ -57,6 +59,7 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
    @Override
    public List<ChildTicketDao> getChildTicketsByUsername(String username) {
        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
+       SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Sort.Direction.ASC, "created"));
         MatchOperation match = Aggregation.match(Criteria.where("boughtByUsername").is(username));
         list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
         list.add(Aggregation.lookup("ticket", "parentTicketCode", "ticketCode", "parentTicketData"));
@@ -64,6 +67,7 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
         //list.add(Aggregation..unwind("user"));
         //list.add(Aggregation.project("username"));
         list.add(match);
+        list.add(sortByPopDesc);
        
 	TypedAggregation<ChildTicket> agg = Aggregation.newAggregation(ChildTicket.class, list);
 	return mongoTemplate.aggregate(agg, ChildTicket.class, ChildTicketDao.class).getMappedResults();
@@ -84,6 +88,7 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
     
     
 }
+
 
 
 
