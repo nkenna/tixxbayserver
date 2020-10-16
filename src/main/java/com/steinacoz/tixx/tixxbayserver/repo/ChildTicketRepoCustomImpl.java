@@ -59,7 +59,7 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
    @Override
    public List<ChildTicketDao> getChildTicketsByUsername(String username) {
        List<AggregationOperation> list = new ArrayList<AggregationOperation>();
-       SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Sort.Direction.ASC, "created"));
+       SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Sort.Direction.DESC, "created"));
         MatchOperation match = Aggregation.match(Criteria.where("boughtByUsername").is(username));
         list.add(Aggregation.lookup("event", "eventCode", "eventCode", "event"));
         list.add(Aggregation.lookup("ticket", "parentTicketCode", "ticketCode", "parentTicketData"));
@@ -88,6 +88,7 @@ public class ChildTicketRepoCustomImpl implements ChildTicketRepoCustom{
     
     
 }
+
 
 
 
