@@ -782,7 +782,7 @@ public class TicketController {
 	            //HttpPost post = new HttpPost("https://api.paystack.co/transaction/initialize");
 	            //post.setEntity(postingString);
 	            getReq.addHeader("Content-type", "text/plain");
-	            getReq.addHeader("Authorization", "Bearer sk_test_36c529556d2463dac5aa8258522be46456013ee2");
+	            getReq.addHeader("Authorization", "Bearer sk_live_69dc107ae7540402b8d96ffe47df405610974c5a");
 	           
 	            org.apache.http.HttpResponse response = client.execute(getReq);
                     statusCode = response.getStatusLine().getStatusCode();
@@ -1283,6 +1283,7 @@ public class TicketController {
     }
     
 }
+
 
 
 
