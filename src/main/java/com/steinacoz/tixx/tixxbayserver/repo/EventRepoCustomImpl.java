@@ -212,7 +212,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     @Override
     public List<EventDao> aggregateAllEventsBy3Weeks() {
         LocalDate now = LocalDate.now();
-        LocalDate futureDate = now.plusDays(21);
+        LocalDate futureDate = now.plusDays(200);
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
         SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.ASC, "startDate"));
         MatchOperation match = Aggregation.match(Criteria.where("startDate").lt(futureDate).andOperator(Criteria.where("startDate").gte(now), Criteria.where("status").is(true)));
@@ -280,7 +280,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     @Override
     public List<Event> getEventsCreatedBy3wks() {
         LocalDate now = LocalDate.now();
-        LocalDate futureDate = now.minusDays(21);
+        LocalDate futureDate = now.minusDays(400);
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
         SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.ASC, "startDate"));
         MatchOperation match = Aggregation.match(Criteria.where("startDate").lt(now).andOperator(Criteria.where("startDate").gte(futureDate)));
