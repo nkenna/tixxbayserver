@@ -212,10 +212,11 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     @Override
     public List<EventDao> aggregateAllEventsBy3Weeks() {
         LocalDate now = LocalDate.now();
+        LocalDate nowDate = now.minusDays(365);
         LocalDate futureDate = now.plusDays(200);
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
         SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.ASC, "startDate"));
-        MatchOperation match = Aggregation.match(Criteria.where("startDate").lt(futureDate).andOperator(Criteria.where("startDate").gte(now), Criteria.where("status").is(true)));
+        MatchOperation match = Aggregation.match(Criteria.where("startDate").lt(futureDate).andOperator(Criteria.where("startDate").gte(nowDate), Criteria.where("status").is(true)));
         
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
@@ -233,13 +234,13 @@ public class EventRepoCustomImpl implements EventRepoCustom {
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
         //SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.ASC, "startDate"));
         //MatchOperation match = Aggregation.match(Criteria.where("endDate").gte(now).andOperator(Criteria.where("status").is(true)));
-        MatchOperation match = Aggregation.match(Criteria.where("endDate").gte(now));
+        //MatchOperation match = Aggregation.match(Criteria.where("endDate").gte(now));
         SampleOperation matchStage = Aggregation.sample(50);
         list.add(Aggregation.lookup("user", "creatorUsername", "username", "createdBy"));
         list.add(Aggregation.lookup("childTicket", "eventCode", "eventCode", "childtickets"));
         list.add(Aggregation.lookup("eventTeam", "eventCode", "eventCode", "teams"));
         list.add(Aggregation.lookup("ticket", "eventCode", "eventCode", "tickets"));
-        list.add(match);       
+       // list.add(match);       
         list.add(matchStage);
         //list.add(sortByPopDesc);
 	TypedAggregation<Event> agg = Aggregation.newAggregation(Event.class, list);
@@ -280,6 +281,7 @@ public class EventRepoCustomImpl implements EventRepoCustom {
     @Override
     public List<Event> getEventsCreatedBy3wks() {
         LocalDate now = LocalDate.now();
+        
         LocalDate futureDate = now.minusDays(400);
         List<AggregationOperation> list = new ArrayList<AggregationOperation>();//eventCode
         SortOperation sortByPopDesc = Aggregation.sort(Sort.by(Direction.ASC, "startDate"));
